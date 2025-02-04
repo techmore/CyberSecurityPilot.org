@@ -1,0 +1,337 @@
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+<nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <!-- Mobile menu button-->
+          <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Open main menu</span>
+            <!--
+              Icon when menu is closed.
+  
+              Menu open: "hidden", Menu closed: "block"
+            -->
+            <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <!--
+              Icon when menu is open.
+  
+              Menu open: "block", Menu closed: "hidden"
+            -->
+            <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex shrink-0 items-center">
+            <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Homepage</a>
+              <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Security Portal</a>
+              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
+              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Chat</a>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+            <span class="absolute -inset-1.5"></span>
+            <span class="sr-only">View notifications</span>
+            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+            </svg>
+          </button>
+  
+          <!-- Profile dropdown -->
+          <div class="relative ml-3">
+            <div>
+              <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <span class="absolute -inset-1.5"></span>
+                <span class="sr-only">Open user menu</span>
+                <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </button>
+            </div>
+  
+            <!--
+              Dropdown menu, show/hide based on menu state.
+  
+              Entering: "transition ease-out duration-100"
+                From: "transform opacity-0 scale-95"
+                To: "transform opacity-100 scale-100"
+              Leaving: "transition ease-in duration-75"
+                From: "transform opacity-100 scale-100"
+                To: "transform opacity-0 scale-95"
+            -->
+            <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div class="sm:hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pt-2 pb-3">
+        <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+        <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <pre><br>
+        DVfriends.org
+
+TYPE	HOSTNAME	VALUE
+A	dvfriends.org	104.16.159.133
+A	dvfriends.org	104.16.189.233
+A	dvfriends.org	104.18.190.233
+A	dvfriends.org	104.16.158.133
+MX	dvfriends.org	10 aspmx.l.google.com.
+MX	dvfriends.org	30 alt2.aspmx.l.google.com.
+MX	dvfriends.org	50 aspmx3.googlemail.com.
+MX	dvfriends.org	20 alt1.aspmx.l.google.com.
+MX	dvfriends.org	40 aspmx2.googlemail.com.
+TXT	dvfriends.org	"v=spf1 include:_spf.ps.computerlogicgroup.com include:customerspf.schoolmessenger.com  include:_spf.google.com include:outboundmail.blackbaud.net  ~all include:mailgun.org ~all"
+TXT	dvfriends.org	"adobe-idp-site-verification=99c8e2aa8d9fd044aea4a442208122c2d4169c6014cd4514d0ec101a3885fd38"
+TXT	dvfriends.org	"google-site-verification=4KWQIIrgKmjeJT6z-CqwdM3Gs3ZD_oHjwToHpaWNdQw"
+NS	dvfriends.org	ns39.worldnic.com.
+NS	dvfriends.org	ns40.worldnic.com.
+SOA	dvfriends.org	NS39.WORLDNIC.COM. namehost\@WORLDNIC.COM. 124102813 10800 3600 604800 3600
+; Transfer failed.
+
+Zone transfer successful for ns40.worldnic.com.
+
+; Transfer failed.
+
+Zone transfer successful for ns39.worldnic.com.
+
+
+============================ www.dvfriends.org ============================
+
+A	www.dvfriends.org	dvfriends.sites.edliocloud.com.
+A	www.dvfriends.org	104.18.235.36
+A	www.dvfriends.org	104.18.234.36
+CNAME	www.dvfriends.org	dvfriends.sites.edliocloud.com.
+MX	www.dvfriends.org	dvfriends.sites.edliocloud.com.
+TXT	www.dvfriends.org	dvfriends.sites.edliocloud.com.
+
+============================ admin.dvfriends.org ============================
+
+A	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
+A	admin.dvfriends.org	104.18.235.36
+A	admin.dvfriends.org	104.18.234.36
+CNAME	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
+MX	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
+TXT	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
+
+============================ CRT.SH CERTIFICATES ============================
+
+CRT.SH	admin.dvfriends.org	Found in Certificate Transparency logs
+CRT.SH	dvfriends.org	Found in Certificate Transparency logs
+CRT.SH	www.dvfriends.org	Found in Certificate Transparency logs
+
+
+WHOIS INFORMATION FOR dvfriends.org:
+
+% IANA WHOIS server
+% for more information on IANA, visit http://www.iana.org
+% This query returned 1 object
+
+refer:        whois.publicinterestregistry.org
+
+domain:       ORG
+
+organisation: Public Interest Registry (PIR)
+address:      11911 Freedom Drive,
+address:      10th Floor, Suite 1000
+address:      Reston VA 20190
+address:      United States of America (the)
+
+contact:      administrative
+name:         Director of Operations, Compliance and Customer Support
+organisation: Public Interest Registry (PIR)
+address:      11911 Freedom Drive,
+address:      10th Floor, Suite 1000
+address:      Reston VA 20190
+address:      United States of America (the)
+phone:        +1 703 889 5778
+fax-no:       +1 703 889 5779
+e-mail:       ops@pir.org
+
+contact:      technical
+name:         Senior Director, DNS Infrastructure Group
+organisation: Donuts Inc.
+address:      10500 NE 8th Street, Suite 750
+address:      Bellevue WA 98004
+address:      United States of America (the)
+phone:        1.425.298.2200
+fax-no:       1.425.671.0020
+e-mail:       tldtech@donuts.email
+
+nserver:      A0.ORG.AFILIAS-NST.INFO 199.19.56.1 2001:500:e:0:0:0:0:1
+nserver:      A2.ORG.AFILIAS-NST.INFO 199.249.112.1 2001:500:40:0:0:0:0:1
+nserver:      B0.ORG.AFILIAS-NST.ORG 199.19.54.1 2001:500:c:0:0:0:0:1
+nserver:      B2.ORG.AFILIAS-NST.ORG 199.249.120.1 2001:500:48:0:0:0:0:1
+nserver:      C0.ORG.AFILIAS-NST.INFO 199.19.53.1 2001:500:b:0:0:0:0:1
+nserver:      D0.ORG.AFILIAS-NST.ORG 199.19.57.1 2001:500:f:0:0:0:0:1
+ds-rdata:     26974 8 2 4fede294c53f438a158c41d39489cd78a86beb0d8a0aeaff14745c0d16e1de32
+
+whois:        whois.publicinterestregistry.org
+
+status:       ACTIVE
+remarks:      Registration information:
+remarks:      http://publicinterestregistry.org
+
+created:      1985-01-01
+changed:      2022-06-03
+source:       IANA
+
+# whois.publicinterestregistry.org
+
+Domain Name: dvfriends.org
+Registry Domain ID: 9e64be164e2c43e580ab76ab3e9354a1-LROR
+Registrar WHOIS Server: whois.networksolutions.com
+Registrar URL: http://www.networksolutions.com
+Updated Date: 2024-03-26T06:54:23Z
+Creation Date: 2019-05-20T16:37:33Z
+Registry Expiry Date: 2025-05-20T16:37:33Z
+Registrar: Network Solutions, LLC
+Registrar IANA ID: 2
+Registrar Abuse Contact Email: domain.operations@web.com
+Registrar Abuse Contact Phone: +1.8777228662
+Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+Registry Registrant ID: REDACTED FOR PRIVACY
+Registrant Name: REDACTED FOR PRIVACY
+Registrant Organization: 
+Registrant Street: REDACTED FOR PRIVACY
+Registrant City: REDACTED FOR PRIVACY
+Registrant State/Province: FL
+Registrant Postal Code: REDACTED FOR PRIVACY
+Registrant Country: US
+Registrant Phone: REDACTED FOR PRIVACY
+Registrant Phone Ext: REDACTED FOR PRIVACY
+Registrant Fax: REDACTED FOR PRIVACY
+Registrant Fax Ext: REDACTED FOR PRIVACY
+Registrant Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
+Registry Admin ID: REDACTED FOR PRIVACY
+Admin Name: REDACTED FOR PRIVACY
+Admin Organization: REDACTED FOR PRIVACY
+Admin Street: REDACTED FOR PRIVACY
+Admin City: REDACTED FOR PRIVACY
+Admin State/Province: REDACTED FOR PRIVACY
+Admin Postal Code: REDACTED FOR PRIVACY
+Admin Country: REDACTED FOR PRIVACY
+Admin Phone: REDACTED FOR PRIVACY
+Admin Phone Ext: REDACTED FOR PRIVACY
+Admin Fax: REDACTED FOR PRIVACY
+Admin Fax Ext: REDACTED FOR PRIVACY
+Admin Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
+Registry Tech ID: REDACTED FOR PRIVACY
+Tech Name: REDACTED FOR PRIVACY
+Tech Organization: REDACTED FOR PRIVACY
+Tech Street: REDACTED FOR PRIVACY
+Tech City: REDACTED FOR PRIVACY
+Tech State/Province: REDACTED FOR PRIVACY
+Tech Postal Code: REDACTED FOR PRIVACY
+Tech Country: REDACTED FOR PRIVACY
+Tech Phone: REDACTED FOR PRIVACY
+Tech Phone Ext: REDACTED FOR PRIVACY
+Tech Fax: REDACTED FOR PRIVACY
+Tech Fax Ext: REDACTED FOR PRIVACY
+Tech Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
+Name Server: ns39.worldnic.com
+Name Server: ns40.worldnic.com
+DNSSEC: unsigned
+URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/
+>>> Last update of WHOIS database: 2025-01-30T22:30:38Z <<<
+
+# whois.networksolutions.com
+
+Domain Name: DVFRIENDS.ORG
+Registry Domain ID: 
+Registrar WHOIS Server: whois.networksolutions.com
+Registrar URL: http://www.networksolutions.com
+Updated Date: 2025-01-14T07:37:00Z
+Creation Date: 2019-05-20T16:37:33Z
+Registrar Registration Expiration Date: 2025-05-20T16:37:33Z
+Registrar: Network Solutions, LLC
+Registrar IANA ID: 2
+Reseller: 
+Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+Registry Registrant ID: 
+Registrant Name: PERFECT PRIVACY, LLC
+Registrant Organization: 
+Registrant Street: 5335 Gate Parkway care of Network Solutions PO Box 459
+Registrant City: Jacksonville
+Registrant State/Province: FL
+Registrant Postal Code: 32256
+Registrant Country: US
+Registrant Phone: +1.5707088622
+Registrant Phone Ext: 
+Registrant Fax: 
+Registrant Fax Ext: 
+Registrant Email: bx5dm2w46c4@networksolutionsprivateregistration.com
+Registry Admin ID: 
+Admin Name: PERFECT PRIVACY, LLC
+Admin Organization: 
+Admin Street: 5335 Gate Parkway care of Network Solutions PO Box 459
+Admin City: Jacksonville
+Admin State/Province: FL
+Admin Postal Code: 32256
+Admin Country: US
+Admin Phone: +1.5707088622
+Admin Phone Ext: 
+Admin Fax: 
+Admin Fax Ext: 
+Admin Email: bx5dm2w46c4@networksolutionsprivateregistration.com
+Registry Tech ID: 
+Tech Name: PERFECT PRIVACY, LLC
+Tech Organization: 
+Tech Street: 5335 Gate Parkway care of Network Solutions PO Box 459
+Tech City: Jacksonville
+Tech State/Province: FL
+Tech Postal Code: 32256
+Tech Country: US
+Tech Phone: +1.5707088622
+Tech Phone Ext: 
+Tech Fax: 
+Tech Fax Ext: 
+Tech Email: bx5dm2w46c4@networksolutionsprivateregistration.com
+Name Server: NS39.WORLDNIC.COM
+Name Server: NS40.WORLDNIC.COM
+DNSSEC: unsigned
+Registrar Abuse Contact Email: domain.operations@web.com
+Registrar Abuse Contact Phone: +1.8777228662
+URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
+>>> Last update of WHOIS database: 2025-01-30T22:30:38Z <<<
+
+
+
+DNS RECORD TYPE EXPLANATIONS:
+A:	Maps a domain to an IP address (IPv4)
+AAAA:	Maps a domain to an IP address (IPv6)
+CNAME:	Alias of one domain to another
+MX:	Mail exchange record that routes email to mail servers
+TXT:	Provides text information to sources outside your domain
+NS:	Specifies the name servers for a domain
+SOA:	Start of Authority, holds administrative information about the domain
+PTR:	Maps an IP address to a domain name (Reverse DNS)
+BRUTE:\tIndicates subdomains discovered through brute-force
+CRT.SH:\tSubdomains found in Certificate Transparency logs
+    <!-- Content goes here -->
+</div>

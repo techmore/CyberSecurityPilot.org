@@ -1,6 +1,28 @@
 <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
-<!-- test 1
+<!-- 
+
+Autopilot Portal 
+   - Login - oauth
+   - My domain information, users management, settings
+   - PDF samples, executive and comprehensive, Monthly uploads to Google Drive. maybe weekly diff scans? daily?
+      - Date activity feed
+      - DNS feed, WhoIs, certificate
+      - crt.sh, email hygiene
+
+      - NMap / Nikto
+        - Pentesting
+        - Firewall IP and others? other hosts? how to validate?
+
+
+   How to best receive help
+   Deliverables
+   expectations
+
+
+
+Company Logo / Icon
+
 Relationships with Vendors
 Baseline references / CISA Hygiene RVWS
 Insurance providers
@@ -11,7 +33,6 @@ Quaker style - The History of global sharing / the web, unix, linux
                Embeded Device functionality / GeoHot Locality
 
 -->
-
 <nav class="bg-gray-800">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
@@ -40,7 +61,7 @@ Quaker style - The History of global sharing / the web, unix, linux
       </div>
       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
         <div class="flex shrink-0 items-center">
-          <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Cyber Security Pilot">
+          <img class="h-10 w-auto" src="img/logo.png" alt="Cyber Security Pilot">
         </div>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
@@ -54,6 +75,7 @@ Quaker style - The History of global sharing / the web, unix, linux
         </div>
       </div>
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <!--
         <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
           <span class="absolute -inset-1.5"></span>
           <span class="sr-only">View notifications</span>
@@ -61,8 +83,14 @@ Quaker style - The History of global sharing / the web, unix, linux
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
           </svg>
         </button>
+        -->
 
-        <!-- Profile dropdown -->
+        <!--
+        ###########################################################
+        Enable Login
+        ###########################################################
+        -->
+        <!-- Profile dropdown 
         <div class="relative ml-3">
           <div>
             <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -71,7 +99,7 @@ Quaker style - The History of global sharing / the web, unix, linux
               <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
             </button>
           </div>
-
+        -->
           <!--
             Dropdown menu, show/hide based on menu state.
 
@@ -108,7 +136,6 @@ Quaker style - The History of global sharing / the web, unix, linux
 </nav>
 
 
-
 <div class="bg-gray-50">
     <div class="mx-auto max-w-7xl py-24 sm:px-2 sm:py-32 lg:px-4">
       <div class="mx-auto max-w-2xl px-4 lg:max-w-none">
@@ -137,13 +164,14 @@ Quaker style - The History of global sharing / the web, unix, linux
             </div>
             <div class="mt-4 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
               <h3 class="text-sm font-medium text-gray-900">Auto Pilot Portal</h3>
-              <div class="text-blue-800"><a href="checkout/autopilotportal_payment.html">$499 / mon</a></div>
+              <p><a href="dashboard/dns_table.html">$499 / mon</a></p>
 
               <p class="mt-2 text-sm text-gray-500">
                 DNS record monitoring<br>
                 Website monitoring <br>
                 Device audits for CIS v8 lvl 1, 2 ,3 compliance<br>
                 Project Management - <br>
+                BYOD - 
                 On-premise continous vulnerability scanning <br>
               </p>
             </div>
@@ -161,7 +189,9 @@ Quaker style - The History of global sharing / the web, unix, linux
               <h3 class="text-sm font-medium text-gray-900">Baseline Assessment</h3>
               <div class="text-blue-800">$999 / mon </div>
               <p class="mt-2 text-sm text-gray-500">Realtime Communication<br>
-                Pathway to a reference framework, standardization and continous deployment.</p>
+                Pathway to a reference framework, standardization and continous deployment.
+                MITRE compliant penetration testing
+              </p>
             </div>
           </div>
           <div class="sm:flex lg:block">
@@ -181,3 +211,31 @@ Quaker style - The History of global sharing / the web, unix, linux
     </div>
   </div>
   
+  <footer class="bg-gray-900">
+    <div class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+      <div class="flex justify-center gap-x-6 md:order-2">
+        <!--
+        <a href="#" class="text-gray-400 hover:text-gray-300">
+          <span class="sr-only">X</span>
+          <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
+          </svg>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-gray-300">
+          <span class="sr-only">GitHub</span>
+          <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+          </svg>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-gray-300">
+          <span class="sr-only">YouTube</span>
+          <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd" />
+          </svg>
+        </a>
+        -->
+      </div>
+      <p class="mt-8 text-center text-sm/6 text-gray-400 md:order-1 md:mt-0">Cyber Security Pilot llc</p><br>
+      <p class="mt-8 text-center text-xs text-gray-400 md:order-1 md:mt-0">Terms of Service | Privacy Policy | SLA</p>
+    </div>
+  </footer>

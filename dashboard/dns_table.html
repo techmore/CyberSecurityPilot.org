@@ -5,7 +5,7 @@
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
-          <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
+          <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
             <span class="absolute -inset-0.5"></span>
             <span class="sr-only">Open main menu</span>
             <!--
@@ -93,245 +93,431 @@
   </nav>
   
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <pre><br>
-        DVfriends.org
+    <div class="mt-8 flex gap-6">
+      <!-- Left side - DNS Records -->
+      <div class="flex-grow space-y-4">
+        <!-- Domain Section -->
+         DNS Portal
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">DVfriends.org</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <div class="min-w-full divide-y divide-gray-200">
+              <div class="bg-gray-50">
+                <div class="grid grid-cols-3 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div>Type</div>
+                  <div>Hostname</div>
+                  <div>Value</div>
+                </div>
+              </div>
+              
+              <div class="bg-white divide-y divide-gray-200">
+                <!-- A Records - More compact -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>dvfriends.org</div>
+                  <div>104.16.159.133</div>
+                </div>
+                <!-- More records with same compact styling -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>dvfriends.org</div>
+                  <div>104.16.189.233</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>dvfriends.org</div>
+                  <div>104.18.190.233</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>dvfriends.org</div>
+                  <div>104.16.158.133</div>
+                </div>
+                
+                <!-- MX Records -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>dvfriends.org</div>
+                  <div>10 aspmx.l.google.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>dvfriends.org</div>
+                  <div>30 alt2.aspmx.l.google.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>dvfriends.org</div>
+                  <div>50 aspmx3.googlemail.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>dvfriends.org</div>
+                  <div>20 alt1.aspmx.l.google.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>dvfriends.org</div>
+                  <div>40 aspmx2.googlemail.com.</div>
+                </div>
+                
+                <!-- TXT Records -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">TXT</div>
+                  <div>dvfriends.org</div>
+                  <div class="break-all">"v=spf1 include:_spf.ps.computerlogicgroup.com include:customerspf.schoolmessenger.com include:_spf.google.com include:outboundmail.blackbaud.net ~all include:mailgun.org ~all"</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">TXT</div>
+                  <div>dvfriends.org</div>
+                  <div class="break-all">"adobe-idp-site-verification=99c8e2aa8d9fd044aea4a442208122c2d4169c6014cd4514d0ec101a3885fd38"</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">TXT</div>
+                  <div>dvfriends.org</div>
+                  <div>"google-site-verification=4KWQIIrgKmjeJT6z-CqwdM3Gs3ZD_oHjwToHpaWNdQw"</div>
+                </div>
+                
+                <!-- NS Records -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">NS</div>
+                  <div>dvfriends.org</div>
+                  <div>ns39.worldnic.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">NS</div>
+                  <div>dvfriends.org</div>
+                  <div>ns40.worldnic.com.</div>
+                </div>
+                
+                <!-- SOA Record -->
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">SOA</div>
+                  <div>dvfriends.org</div>
+                  <div>NS39.WORLDNIC.COM. namehost@WORLDNIC.COM. 124102813 10800 3600 604800 3600</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-TYPE	HOSTNAME	VALUE
-A	dvfriends.org	104.16.159.133
-A	dvfriends.org	104.16.189.233
-A	dvfriends.org	104.18.190.233
-A	dvfriends.org	104.16.158.133
-MX	dvfriends.org	10 aspmx.l.google.com.
-MX	dvfriends.org	30 alt2.aspmx.l.google.com.
-MX	dvfriends.org	50 aspmx3.googlemail.com.
-MX	dvfriends.org	20 alt1.aspmx.l.google.com.
-MX	dvfriends.org	40 aspmx2.googlemail.com.
-TXT	dvfriends.org	"v=spf1 include:_spf.ps.computerlogicgroup.com include:customerspf.schoolmessenger.com  include:_spf.google.com include:outboundmail.blackbaud.net  ~all include:mailgun.org ~all"
-TXT	dvfriends.org	"adobe-idp-site-verification=99c8e2aa8d9fd044aea4a442208122c2d4169c6014cd4514d0ec101a3885fd38"
-TXT	dvfriends.org	"google-site-verification=4KWQIIrgKmjeJT6z-CqwdM3Gs3ZD_oHjwToHpaWNdQw"
-NS	dvfriends.org	ns39.worldnic.com.
-NS	dvfriends.org	ns40.worldnic.com.
-SOA	dvfriends.org	NS39.WORLDNIC.COM. namehost\@WORLDNIC.COM. 124102813 10800 3600 604800 3600
-; Transfer failed.
+        <!-- www and admin sections with same compact styling -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">www.dvfriends.org</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <div class="min-w-full divide-y divide-gray-200">
+              <div class="bg-gray-50">
+                <div class="grid grid-cols-3 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div>Type</div>
+                  <div>Hostname</div>
+                  <div>Value</div>
+                </div>
+              </div>
+              
+              <div class="bg-white divide-y divide-gray-200">
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>www.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>www.dvfriends.org</div>
+                  <div>104.18.235.36</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>www.dvfriends.org</div>
+                  <div>104.18.234.36</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">CNAME</div>
+                  <div>www.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>www.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">TXT</div>
+                  <div>www.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-Zone transfer successful for ns40.worldnic.com.
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">admin.dvfriends.org</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <div class="min-w-full divide-y divide-gray-200">
+              <div class="bg-gray-50">
+                <div class="grid grid-cols-3 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div>Type</div>
+                  <div>Hostname</div>
+                  <div>Value</div>
+                </div>
+              </div>
+              
+              <div class="bg-white divide-y divide-gray-200">
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>104.18.235.36</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">A</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>104.18.234.36</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">CNAME</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">MX</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div class="font-medium">TXT</div>
+                  <div>admin.dvfriends.org</div>
+                  <div>dvfriends.sites.edliocloud.com.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-; Transfer failed.
+        <!-- Certificate Information Section -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">CRT.SH Certificates</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <div class="min-w-full divide-y divide-gray-200">
+              <div class="bg-gray-50">
+                <div class="grid grid-cols-2 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div>Domain</div>
+                  <div>Status</div>
+                </div>
+              </div>
+              
+              <div class="bg-white divide-y divide-gray-200">
+                <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div>admin.dvfriends.org</div>
+                  <div>Found in Certificate Transparency logs</div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div>dvfriends.org</div>
+                  <div>Found in Certificate Transparency logs</div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                  <div>www.dvfriends.org</div>
+                  <div>Found in Certificate Transparency logs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-Zone transfer successful for ns39.worldnic.com.
+        <!-- WHOIS Information Section -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">WHOIS Information</h3>
+          </div>
+          
+          <div class="p-3 space-y-3">
+            <!-- Domain Information -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">Domain Details</h4>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="text-gray-500">Domain Name:</div>
+                <div class="text-gray-900">dvfriends.org</div>
+                <div class="text-gray-500">Registry Domain ID:</div>
+                <div class="text-gray-900">9e64be164e2c43e580ab76ab3e9354a1-LROR</div>
+                <div class="text-gray-500">Creation Date:</div>
+                <div class="text-gray-900">2019-05-20T16:37:33Z</div>
+                <div class="text-gray-500">Updated Date:</div>
+                <div class="text-gray-900">2024-03-26T06:54:23Z</div>
+                <div class="text-gray-500">Registry Expiry Date:</div>
+                <div class="text-gray-900">2025-05-20T16:37:33Z</div>
+              </div>
+            </div>
 
+            <!-- Registrar Information -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">Registrar Information</h4>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="text-gray-500">Registrar:</div>
+                <div class="text-gray-900">Network Solutions, LLC</div>
+                <div class="text-gray-500">IANA ID:</div>
+                <div class="text-gray-900">2</div>
+                <div class="text-gray-500">Abuse Contact Email:</div>
+                <div class="text-gray-900">domain.operations@web.com</div>
+                <div class="text-gray-500">Abuse Contact Phone:</div>
+                <div class="text-gray-900">+1.8777228662</div>
+              </div>
+            </div>
 
-============================ www.dvfriends.org ============================
+            <!-- Name Servers -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">Name Servers</h4>
+              <div class="grid grid-cols-1 gap-1 text-xs">
+                <div class="text-gray-900">NS39.WORLDNIC.COM</div>
+                <div class="text-gray-900">NS40.WORLDNIC.COM</div>
+              </div>
+            </div>
 
-A	www.dvfriends.org	dvfriends.sites.edliocloud.com.
-A	www.dvfriends.org	104.18.235.36
-A	www.dvfriends.org	104.18.234.36
-CNAME	www.dvfriends.org	dvfriends.sites.edliocloud.com.
-MX	www.dvfriends.org	dvfriends.sites.edliocloud.com.
-TXT	www.dvfriends.org	dvfriends.sites.edliocloud.com.
+            <!-- DNSSEC -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">DNSSEC</h4>
+              <div class="text-xs text-gray-900">unsigned</div>
+            </div>
 
-============================ admin.dvfriends.org ============================
+            <!-- Domain Status -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">Domain Status</h4>
+              <div class="text-xs text-gray-900">clientTransferProhibited</div>
+            </div>
 
-A	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
-A	admin.dvfriends.org	104.18.235.36
-A	admin.dvfriends.org	104.18.234.36
-CNAME	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
-MX	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
-TXT	admin.dvfriends.org	dvfriends.sites.edliocloud.com.
+            <!-- Registry Information -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-medium text-gray-700">Registry Information</h4>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="text-gray-500">Organization:</div>
+                <div class="text-gray-900">Public Interest Registry (PIR)</div>
+                <div class="text-gray-500">Address:</div>
+                <div class="text-gray-900">11911 Freedom Drive, 10th Floor, Suite 1000, Reston VA 20190, United States of America</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-============================ CRT.SH CERTIFICATES ============================
+      <!-- Right side - Activity Timeline -->
+      <div class="w-80 flex-none">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">Recent Activity</h3>
+          </div>
+          <div class="p-4">
+            <div class="flow-root">
+              <ul role="list" class="-mb-8">
+                <li>
+                  <div class="relative pb-8">
+                    <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
+                          <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-xs text-gray-500">New A record added <span class="font-medium text-gray-900">104.18.190.233</span></p>
+                        </div>
+                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                          <time datetime="2025-02-05">3h ago</time>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
 
-CRT.SH	admin.dvfriends.org	Found in Certificate Transparency logs
-CRT.SH	dvfriends.org	Found in Certificate Transparency logs
-CRT.SH	www.dvfriends.org	Found in Certificate Transparency logs
+                <li>
+                  <div class="relative pb-8">
+                    <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
+                          <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-xs text-gray-500">SSL Certificate renewed for <span class="font-medium text-gray-900">dvfriends.org</span></p>
+                        </div>
+                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                          <time datetime="2025-02-05">1d ago</time>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
 
+                <li>
+                  <div class="relative pb-8">
+                    <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-yellow-500 flex items-center justify-center ring-8 ring-white">
+                          <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-xs text-gray-500">MX record changed for <span class="font-medium text-gray-900">admin.dvfriends.org</span></p>
+                        </div>
+                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                          <time datetime="2025-02-03">2d ago</time>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
 
-WHOIS INFORMATION FOR dvfriends.org:
-
-% IANA WHOIS server
-% for more information on IANA, visit http://www.iana.org
-% This query returned 1 object
-
-refer:        whois.publicinterestregistry.org
-
-domain:       ORG
-
-organisation: Public Interest Registry (PIR)
-address:      11911 Freedom Drive,
-address:      10th Floor, Suite 1000
-address:      Reston VA 20190
-address:      United States of America (the)
-
-contact:      administrative
-name:         Director of Operations, Compliance and Customer Support
-organisation: Public Interest Registry (PIR)
-address:      11911 Freedom Drive,
-address:      10th Floor, Suite 1000
-address:      Reston VA 20190
-address:      United States of America (the)
-phone:        +1 703 889 5778
-fax-no:       +1 703 889 5779
-e-mail:       ops@pir.org
-
-contact:      technical
-name:         Senior Director, DNS Infrastructure Group
-organisation: Donuts Inc.
-address:      10500 NE 8th Street, Suite 750
-address:      Bellevue WA 98004
-address:      United States of America (the)
-phone:        1.425.298.2200
-fax-no:       1.425.671.0020
-e-mail:       tldtech@donuts.email
-
-nserver:      A0.ORG.AFILIAS-NST.INFO 199.19.56.1 2001:500:e:0:0:0:0:1
-nserver:      A2.ORG.AFILIAS-NST.INFO 199.249.112.1 2001:500:40:0:0:0:0:1
-nserver:      B0.ORG.AFILIAS-NST.ORG 199.19.54.1 2001:500:c:0:0:0:0:1
-nserver:      B2.ORG.AFILIAS-NST.ORG 199.249.120.1 2001:500:48:0:0:0:0:1
-nserver:      C0.ORG.AFILIAS-NST.INFO 199.19.53.1 2001:500:b:0:0:0:0:1
-nserver:      D0.ORG.AFILIAS-NST.ORG 199.19.57.1 2001:500:f:0:0:0:0:1
-ds-rdata:     26974 8 2 4fede294c53f438a158c41d39489cd78a86beb0d8a0aeaff14745c0d16e1de32
-
-whois:        whois.publicinterestregistry.org
-
-status:       ACTIVE
-remarks:      Registration information:
-remarks:      http://publicinterestregistry.org
-
-created:      1985-01-01
-changed:      2022-06-03
-source:       IANA
-
-# whois.publicinterestregistry.org
-
-Domain Name: dvfriends.org
-Registry Domain ID: 9e64be164e2c43e580ab76ab3e9354a1-LROR
-Registrar WHOIS Server: whois.networksolutions.com
-Registrar URL: http://www.networksolutions.com
-Updated Date: 2024-03-26T06:54:23Z
-Creation Date: 2019-05-20T16:37:33Z
-Registry Expiry Date: 2025-05-20T16:37:33Z
-Registrar: Network Solutions, LLC
-Registrar IANA ID: 2
-Registrar Abuse Contact Email: domain.operations@web.com
-Registrar Abuse Contact Phone: +1.8777228662
-Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
-Registry Registrant ID: REDACTED FOR PRIVACY
-Registrant Name: REDACTED FOR PRIVACY
-Registrant Organization: 
-Registrant Street: REDACTED FOR PRIVACY
-Registrant City: REDACTED FOR PRIVACY
-Registrant State/Province: FL
-Registrant Postal Code: REDACTED FOR PRIVACY
-Registrant Country: US
-Registrant Phone: REDACTED FOR PRIVACY
-Registrant Phone Ext: REDACTED FOR PRIVACY
-Registrant Fax: REDACTED FOR PRIVACY
-Registrant Fax Ext: REDACTED FOR PRIVACY
-Registrant Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
-Registry Admin ID: REDACTED FOR PRIVACY
-Admin Name: REDACTED FOR PRIVACY
-Admin Organization: REDACTED FOR PRIVACY
-Admin Street: REDACTED FOR PRIVACY
-Admin City: REDACTED FOR PRIVACY
-Admin State/Province: REDACTED FOR PRIVACY
-Admin Postal Code: REDACTED FOR PRIVACY
-Admin Country: REDACTED FOR PRIVACY
-Admin Phone: REDACTED FOR PRIVACY
-Admin Phone Ext: REDACTED FOR PRIVACY
-Admin Fax: REDACTED FOR PRIVACY
-Admin Fax Ext: REDACTED FOR PRIVACY
-Admin Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
-Registry Tech ID: REDACTED FOR PRIVACY
-Tech Name: REDACTED FOR PRIVACY
-Tech Organization: REDACTED FOR PRIVACY
-Tech Street: REDACTED FOR PRIVACY
-Tech City: REDACTED FOR PRIVACY
-Tech State/Province: REDACTED FOR PRIVACY
-Tech Postal Code: REDACTED FOR PRIVACY
-Tech Country: REDACTED FOR PRIVACY
-Tech Phone: REDACTED FOR PRIVACY
-Tech Phone Ext: REDACTED FOR PRIVACY
-Tech Fax: REDACTED FOR PRIVACY
-Tech Fax Ext: REDACTED FOR PRIVACY
-Tech Email: Please query the RDDS service of the Registrar of Record identified in this output for information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.
-Name Server: ns39.worldnic.com
-Name Server: ns40.worldnic.com
-DNSSEC: unsigned
-URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/
->>> Last update of WHOIS database: 2025-01-30T22:30:38Z <<<
-
-# whois.networksolutions.com
-
-Domain Name: DVFRIENDS.ORG
-Registry Domain ID: 
-Registrar WHOIS Server: whois.networksolutions.com
-Registrar URL: http://www.networksolutions.com
-Updated Date: 2025-01-14T07:37:00Z
-Creation Date: 2019-05-20T16:37:33Z
-Registrar Registration Expiration Date: 2025-05-20T16:37:33Z
-Registrar: Network Solutions, LLC
-Registrar IANA ID: 2
-Reseller: 
-Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
-Registry Registrant ID: 
-Registrant Name: PERFECT PRIVACY, LLC
-Registrant Organization: 
-Registrant Street: 5335 Gate Parkway care of Network Solutions PO Box 459
-Registrant City: Jacksonville
-Registrant State/Province: FL
-Registrant Postal Code: 32256
-Registrant Country: US
-Registrant Phone: +1.5707088622
-Registrant Phone Ext: 
-Registrant Fax: 
-Registrant Fax Ext: 
-Registrant Email: bx5dm2w46c4@networksolutionsprivateregistration.com
-Registry Admin ID: 
-Admin Name: PERFECT PRIVACY, LLC
-Admin Organization: 
-Admin Street: 5335 Gate Parkway care of Network Solutions PO Box 459
-Admin City: Jacksonville
-Admin State/Province: FL
-Admin Postal Code: 32256
-Admin Country: US
-Admin Phone: +1.5707088622
-Admin Phone Ext: 
-Admin Fax: 
-Admin Fax Ext: 
-Admin Email: bx5dm2w46c4@networksolutionsprivateregistration.com
-Registry Tech ID: 
-Tech Name: PERFECT PRIVACY, LLC
-Tech Organization: 
-Tech Street: 5335 Gate Parkway care of Network Solutions PO Box 459
-Tech City: Jacksonville
-Tech State/Province: FL
-Tech Postal Code: 32256
-Tech Country: US
-Tech Phone: +1.5707088622
-Tech Phone Ext: 
-Tech Fax: 
-Tech Fax Ext: 
-Tech Email: bx5dm2w46c4@networksolutionsprivateregistration.com
-Name Server: NS39.WORLDNIC.COM
-Name Server: NS40.WORLDNIC.COM
-DNSSEC: unsigned
-Registrar Abuse Contact Email: domain.operations@web.com
-Registrar Abuse Contact Phone: +1.8777228662
-URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
->>> Last update of WHOIS database: 2025-01-30T22:30:38Z <<<
-
-
-
-DNS RECORD TYPE EXPLANATIONS:
-A:	Maps a domain to an IP address (IPv4)
-AAAA:	Maps a domain to an IP address (IPv6)
-CNAME:	Alias of one domain to another
-MX:	Mail exchange record that routes email to mail servers
-TXT:	Provides text information to sources outside your domain
-NS:	Specifies the name servers for a domain
-SOA:	Start of Authority, holds administrative information about the domain
-PTR:	Maps an IP address to a domain name (Reverse DNS)
-BRUTE:\tIndicates subdomains discovered through brute-force
-CRT.SH:\tSubdomains found in Certificate Transparency logs
-    <!-- Content goes here -->
+                <li>
+                  <div class="relative pb-8">
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-red-500 flex items-center justify-center ring-8 ring-white">
+                          <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-xs text-gray-500">Removed deprecated TXT record from <span class="font-medium text-gray-900">dvfriends.org</span></p>
+                        </div>
+                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                          <time datetime="2025-02-01">4d ago</time>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

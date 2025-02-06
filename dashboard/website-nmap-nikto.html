@@ -69,12 +69,14 @@
                 From: "transform opacity-100 scale-100"
                 To: "transform opacity-0 scale-95"
             -->
+            <!--
             <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
+               Active: "bg-gray-100 outline-hidden", Not Active: "" 
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -96,11 +98,45 @@
     <nav class="mt-8 bg-white shadow rounded-lg">
       <div class="px-3 py-2 bg-gray-50">
         <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-gray-900">Website Monitoring</span>
-          <div class="flex space-x-4">
-            <a href="dns_table.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">DNS Portal</a>
-            <a href="dashboard_www.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Website Monitoring</a>
-          </div>
+          Autopilot Portal
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
+              <li class="flex">
+                <div class="flex items-center">
+                  <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">DNS Portal</span>
+                  </a>
+                </div>
+              </li>
+              <li class="flex">
+                <div class="flex items-center">
+                  <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                    <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                  </svg>
+                  <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">DNS Portal</a>
+                </div>
+              </li>
+              <li class="flex">
+                <div class="flex items-center">
+                  <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                    <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                  </svg>
+                  <a href="website-nmap-nikto.html" class="ml-4 text-sm font-medium text-blue-500 hover:text-gray-700" aria-current="page">Website Monitoring</a>
+                </div>
+              </li>
+              <li class="flex">
+                <div class="flex items-center">
+                  <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                    <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                  </svg>
+                  <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
+                </div>
+              </li>
+            </ol>
+          </nav>
         </div>
       </div>
     </nav>
@@ -108,25 +144,34 @@
       <!-- Left side - Scan Results -->
       <div class="flex-grow space-y-4">
         <!-- Navigation -->
-        <nav class="bg-white shadow rounded-lg">
-          <div class="px-3 py-2 bg-gray-50">
-            <div class="flex justify-between items-center">
-              <span class="text-sm font-medium text-gray-900">Security Scans</span>
-              <a href="dns_table.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">DNS Portal</a>
+        
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">Target Information</h3>
+          </div>
+          <div class="min-w-full divide-y divide-gray-200">
+            <div class="bg-gray-50">
+              <div class="grid grid-cols-2 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <div>Target</div>
+                <div>IP Address</div>
+              </div>
+            </div>
+            <div class="bg-white divide-y divide-gray-200">
+              <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">DVfriends.org</div>
+                <div>104.16.159.133</div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">IP Addresses</div>
+                <div>104.16.158.133 104.16.189.233 104.18.190.233</div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">Warning</div>
+                <div>OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</div>
+              </div>
             </div>
           </div>
-        </nav>
-
-
-        DVfriends.org - 104.16.159.133
-        <br>
-
-        104.16.158.133 104.16.189.233 104.18.190.233
-        <br><br>
-
-        Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
-        Aggressive OS guesses: Apple iOS 14.0 - 15.6 or tvOS 14.3 - 16.1 (Darwin 20.0.0 - 22.1.0) (89%), Apple macOS 11 (Big Sur) - 13 (Ventura) or iOS 16 (Darwin 20.6.0 - 22.4.0) (89%), FreeBSD 11.1-STABLE (89%), FreeBSD 12.0-RELEASE - 12.1-RELEASE (89%), FreeBSD 12.1-RELEASE (89%), FreeBSD 13.0-RELEASE (89%), Android 7.0 (Linux 3.18) (86%), FreeBSD 11.1-RELEASE (85%), FreeBSD 11.2-RELEASE - 11.3 RELEASE (85%), FreeBSD 12.0-RELEASE - 13.0-RELEASE (85%)
-        No exact OS matches for host (test conditions non-ideal).
+        </div>
 
         <!-- Nmap Results -->
         <div class="bg-white shadow rounded-lg overflow-hidden">
@@ -203,30 +248,79 @@
             </div>
           </div>
         </div>
-        Network Distance: 8 hops
-
-TRACEROUTE (using port 80/tcp)
-HOP RTT      ADDRESS
-1   5.25 ms  192.168.222.1
-2   32.71 ms 100.64.0.1
-3   34.63 ms 172.16.250.132
-4   ...
-5   37.39 ms undefined.hostname.localhost (206.224.64.159)
-6   37.39 ms 162.158.61.14
-7   41.14 ms 162.158.61.115
-8   44.53 ms 104.16.159.133
-
-OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 800.73 seconds
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">Traceroute Results</h3>
+          </div>
+          <div class="min-w-full divide-y divide-gray-200">
+            <div class="bg-gray-50">
+              <div class="grid grid-cols-3 gap-2 px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <div>HOP</div>
+                <div>RTT</div>
+                <div>ADDRESS</div>
+              </div>
+            </div>
+            <div class="bg-white divide-y divide-gray-200">
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">1</div>
+                <div>5.25 ms</div>
+                <div>192.168.222.1</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">2</div>
+                <div>32.71 ms</div>
+                <div>100.64.0.1</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">3</div>
+                <div>34.63 ms</div>
+                <div>172.16.250.132</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">4</div>
+                <div>...</div>
+                <div>...</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">5</div>
+                <div>37.39 ms</div>
+                <div>undefined.hostname.localhost (206.224.64.159)</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">6</div>
+                <div>37.39 ms</div>
+                <div>162.158.61.14</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">7</div>
+                <div>41.14 ms</div>
+                <div>162.158.61.115</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-50">
+                <div class="font-medium">8</div>
+                <div>44.53 ms</div>
+                <div>104.16.159.133</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-xs text-gray-500">Network Distance: 8 hops</div>
+        <div class="text-xs text-gray-500">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</div>
+        <div class="text-xs text-gray-500">Nmap done: 1 IP address (1 host up) scanned in 800.73 seconds</div>
 
       </div>
 
       <!-- Right side - Activity Timeline -->
-      <div class="w-80 flex-none">
-        <a href="www.dvfriends.org/index.html">Clone</a> 
-        <img src="output.png">
-
-
+      <div class="w-80 flex-none mt-6">
+        <div class="bg-white shadow rounded-lg overflow-hidden mb-4">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">Website Preview</h3>
+          </div>
+          <div class="p-4">
+            <a href="https://www.dvfriends.org" class="text-sm text-indigo-600 hover:text-indigo-800 mb-4 block">Visit Website</a>
+            <img src="output.png" alt="Website Preview" class="w-full rounded-lg">
+          </div>
+        </div>
 
         <div class="bg-white shadow rounded-lg overflow-hidden">
           <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">

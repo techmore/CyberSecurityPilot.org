@@ -69,12 +69,14 @@
                 From: "transform opacity-100 scale-100"
                 To: "transform opacity-0 scale-95"
             -->
+                    <!--
             <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-              <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>
+          -->
+
           </div>
         </div>
       </div>
@@ -93,18 +95,58 @@
   </nav>
   
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="mt-8 flex gap-6">
-      <!-- Left side - DNS Records -->
-      <div class="flex-grow space-y-4">
+
         <!-- Domain Section -->
         <nav class="mt-8 bg-white shadow rounded-lg">
           <div class="px-3 py-2 bg-gray-50">
             <div class="flex justify-between items-center">
-              <span class="text-sm font-medium text-gray-900">DNS Portal</span>
-              <a href="website-nmap-nikto.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Website Monitoring</a>
+              Autopilot Portal
+              <nav class="flex" aria-label="Breadcrumb">
+                <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                          <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">DNS Portal</span>
+                      </a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a href="#" class="ml-4 text-sm font-medium text-blue-500 hover:text-gray-700">DNS Portal</a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a href="website-nmap-nikto.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Website Monitoring</a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
+                    </div>
+                  </li>
+                </ol>
+              </nav>
             </div>
           </div>
         </nav>
+
+
+        <div class="mt-8 flex gap-6">
+          <!-- Left side - DNS Records -->
+          <div class="flex-grow space-y-4">
         <div class="bg-white shadow rounded-lg overflow-hidden">
           <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
             <h3 class="text-sm font-medium text-gray-900">DVfriends.org</h3>
@@ -422,7 +464,65 @@
       </div>
 
       <!-- Right side - Activity Timeline -->
-      <div class="w-80 flex-none">
+      <div class="w-80 flex-none mt-6">
+        <div class="bg-white shadow rounded-lg overflow-hidden mb-4">
+          <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900">32 Email Enumeration Results</h3>
+          </div>
+          <div class="p-4">
+            <div class="text-sm text-gray-600">
+              <div class="mb-4">
+                <div class="space-y-1">
+                  <ul class="list-none space-y-1 max-h-256 overflow-y-auto">
+                    <li class="text-sm text-blue-600">admin@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">contact@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">info@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">webmaster@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">admin.admin@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">contact.contact@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">info.info@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">webmaster.webmaster@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">john.doe@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">jane.smith@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">aadmin@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">admin.admin@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">admin@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">admina@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">adminadmin@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">ccontact@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">contact.contact@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">contact@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">contactc@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">contactcontact@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">doe@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">iinfo@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">info.info@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">info@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">infoi@dvfriends.org</li>
+                    <li class="text-sm text-gray-600">infoinfo@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">jane.smith@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">jane@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">janes@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">janesmith@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">jdoe@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">john.doe@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">john@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">johnd@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">johndoe@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">jsmith@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">smith@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">webmaster.webmaster@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">webmaster@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">webmasterw@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">webmasterwebmaster@dvfriends.org</li>
+                    <li class="text-sm text-blue-600">wwebmaster@dvfriends.org</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="bg-white shadow rounded-lg overflow-hidden">
           <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
             <h3 class="text-sm font-medium text-gray-900">Recent Activity</h3>
@@ -437,7 +537,7 @@
                       <div>
                         <span class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
                           <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                           </svg>
                         </span>
                       </div>

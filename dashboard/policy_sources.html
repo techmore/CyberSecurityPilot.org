@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Templates by CIS Controls</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f1c40f;
+            --light-bg: #f5f5f5;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: var(--light-bg);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .source-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 20px;
+        }
+
+        .source-card {
+            background: var(--light-bg);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .source-card h3 {
+            font-size: 1rem;
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .source-card p {
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .source-card a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .source-card a:hover {
+            text-decoration: underline;
+        }
+
+        .control-section {
+            margin-top: 20px;
+        }
+
+        .control-card {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .control-card h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .control-description {
+            margin: 0 0 10px 0;
+            font-size: 0.9em;
+        }
+
+        .policy-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .policy-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .policy-item:last-child {
+            border-bottom: none;
+        }
+
+        .policy-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .policy-item a:hover {
+            text-decoration: underline;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--light-bg);
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+        .implementation-groups {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .ig-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .ig1 {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .ig2 {
+            background: #f1c40f;
+            color: black;
+        }
+        
+        .ig3 {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .search-container {
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        #policySearch {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .filter-buttons {
+            margin: 0.75rem 0;
+        }
+
+        .filter-btn {
+            padding: 0.375rem 0.75rem;
+            margin: 0 0.25rem;
+            border: none;
+            border-radius: 4px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .education-specific .source-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .related-controls {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .state-header {
+            margin: 1.5rem 0 0.75rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            color: #2c3e50;
+        }
+
+        .education-specific .source-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .education-specific .source-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .education-specific .source-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .education-specific .source-card p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .education-specific .source-card a {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .education-specific .source-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Getting Started Styles */
+        .guide-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 20px 0;
+        }
+
+        .guide-step {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .guide-step ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .quick-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Incident Reporting Styles */
+        .incident-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .incident-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .incident-card.emergency {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .incident-card.procedures {
+            border-left: 4px solid #3498db;
+        }
+
+        .incident-card.it-ot {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .contact-list, .procedure-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-list li {
+            margin: 10px 0;
+        }
+
+        .procedure-list {
+            counter-reset: procedure;
+            padding-left: 20px;
+        }
+
+        .procedure-list li {
+            margin: 10px 0;
+        }
+
+        .resource-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .resource-item h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .resource-item ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .resource-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .section {
+                padding: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .source-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print optimization */
+        @media print {
+            .section {
+                margin-bottom: 0.5in;
+            }
+
+            .source-card {
+                break-inside: avoid;
+            }
+        }
+
+        /* Navigation optimization */
+        nav.mt-8 {
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb {
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Policy Templates by CIS Controls</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="mt-8 bg-white shadow rounded-lg">
+            <div class="px-3 py-2 bg-gray-50">
+              <div class="flex justify-between items-center">
+                Autopilot Portal
+                <nav class="flex" aria-label="Breadcrumb">
+                  <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <a href="dns_table.html" class="text-gray-400 hover:text-gray-500">
+                          <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd" />
+                          </svg>
+                          <span class="sr-only">DNS Portal</span>
+                        </a>
+                      </div>
+                    </li>
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="dns_table.html" class="ml-4 text-sm font-medium text-grey-500 hover:text-gray-700">DNS Portal</a>
+                      </div>
+                    </li>
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="website-nmap-nikto.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Website Monitoring</a>
+                      </div>
+                    </li>
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="cis_ram_questionnaire.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
+                      </div>
+                    </li>
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="policy_sources.html" class="ml-4 text-sm font-medium text-blue-500 hover:text-gray-700">Policy Templates</a>
+                      </div>
+                    </li>
+                    <li class="flex">
+                      <div class="flex items-center">
+                        <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
+                      </div>
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </nav>
+        <div class="search-container">
+            <input type="text" id="policySearch" placeholder="Search for policies, controls, or standards..." />
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="ig1">IG1 Basic</button>
+                <button class="filter-btn" data-filter="ig2">IG2 Foundational</button>
+                <button class="filter-btn" data-filter="ig3">IG3 Advanced</button>
+            </div>
+        </div>
+
+        <!-- Major Policy Template Sources -->
+        <section class="section">
+            <h2>Major Policy Template Sources</h2>
+            <div class="source-list">
+                <div class="source-card">
+                    <h3>CIS Controls Documentation</h3>
+                    <p>Official CIS Controls v8.1 documentation and implementation guides</p>
+                    <a href="https://www.cisecurity.org/controls" target="_blank">View Controls →</a>
+                </div>
+                <div class="source-card">
+                    <h3>CIS Benchmarks</h3>
+                    <p>Technical security configuration guidelines for systems and applications</p>
+                    <a href="https://www.cisecurity.org/cis-benchmarks" target="_blank">Browse Benchmarks →</a>
+                </div>
+                <div class="source-card">
+                    <h3>SANS Policy Templates</h3>
+                    <p>Free security policy templates aligned with industry standards</p>
+                    <a href="https://www.sans.org/information-security-policy/" target="_blank">Browse Templates →</a>
+                </div>
+                <div class="source-card">
+                    <h3>NIST Special Publications</h3>
+                    <p>Federal standards and guidelines for cybersecurity</p>
+                    <a href="https://csrc.nist.gov/publications" target="_blank">View Publications →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 1: Inventory and Control of Enterprise Assets -->
+        <section class="section">
+            <h2>CIS Control 1: Inventory and Control of Enterprise Assets</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Actively manage all enterprise assets connected to the infrastructure.</p>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/asset-inventory" target="_blank">
+                                Asset Inventory Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/insights/white-papers/cis-controls-v8-asset-inventory" target="_blank">
+                                CIS Controls V8 Asset Type Guide
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/1800-5/final" target="_blank">
+                                NIST SP 1800-5: IT Asset Management
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 2: Inventory and Control of Software Assets -->
+        <section class="section">
+            <h2>CIS Control 2: Inventory and Control of Software Assets</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Actively manage all software on the network so that only authorized software is installed.</p>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/insights/white-papers/cis-controls-v8-software-inventory" target="_blank">
+                                Software Inventory Implementation Guide
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final" target="_blank">
+                                NIST SP 800-53: CM-8 Software Inventory
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 3: Data Protection -->
+        <section class="section">
+            <h2>CIS Control 3: Data Protection</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Develop processes and technical controls to identify, classify, securely handle, retain, and dispose of data.</p>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/data-classification" target="_blank">
+                                Data Classification Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-171/rev-2/final" target="_blank">
+                                NIST SP 800-171: Protecting CUI
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/insights/white-papers/cis-controls-v8-data-protection" target="_blank">
+                                Data Protection Implementation Guide
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 4: Secure Configuration of Enterprise Assets and Software -->
+        <section class="section">
+            <h2>CIS Control 4: Secure Configuration of Enterprise Assets and Software</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Establish and maintain secure configuration of enterprise assets and software.</p>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/benchmark/ubuntu_linux" target="_blank">
+                                CIS Ubuntu Linux 22.04 Benchmark
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-70/rev-4/final" target="_blank">
+                                NIST SP 800-70: Security Configuration Checklists
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">DISA</span>
+                            <a href="https://public.cyber.mil/stigs/" target="_blank">
+                                DISA STIGs
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 5: Account Management -->
+        <section class="section">
+            <h2>CIS Control 5: Account Management</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Use processes and tools to assign and manage authorization to credentials for user accounts, including administrator accounts, as well as service accounts.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                        <span class="ig-tag ig2">IG2</span>
+                        <span class="ig-tag ig3">IG3</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/account-management" target="_blank">
+                                Account Management Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-63/3/final" target="_blank">
+                                NIST SP 800-63: Digital Identity Guidelines
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 6: Access Control Management -->
+        <section class="section">
+            <h2>CIS Control 6: Access Control Management</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Use processes and tools to create, assign, manage, and revoke access credentials and privileges.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                        <span class="ig-tag ig2">IG2</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final" target="_blank">
+                                NIST SP 800-53: AC-1 Access Control Policy and Procedures
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/insights/white-papers/cis-controls-v8-access-control" target="_blank">
+                                Access Control Implementation Guide
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 7: Continuous Vulnerability Management -->
+        <section class="section">
+            <h2>CIS Control 7: Continuous Vulnerability Management</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Develop a plan to continuously assess and track vulnerabilities on all enterprise assets within the enterprise's infrastructure.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                        <span class="ig-tag ig2">IG2</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/vulnerability-management" target="_blank">
+                                Vulnerability Management Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-40/rev-4/final" target="_blank">
+                                NIST SP 800-40: Vulnerability Management
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 8: Audit Log Management -->
+        <section class="section">
+            <h2>CIS Control 8: Audit Log Management</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Collect, alert, review, and retain audit logs of events that could help detect, understand, or recover from an attack.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                        <span class="ig-tag ig2">IG2</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/audit-logging" target="_blank">
+                                Audit and Logging Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-92/final" target="_blank">
+                                NIST SP 800-92: Log Management
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 9: Email and Web Browser Protections -->
+        <section class="section">
+            <h2>CIS Control 9: Email and Web Browser Protections</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Improve protections and detections of threats from email and web vectors.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/email-security" target="_blank">
+                                Email Security Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">CIS</span>
+                            <a href="https://www.cisecurity.org/insights/white-papers/cis-controls-email-web-browser-protections" target="_blank">
+                                Email and Web Browser Security Guide
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CIS Control 10: Malware Defenses -->
+        <section class="section">
+            <h2>CIS Control 10: Malware Defenses</h2>
+            <div class="control-section">
+                <div class="control-card">
+                    <p class="control-description">Prevent or control the installation, spread, and execution of malicious applications, code, or scripts.</p>
+                    <div class="implementation-groups">
+                        <span class="ig-tag ig1">IG1</span>
+                        <span class="ig-tag ig2">IG2</span>
+                    </div>
+                    <ul class="policy-list">
+                        <li class="policy-item">
+                            <span class="tag">SANS</span>
+                            <a href="https://www.sans.org/information-security-policy/malware" target="_blank">
+                                Malware Protection Policy Template
+                            </a>
+                        </li>
+                        <li class="policy-item">
+                            <span class="tag">NIST</span>
+                            <a href="https://csrc.nist.gov/publications/detail/sp/800-83/rev-1/final" target="_blank">
+                                NIST SP 800-83: Malware Prevention
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Getting Started Guide -->
+        <section class="section getting-started">
+            <h2>Getting Started Guide</h2>
+            <div class="guide-container">
+                <div class="guide-step">
+                    <span class="step-number">1</span>
+                    <h3>Assess Your Current State</h3>
+                    <p>Start with basic security hygiene (IG1 controls):</p>
+                    <ul>
+                        <li>Inventory your assets (Control 1)</li>
+                        <li>Implement basic data protection (Control 3)</li>
+                        <li>Set up account management (Control 5)</li>
+                    </ul>
+                    <a href="#" class="quick-link" onclick="filterControls('ig1')">View IG1 Controls →</a>
+                </div>
+                <div class="guide-step">
+                    <span class="step-number">2</span>
+                    <h3>Meet State Requirements</h3>
+                    <p>Ensure compliance with state guidelines:</p>
+                    <ul>
+                        <li>Review NJ/PA education security requirements</li>
+                        <li>Check grant eligibility for security improvements</li>
+                        <li>Implement required data privacy measures</li>
+                    </ul>
+                    <a href="#state-resources" class="quick-link">View State Resources →</a>
+                </div>
+                <div class="guide-step">
+                    <span class="step-number">3</span>
+                    <h3>Prepare for Incidents</h3>
+                    <p>Establish basic incident response:</p>
+                    <ul>
+                        <li>Create incident response plan</li>
+                        <li>Set up reporting procedures</li>
+                        <li>Document emergency contacts</li>
+                    </ul>
+                    <a href="#incident-reporting" class="quick-link">View Incident Resources →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Incident Reporting Section -->
+        <section class="section incident-reporting" id="incident-reporting">
+            <h2>Incident Reporting & Response</h2>
+            
+            <div class="incident-grid">
+                <!-- Emergency Contacts -->
+                <div class="incident-card emergency">
+                    <h3>Emergency Contacts</h3>
+                    <ul class="contact-list">
+                        <li>
+                            <strong>NJ Cybersecurity (NJCCIC):</strong>
+                            <a href="tel:1-833-4-NJCCIC">1-833-4-NJCCIC</a>
+                        </li>
+                        <li>
+                            <strong>PA-CSIRT:</strong>
+                            <a href="tel:1-866-800-0987">1-866-800-0987</a>
+                        </li>
+                        <li>
+                            <strong>MS-ISAC:</strong>
+                            <a href="tel:1-866-787-4722">1-866-787-4722</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Reporting Procedures -->
+                <div class="incident-card procedures">
+                    <h3>Reporting Procedures</h3>
+                    <ol class="procedure-list">
+                        <li>Document the incident details</li>
+                        <li>Contact your IT security team</li>
+                        <li>Report to state authorities:
+                            <ul>
+                                <li><a href="https://www.cyber.nj.gov/report" target="_blank">NJ Incident Report Form</a></li>
+                                <li><a href="https://www.pa.gov/cyber-incident-report" target="_blank">PA Cyber Incident Report</a></li>
+                            </ul>
+                        </li>
+                        <li>Notify affected parties if required by law</li>
+                    </ol>
+                </div>
+
+                <!-- IT/OT Resources -->
+                <div class="incident-card it-ot">
+                    <h3>IT/OT Security Resources</h3>
+                    <div class="resource-list">
+                        <div class="resource-item">
+                            <h4>IT Systems</h4>
+                            <ul>
+                                <li><a href="https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf" target="_blank">CISA Incident Response Playbook</a></li>
+                                <li><a href="https://www.cisecurity.org/insights/white-papers/cis-controls-incident-response" target="_blank">CIS Incident Response Guide</a></li>
+                            </ul>
+                        </div>
+                        <div class="resource-item">
+                            <h4>OT Systems</h4>
+                            <ul>
+                                <li><a href="https://www.cisa.gov/sites/default/files/publications/IR_for_ICS_RP_508.pdf" target="_blank">ICS Incident Response Guide</a></li>
+                                <li><a href="https://www.nist.gov/publications/guide-operational-technology-ot-security" target="_blank">NIST OT Security Guide</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education-Specific Frameworks and Policies -->
+        <section class="section education-specific">
+            <h2>Education-Specific Frameworks and Policies</h2>
+            
+            <!-- New Jersey Resources -->
+            <h3 class="state-header">New Jersey Resources</h3>
+            <div class="source-list">
+                <div class="source-card">
+                    <h3>NJ Cybersecurity & Communications Integration Cell</h3>
+                    <p>NJCCIC guidance for K-12 cybersecurity programs</p>
+                    <a href="https://www.cyber.nj.gov/resources/education" target="_blank">NJCCIC Education Resources →</a>
+                    <div class="related-controls">
+                        Related Controls: All
+                    </div>
+                </div>
+                <div class="source-card">
+                    <h3>NJ Department of Education Security Guidelines</h3>
+                    <p>Technology security guidelines for NJ schools</p>
+                    <a href="https://www.nj.gov/education/technology/" target="_blank">NJDOE Tech Guidelines →</a>
+                    <div class="related-controls">
+                        Related Controls: 3, 5, 14
+                    </div>
+                </div>
+                <div class="source-card">
+                    <h3>NJ Educational Technology Plan</h3>
+                    <p>State educational technology guidelines including security requirements</p>
+                    <a href="https://www.nj.gov/education/technology/plan/" target="_blank">NJ Tech Plan →</a>
+                    <div class="related-controls">
+                        Related Controls: 1, 2, 14
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pennsylvania Resources -->
+            <h3 class="state-header">Pennsylvania Resources</h3>
+            <div class="source-list">
+                <div class="source-card">
+                    <h3>PA Department of Education Data Security</h3>
+                    <p>Guidelines for protecting student data in PA schools</p>
+                    <a href="https://www.education.pa.gov/DataAndReporting/DataSecurity/" target="_blank">PDE Security Guidelines →</a>
+                    <div class="related-controls">
+                        Related Controls: 3, 5, 6
+                    </div>
+                </div>
+                <div class="source-card">
+                    <h3>PA School Cybersecurity and Safety Grant Program</h3>
+                    <p>Resources and requirements for PA school security grants</p>
+                    <a href="https://www.pccd.pa.gov/schoolsafety/" target="_blank">Grant Resources →</a>
+                    <div class="related-controls">
+                        Related Controls: All
+                    </div>
+                </div>
+                <div class="source-card">
+                    <h3>PASmartConnect</h3>
+                    <p>PA's K-12 technology and cybersecurity initiative</p>
+                    <a href="https://www.education.pa.gov/Policy-Funding/SchoolGrants/PASmartConnect/" target="_blank">PASmartConnect →</a>
+                    <div class="related-controls">
+                        Related Controls: 14, 17
+                    </div>
+                </div>
+            </div>
+
+            <!-- Federal Education Requirements -->
+            <h3 class="state-header">Federal Requirements</h3>
+            <div class="source-list">
+                <div class="source-card">
+                    <h3>FERPA Compliance</h3>
+                    <p>Family Educational Rights and Privacy Act requirements and guidelines</p>
+                    <a href="https://studentprivacy.ed.gov/node/548/" target="_blank">FERPA Guidelines →</a>
+                    <div class="related-controls">
+                        Related Controls: 3, 5, 6, 14
+                    </div>
+                </div>
+                <div class="source-card">
+                    <h3>COPPA Compliance</h3>
+                    <p>Children's Online Privacy Protection Act requirements for K-12 schools</p>
+                    <a href="https://www.ftc.gov/business-guidance/privacy-security/children%27s-privacy" target="_blank">COPPA Guide →</a>
+                    <div class="related-controls">
+                        Related Controls: 3, 14, 16
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Add any interactive features here
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click tracking
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    console.log(`Clicked link: ${link.href}`);
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('policySearch');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const sections = document.querySelectorAll('.section');
+
+            // Search functionality
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                sections.forEach(section => {
+                    if (section.classList.contains('education-specific')) return;
+                    
+                    const sectionText = section.textContent.toLowerCase();
+                    const shouldShow = sectionText.includes(searchTerm);
+                    
+                    section.classList.toggle('hidden', !shouldShow);
+                });
+            });
+
+            // Filter functionality
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter sections
+                    sections.forEach(section => {
+                        if (section.classList.contains('education-specific')) return;
+                        
+                        if (filter === 'all') {
+                            section.classList.remove('hidden');
+                        } else {
+                            const hasIG = section.querySelector(`.ig-tag.${filter}`);
+                            section.classList.toggle('hidden', !hasIG);
+                        }
+                    });
+                });
+            });
+        });
+
+        function filterControls(level) {
+            const filterBtn = document.querySelector(`[data-filter="${level}"]`);
+            if (filterBtn) {
+                filterBtn.click();
+            }
+        }
+    </script>
+</body>
+</html>

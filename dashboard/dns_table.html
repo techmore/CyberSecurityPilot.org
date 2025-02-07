@@ -10,7 +10,6 @@
             <span class="sr-only">Open main menu</span>
             <!--
               Icon when menu is closed.
-  
               Menu open: "hidden", Menu closed: "block"
             -->
             <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
@@ -18,7 +17,6 @@
             </svg>
             <!--
               Icon when menu is open.
-  
               Menu open: "block", Menu closed: "hidden"
             -->
             <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
@@ -33,10 +31,12 @@
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+               <!--
               <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Homepage</a>
               <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Security Portal</a>
               <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
               <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Chat</a>
+              -->
             </div>
           </div>
         </div>
@@ -134,6 +134,22 @@
                       <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                       </svg>
+                      <a href="cis_ram_questionnaire.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a href="policy_sources.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Policy Templates</a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
                       <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
                     </div>
                   </li>
@@ -143,7 +159,108 @@
           </div>
         </nav>
 
+        <!-- Firewall | Registrar - subdomains - email enumeration ( password ) | Host - clone | Vulnerability -->
+        <nav aria-label="Progress">
+          <ol role="list" class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0">
+            <li class="relative md:flex md:flex-1">
+              <!-- Completed Step -->
+              <a href="#" class="group flex w-full items-center">
+                <span class="flex items-center px-6 py-4 text-sm font-medium">
+                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
+                    <svg class="size-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span class="ml-4 text-sm font-medium text-gray-900">Firewall<br><br>
+                    <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                      <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx="3" cy="3" r="3" />
+                      </svg>
+                      WAN 1
+                    </span>
+                    <br>
+                    <p class="text-xs font-light">50.201.118.234</p>
+                  </span>
+                  
 
+                  <!--
+                  <span class="ml-4 text-sm font-medium text-gray-800"> WAN1 50.201.118.234 50.201.118.233 75.75.75.75 75.75.74.74</span>
+
+                  <span class="ml-4 text-sm font-medium text-gray-800">
+                    dvfs-network-appliance-bmrkbgtgpwc.dynamic-m.com 
+                    Meraki MX105 a8:46:9d:ff:5d:5d Q2WN-7L2E-5DCU 19.1.6</span>
+                </span>
+                  DHCP subnets
+Subnet	VLAN	Used	Free
+192.168.6.0/26	192.168.6.0/26 - VLAN 6	0	61 (100%)
+192.168.7.0/27	192.168.7.0/27 - VLAN 7	0	29 (100%)
+192.168.8.0/23	192.168.8.0/23 - VLAN 8	0	509 (100%)
+192.168.10.0/26	192.168.10.0/26 - VLAN 10	0	61 (100%)
+192.168.11.0/25	192.168.11.0/25 - VLAN 11	0	125 (100%)
+192.168.12.0/23	192.168.12.0/23 - VLAN 12	0	509 (100%)
+192.168.14.0/24	192.168.14.0/24 - VLAN 14	1	252 (99%)
+192.168.0.0/22	192.168.0.0/22 - VLAN 1	591	430 (42%)
+
+
+
+                -->
+              </a>
+              <!-- Arrow separator for lg screens and up -->
+              <div class="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
+                <svg class="size-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
+                  <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </li>
+            <li class="relative md:flex md:flex-1">
+              <!-- Current Step -->
+              <a href="#" class="flex items-center px-6 py-4 text-sm font-medium" aria-current="step">
+                <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
+                  <span class="text-indigo-600">02</span>
+                </span>
+                <span class="ml-4 text-sm font-medium text-indigo-600">DNS<br><br>               
+                  <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                    <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx="3" cy="3" r="3" />
+                    </svg>
+                    DVfriends.orgs
+                  </span>
+                  <br>
+                  <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                    <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx="3" cy="3" r="3" />
+                    </svg>
+                    admin.dvfriends.org
+                  </span>
+
+                  <br>
+                  <p class="text-xs text-gray-700 font-light">Network Solutions, LLC</p>
+                  <p class="text-xs text-gray-700 font-light">Renewal: 2025-05-20T16:37:33Z</p>
+                  
+                </span>
+              </span>
+              </a>
+              <!-- Arrow separator for lg screens and up -->
+              <div class="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
+                <svg class="size-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
+                  <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </li>
+            <li class="relative md:flex md:flex-1">
+              <!-- Upcoming Step -->
+              <a href="#" class="group flex items-center">
+                <span class="flex items-center px-6 py-4 text-sm font-medium">
+                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 group-hover:border-gray-400">
+                    <span class="text-gray-500 group-hover:text-gray-900">03</span>
+                  </span>
+                  <span class="ml-4 text-sm font-medium text-gray-500 group-hover:text-gray-900">Preview</span>
+                </span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        
         <div class="mt-8 flex gap-6">
           <!-- Left side - DNS Records -->
           <div class="flex-grow space-y-4">

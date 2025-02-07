@@ -1,0 +1,877 @@
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<nav class="bg-gray-800">
+  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="relative flex h-16 items-center justify-between">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+        <!-- Mobile menu button-->
+        <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="absolute -inset-0.5"></span>
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <!--
+            Icon when menu is open.
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex shrink-0 items-center">
+          <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+        </div>
+        <div class="hidden sm:ml-6 sm:block">
+          <div class="flex space-x-4">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+             <!--
+            <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Homepage</a>
+            <a href="https://urchin-app-9u5ak.ondigitalocean.app" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Security Portal</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Chat</a>
+            -->
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+          <span class="absolute -inset-1.5"></span>
+          <span class="sr-only">View notifications</span>
+          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+        </button>
+
+        <!-- Profile dropdown -->
+        <div class="relative ml-3">
+          <div>
+            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="absolute -inset-1.5"></span>
+              <span class="sr-only">Open user menu</span>
+              <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            </button>
+          </div>
+
+          <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+                  <!--
+          <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+          </div>
+        -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="sm:hidden" id="mobile-menu">
+    <div class="space-y-1 px-2 pt-2 pb-3">
+      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
+      <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
+      <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
+      <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+    </div>
+  </div>
+</nav>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+</nav>
+<div class="container">
+    <nav class="mt-8 bg-white shadow rounded-lg">
+        <div class="px-3 py-2 bg-gray-50">
+          <div class="flex justify-between items-center">
+            Autopilot Portal
+            <nav class="flex" aria-label="Breadcrumb">
+              <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
+                <li class="flex">
+                  <div class="flex items-center">
+                    <a href="dns_table.html" class="text-gray-400 hover:text-gray-500">
+                      <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="sr-only">DNS Portal</span>
+                    </a>
+                  </div>
+                </li>
+                <li class="flex">
+                  <div class="flex items-center">
+                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="dns_table.html" class="ml-4 text-sm font-medium text-grey-500 hover:text-gray-700">DNS Portal</a>
+                  </div>
+                </li>
+                <li class="flex">
+                  <div class="flex items-center">
+                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="website-nmap-nikto.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Website Monitoring</a>
+                  </div>
+                </li>
+                <li class="flex">
+                  <div class="flex items-center">
+                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="cis_ram_questionnaire.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
+                  </div>
+                </li>
+                <li class="flex">
+                  <div class="flex items-center">
+                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="policy_sources.html" class="ml-4 text-sm font-medium text-blue-500 hover:text-gray-700">Policy Templates</a>
+                  </div>
+                </li>
+                <li class="flex">
+                  <div class="flex items-center">
+                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="dashboard-projects.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
+                  </div>
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </nav>
+      <div class="container mx-auto px-4 py-8">
+        <!-- Quick Add Task -->
+        <div class="mb-8 bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Add New Task</h3>
+          <form id="taskForm" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Task Title</label>
+                <input type="text" id="taskTitle" placeholder="Enter task title" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Due Date</label>
+                <input type="date" id="taskDueDate" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Priority</label>
+                <select id="taskPriority" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Assignee</label>
+                <input type="text" id="taskAssignee" placeholder="Enter assignee name" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Description</label>
+              <textarea id="taskDescription" rows="3" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter task description"></textarea>
+            </div>
+            <div class="flex justify-end">
+              <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Add Task
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Task Filters -->
+        <div class="mb-6 flex flex-wrap gap-4">
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Filter by Priority:</label>
+            <select id="priorityFilter" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="all">All</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Sort by:</label>
+            <select id="sortBy" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="dueDate">Due Date</option>
+              <option value="priority">Priority</option>
+              <option value="assignee">Assignee</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Task Overview Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-lg p-6 shadow">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </div>
+              <div class="ml-5">
+                <h3 class="text-lg font-medium text-gray-900">Total Tasks</h3>
+                <p class="mt-1 text-3xl font-semibold text-indigo-600" data-count="total">15</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg p-6 shadow">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-5">
+                <h3 class="text-lg font-medium text-gray-900">In Progress</h3>
+                <p class="mt-1 text-3xl font-semibold text-yellow-600" data-count="inProgress">8</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg p-6 shadow">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-5">
+                <h3 class="text-lg font-medium text-gray-900">Due Soon</h3>
+                <p class="mt-1 text-3xl font-semibold text-red-600" data-count="dueSoon">3</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg p-6 shadow">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div class="ml-5">
+                <h3 class="text-lg font-medium text-gray-900">Completed</h3>
+                <p class="mt-1 text-3xl font-semibold text-green-600" data-count="completed">4</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Lists -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-8">
+          <!-- High Priority Tasks -->
+          <div class="rounded-lg bg-white p-6 shadow">
+            <h3 class="mb-4 text-lg font-medium text-red-600">High Priority</h3>
+            <div class="space-y-3 task-list" data-priority="high">
+              <!-- Security Audit Task -->
+              <div class="task-card" data-priority="high" data-due-date="2025-02-08" data-assignee="John Smith">
+                <div class="flex flex-col rounded-lg bg-red-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Security Audit</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 8, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: John Smith</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">High</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review firewall configurations</li>
+                    <li>Audit user access permissions</li>
+                    <li>Check system logs for anomalies</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Firewall Update Task -->
+              <div class="task-card" data-priority="high" data-due-date="2025-02-07" data-assignee="Sarah Chen">
+                <div class="flex flex-col rounded-lg bg-red-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Firewall Update</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 7, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Sarah Chen</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">High</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Update to version 4.2.1</li>
+                    <li>Test new rule configurations</li>
+                    <li>Backup existing settings</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Incident Response Plan Task (Completed) -->
+              <div class="task-card completed" data-priority="high" data-due-date="2025-02-06" data-assignee="Mike Johnson">
+                <div class="flex flex-col rounded-lg bg-red-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Incident Response Plan</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 6, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Mike Johnson</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">High</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review incident response procedures</li>
+                    <li>Update emergency contact list</li>
+                    <li>Conduct tabletop exercise</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Additional High Priority Task -->
+              <div class="task-card" data-priority="high" data-due-date="2025-02-09" data-assignee="James Wilson">
+                <div class="flex flex-col rounded-lg bg-red-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Vulnerability Assessment</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 9, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: James Wilson</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">High</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Scan for vulnerabilities</li>
+                    <li>Analyze results</li>
+                    <li>Implement patches</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medium Priority Tasks -->
+          <div class="rounded-lg bg-white p-6 shadow">
+            <h3 class="mb-4 text-lg font-medium text-yellow-600">Medium Priority</h3>
+            <div class="space-y-3 task-list" data-priority="medium">
+              <!-- Policy Review Task -->
+              <div class="task-card" data-priority="medium" data-due-date="2025-02-11" data-assignee="Emma Davis">
+                <div class="flex flex-col rounded-lg bg-yellow-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Policy Review</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 11, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Emma Davis</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Medium</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review security policies</li>
+                    <li>Update procedures</li>
+                    <li>Conduct training</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Team Training Task -->
+              <div class="task-card" data-priority="medium" data-due-date="2025-02-13" data-assignee="Alex Wong">
+                <div class="flex flex-col rounded-lg bg-yellow-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Team Training</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 13, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Alex Wong</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Medium</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Prepare training materials</li>
+                    <li>Schedule 2-hour session</li>
+                    <li>Send calendar invites</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Access Review Task (Completed) -->
+              <div class="task-card completed" data-priority="medium" data-due-date="2025-02-09" data-assignee="Lisa Park">
+                <div class="flex flex-col rounded-lg bg-yellow-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Access Review</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 9, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Lisa Park</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Medium</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review user access</li>
+                    <li>Update permissions</li>
+                    <li>Remove unnecessary access</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Additional Medium Priority Task -->
+              <div class="task-card" data-priority="medium" data-due-date="2025-02-08" data-assignee="Maria Garcia">
+                <div class="flex flex-col rounded-lg bg-yellow-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Security Training Materials</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 8, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Maria Garcia</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Medium</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Prepare training materials</li>
+                    <li>Review and update</li>
+                    <li>Distribute to team</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Low Priority Tasks -->
+          <div class="rounded-lg bg-white p-6 shadow">
+            <h3 class="mb-4 text-lg font-medium text-blue-600">Low Priority</h3>
+            <div class="space-y-3 task-list" data-priority="low">
+              <!-- Documentation Update Task -->
+              <div class="task-card" data-priority="low" data-due-date="2025-02-20" data-assignee="David Kim">
+                <div class="flex flex-col rounded-lg bg-blue-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Documentation Update</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 20, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: David Kim</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Low</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Update security procedures</li>
+                    <li>Review incident response docs</li>
+                    <li>Add new compliance requirements</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Asset Review Task -->
+              <div class="task-card" data-priority="low" data-due-date="2025-02-16" data-assignee="Rachel Green">
+                <div class="flex flex-col rounded-lg bg-blue-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Asset Review</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 16, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Rachel Green</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Low</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review asset inventory</li>
+                    <li>Update asset records</li>
+                    <li>Dispose of unnecessary assets</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Software Inventory Task (Completed) -->
+              <div class="task-card completed" data-priority="low" data-due-date="2025-02-10" data-assignee="Tom Wilson">
+                <div class="flex flex-col rounded-lg bg-blue-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Software Inventory</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 10, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Tom Wilson</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Low</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review software inventory</li>
+                    <li>Update software records</li>
+                    <li>Remove unnecessary software</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Additional Low Priority Task -->
+              <div class="task-card" data-priority="low" data-due-date="2025-02-15" data-assignee="Chris Taylor">
+                <div class="flex flex-col rounded-lg bg-blue-50 p-4">
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="flex-1">
+                      <h4 class="font-medium text-gray-900">Update Wiki Pages</h4>
+                      <p class="text-sm text-gray-500">Due: Feb 15, 2025</p>
+                      <p class="text-sm text-gray-500">Assignee: Chris Taylor</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Low</span>
+                      <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </a>
+                      <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li>Review wiki pages</li>
+                    <li>Update content</li>
+                    <li>Remove unnecessary pages</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          // Task Management
+          document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const task = {
+              title: document.getElementById('taskTitle').value,
+              dueDate: document.getElementById('taskDueDate').value,
+              priority: document.getElementById('taskPriority').value,
+              assignee: document.getElementById('taskAssignee').value,
+              description: document.getElementById('taskDescription').value,
+              status: 'pending',
+              createdAt: new Date().toISOString()
+            };
+
+            // Add task to appropriate priority section
+            const prioritySection = document.querySelector(`[data-priority="${task.priority}"]`);
+            if (prioritySection) {
+              const taskElement = createTaskElement(task);
+              prioritySection.appendChild(taskElement);
+            }
+
+            // Clear form
+            e.target.reset();
+            
+            // Update task counts
+            updateTaskCounts();
+          });
+
+          // Filter tasks
+          document.getElementById('priorityFilter').addEventListener('change', function(e) {
+            const priority = e.target.value;
+            const taskCards = document.querySelectorAll('.task-card');
+            
+            taskCards.forEach(card => {
+              if (priority === 'all' || card.dataset.priority === priority) {
+                card.style.display = 'block';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          });
+
+          // Sort tasks
+          document.getElementById('sortBy').addEventListener('change', function(e) {
+            const sortBy = e.target.value;
+            const taskLists = document.querySelectorAll('.task-list');
+            
+            taskLists.forEach(list => {
+              const tasks = Array.from(list.children);
+              tasks.sort((a, b) => {
+                const aValue = a.dataset[sortBy];
+                const bValue = b.dataset[sortBy];
+                return aValue.localeCompare(bValue);
+              });
+              
+              tasks.forEach(task => list.appendChild(task));
+            });
+          });
+
+          function createTaskElement(task) {
+            const div = document.createElement('div');
+            div.className = 'task-card';
+            div.dataset.priority = task.priority;
+            div.dataset.dueDate = task.dueDate;
+            div.dataset.assignee = task.assignee;
+            
+            div.innerHTML = `
+              <div class="flex flex-col rounded-lg bg-white p-4 shadow">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex-1">
+                    <h4 class="font-medium text-gray-900">${task.title}</h4>
+                    <p class="text-sm text-gray-500">Due: ${task.dueDate}</p>
+                    <p class="text-sm text-gray-500">Assignee: ${task.assignee}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      task.priority === 'high' ? 'bg-red-100 text-red-800' :
+                      task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }">${task.priority}</span>
+                    <a href="#" class="text-gray-400 hover:text-gray-500" title="View Document">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                      </svg>
+                    </a>
+                    <button class="text-gray-400 hover:text-gray-500" title="Edit Task">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                ${task.description ? `
+                  <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    ${task.description.split('\n').map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                ` : ''}
+              </div>
+            `;
+            
+            return div;
+          }
+
+          function editTask(taskElement) {
+            const title = taskElement.querySelector('h4').textContent;
+            const dueDate = taskElement.dataset.dueDate;
+            const assignee = taskElement.dataset.assignee;
+            const priority = taskElement.dataset.priority;
+            
+            // Fill the form with existing task data
+            document.getElementById('taskTitle').value = title;
+            document.getElementById('taskDueDate').value = dueDate;
+            document.getElementById('taskAssignee').value = assignee;
+            document.getElementById('taskPriority').value = priority;
+            
+            // Scroll to the form
+            document.getElementById('taskForm').scrollIntoView({ behavior: 'smooth' });
+          }
+
+          // Add click handlers for edit buttons
+          document.querySelectorAll('.task-card button[title="Edit Task"]').forEach(button => {
+            button.addEventListener('click', function() {
+              const taskCard = this.closest('.task-card');
+              editTask(taskCard);
+            });
+          });
+
+          function toggleTaskStatus(button) {
+            const taskCard = button.closest('.task-card');
+            taskCard.classList.toggle('completed');
+            updateTaskCounts();
+          }
+
+          function updateTaskCounts() {
+            const totalTasks = document.querySelectorAll('.task-card').length;
+            const completedTasks = document.querySelectorAll('.task-card.completed').length;
+            const inProgressTasks = totalTasks - completedTasks;
+            const dueSoonTasks = Array.from(document.querySelectorAll('.task-card')).filter(task => {
+              const dueDate = new Date(task.dataset.dueDate);
+              const today = new Date();
+              const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+              return diffDays <= 3 && diffDays >= 0;
+            }).length;
+
+            document.querySelector('[data-count="total"]').textContent = totalTasks;
+            document.querySelector('[data-count="inProgress"]').textContent = inProgressTasks;
+            document.querySelector('[data-count="dueSoon"]').textContent = dueSoonTasks;
+            document.querySelector('[data-count="completed"]').textContent = completedTasks;
+          }
+        </script>
+      </div>
+
+      <!-- Timeline -->
+      <div class="mt-8 rounded-lg bg-white p-6 shadow">
+        <h3 class="mb-4 text-lg font-medium text-gray-900">Timeline</h3>
+        <div class="flow-root">
+          <ul role="list" class="-mb-8">
+            <li>
+              <div class="relative pb-8">
+                <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                <div class="relative flex space-x-3">
+                  <div>
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 ring-8 ring-white">
+                      <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                    <div>
+                      <p class="text-sm text-gray-500">Security Audit <span class="font-medium text-gray-900">completed</span></p>
+                    </div>
+                    <div class="whitespace-nowrap text-right text-sm text-gray-500">
+                      <time datetime="2024-02-06">Feb 6</time>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="relative pb-8">
+                <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                <div class="relative flex space-x-3">
+                  <div>
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 ring-8 ring-white">
+                      <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                    <div>
+                      <p class="text-sm text-gray-500">Policy Review <span class="font-medium text-gray-900">in progress</span></p>
+                    </div>
+                    <div class="whitespace-nowrap text-right text-sm text-gray-500">
+                      <time datetime="2024-02-05">Feb 5</time>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>

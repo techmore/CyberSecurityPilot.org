@@ -1,0 +1,94 @@
+<!-- Domain Section -->
+<nav class="mt-8 bg-white shadow rounded-lg">
+    <div class="px-3 py-2 bg-gray-50">
+        <div class="flex justify-between items-center">
+            <h2 class="text-lg font-medium text-gray-900">Autopilot Portal</h2>
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <a href="/" id="nav-home" class="text-gray-400 hover:text-gray-500">
+                                <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 18 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7z" clip-rule="evenodd" />
+                                </svg>
+                                <span class="sr-only">Home</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
+                            <a href="dns_table.html" id="nav-dns" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">DNS Portal</a>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
+                            <a href="website-nmap-nikto.html" id="nav-website" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Website Monitoring</a>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
+                            <div class="ml-4 flex flex-col">
+                                <a href="cis_ram_questionnaire.html" id="nav-cis-baselines" class="text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
+                                <a href="cis-report-dashboard.html" id="nav-cis-reports" class="text-sm font-medium text-gray-500 hover:text-gray-700">CIS Reports</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
+                            <a href="policy_sources.html" id="nav-policy" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Policy Templates</a>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex items-center">
+                            <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
+                            <a href="dashboard-projects.html" id="nav-projects" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Projects</a>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</nav>
+
+<script>
+(function() {
+    // Get the current page URL
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Map of page IDs to their navigation IDs
+    const pageToNavMap = {
+        '': 'nav-home',
+        'index.html': 'nav-home',
+        'dns_table.html': 'nav-dns',
+        'website-nmap-nikto.html': 'nav-website',
+        'cis_ram_questionnaire.html': 'nav-cis-baselines',
+        'cis-report-dashboard.html': 'nav-cis-reports',
+        'policy_sources.html': 'nav-policy',
+        'dashboard-projects.html': 'nav-projects'
+    };
+
+    // Find and highlight the current page in the navigation
+    const navId = pageToNavMap[currentPage];
+    if (navId) {
+        const navElement = document.getElementById(navId);
+        if (navElement) {
+            navElement.classList.remove('text-gray-500');
+            navElement.classList.add('text-blue-500', 'font-semibold');
+        }
+    }
+})();
+</script>

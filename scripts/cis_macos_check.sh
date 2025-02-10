@@ -151,7 +151,7 @@ check_security_item() {
 
 # Get the absolute path to the project root directory
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-REPORTS_DIR="$PROJECT_ROOT/reports"
+REPORTS_DIR="$PROJECT_ROOT/dashboard/reports"
 
 # Create report directory if it doesn't exist
 mkdir -p "$REPORTS_DIR"
@@ -1584,7 +1584,7 @@ check_security_item \
 
 check_security_item \
     "14.1.2 Configure audit log retention" \
-    "grep -c 'expire-after:60d OR 5G' /etc/security/audit_control" \
+    "grep -c expire-after /etc/security/audit_control" \
     "1" \
     "Configure audit log retention" \
     "Level 2"

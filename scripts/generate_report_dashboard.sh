@@ -2,7 +2,7 @@
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-REPORTS_DIR="$SCRIPT_DIR/../reports"
+REPORTS_DIR="$SCRIPT_DIR/../dashboard/reports"
 
 # Function to generate a dashboard for a report
 generate_dashboard() {

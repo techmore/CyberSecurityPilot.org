@@ -268,4 +268,40 @@
       "processor": "Apple M4",
       "memory": "16 GB"
     }
+,
+    {
+      "date": "2025-02-10T02:26:40",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "compliance": 0,
+      "txt": "cis_security_report_20250210_022640.txt",
+      "json": "cis_security_report_20250210_022640.json",
+      "html": "cis_security_report_20250210_022640.html",
+      "passed_delta": -27,
+      "failed_delta": -161,
+      "hostname": "techmore’s Mac mini",
+      "model": "Mac mini",
+      "macos_version": "15.3",
+      "processor": "Apple M4",
+      "memory": "16 GB"
+    }
+,
+    {
+      "date": "2025-02-10T02:26:29",
+      "total": 188,
+      "passed": 27,
+      "failed": 161,
+      "compliance": 14,
+      "txt": "cis_security_report_20250210_022629.txt",
+      "json": "cis_security_report_20250210_022629.json",
+      "html": "cis_security_report_20250210_022629.html",
+      "passed_delta": 27,
+      "failed_delta": 161,
+      "hostname": "techmore’s Mac mini",
+      "model": "Mac mini",
+      "macos_version": "15.3",
+      "processor": "Apple M4",
+      "memory": "16 GB"
+    }
 ]

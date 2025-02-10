@@ -1,0 +1,519 @@
+CIS macOS Security Benchmark Report
+==================================
+Generated on: Mon Feb 10 12:02:54 EST 2025
+
+System Information
+==================
+Hostname: techmore’s Mac mini
+Local Hostname: techmores-Mac-mini
+Model: Mac mini
+Model Identifier: Mac16,10
+Serial Number: MQFJ16HQ2W
+macOS Version: 15.3
+Build Version: 24D60
+
+Processor & Memory
+------------------
+Processor: Apple M4
+CPU Cores: 10
+Memory: 16 GB
+
+Storage Information
+-------------------
+Disk Usage:
+Total: 1.8Ti, Used: 10Gi, Free: 1.6Ti, Use%: 1%
+
+Network Information
+-------------------
+Local IP Addresses:
+192.168.222.111
+Ethernet (en1): 192.168.222.111
+Public IP: 98.97.22.160
+
+Active Network Services:
+Ethernet: Active
+Thunderbolt Bridge: Active
+Wi-Fi: Active
+iPhone USB: Active
+SJS-VPN: Active
+
+Security Information
+-------------------
+FileVault Status: FileVault is On
+SIP Status: enabled.
+
+Power Information
+-----------------
+No battery detected (Desktop Mac)
+
+Hardware Ports
+--------------
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+--
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+--
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+--
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+--
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleUSBXHCITR
+
+Installed Applications Summary
+---------------------------
+Total Apps in /Applications: 27
+Recently Modified Apps (last 30 days):
+- Signal.app
+- Supercharge.app
+- LM Studio.app
+- Raycast.app
+- Blackmagic Disk Speed Test.app
+- Google Chrome.app
+- superwhisper.app
+- Multipass.app
+- Element.app
+- Notion.app
+- Xcode.app
+- Notion Calendar.app
+- Windows App.app
+- Windsurf.app
+- Utilities
+- zoom.us.app
+- Windsurf - Next.app
+- Brave Browser.app
+- Ghostty.app
+- VSCodium.app
+- Draw Things.app
+- Swift Playground.app
+- Ollama.app
+
+====================
+
+Security Check Results
+=====================
+
+CIS macOS Security Benchmark v4.0.0 - Mon Feb 10 12:02:54 EST 2025
+==================================================
+
+
+[1m1. System Updates and Security Software[0m
+----------------------------------------
+[0;31m[Fail][0m 1.1 Ensure all Apple-provided software is current
+[1;33mRemediation:[0m Run 'softwareupdate -i -a' to install all available updates
+[0;31m[Fail][0m 1.2 Ensure Auto Update is enabled
+[1;33mRemediation:[0m Enable automatic updates: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -int 1
+[0;31m[Fail][0m 1.3 Ensure Download new updates when available is enabled
+[1;33mRemediation:[0m Enable automatic download: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -int 1
+[0;31m[Fail][0m 1.4 Ensure Installation of macOS updates is enabled
+[1;33mRemediation:[0m Enable automatic macOS updates: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -int 1
+[0;31m[Fail][0m 1.5 Ensure System data files and Security updates are installed
+[1;33mRemediation:[0m Enable system data and security updates: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall -int 1 && sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+
+[1m2. System Preferences[0m
+----------------------------------------
+[0;31m[Fail][0m 2.1.1 Disable Bluetooth if no paired devices exist
+[1;33mRemediation:[0m Disable Bluetooth if not needed: sudo defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0
+[0;31m[Fail][0m 2.1.2 Show Bluetooth status in menu bar
+[1;33mRemediation:[0m Show Bluetooth in menu bar: defaults write com.apple.controlcenter 'NSStatusItem Visible Bluetooth' -int 1
+[0;32m[Pass][0m 2.2.1 Enable Set time and date automatically
+[0;32m[Pass][0m 2.2.2 Ensure time set is within appropriate limits
+[0;31m[Fail][0m 2.3.1 Set an inactivity interval of 20 minutes or less for the screen saver
+[1;33mRemediation:[0m Set screen saver timeout: defaults write com.apple.screensaver idleTime -int 1200
+[0;31m[Fail][0m 2.3.2 Secure screen saver corners
+[1;33mRemediation:[0m Disable hot corners for screen saver: defaults write com.apple.dock wvous-tl-corner -int 0
+[0;32m[Pass][0m 2.4.1 Disable Remote Apple Events
+[0;31m[Fail][0m 2.4.2 Disable Internet Sharing
+[1;33mRemediation:[0m Disable Internet Sharing in System Preferences > Sharing
+[0;31m[Fail][0m 2.4.3 Disable Screen Sharing
+[1;33mRemediation:[0m Disable Screen Sharing: sudo launchctl disable system/com.apple.screensharing
+[0;31m[Fail][0m 2.5.1 Disable wake for network access
+[1;33mRemediation:[0m Disable wake for network access: sudo pmset -a womp 0
+[0;31m[Fail][0m 2.5.2 Disable Power Nap
+[1;33mRemediation:[0m Disable Power Nap: sudo pmset -a powernap 0
+[0;31m[Fail][0m 2.6.1 Enable Time Machine
+[1;33mRemediation:[0m Enable Time Machine backups: sudo defaults write /Library/Preferences/com.apple.TimeMachine AutoBackup -int 1
+[0;31m[Fail][0m 2.6.2 Enable Time Machine encryption
+[1;33mRemediation:[0m Enable Time Machine encryption: sudo defaults write /Library/Preferences/com.apple.TimeMachine RequiresEncryption -int 1
+[0;31m[Fail][0m 2.7.1 Disable automatic login
+[1;33mRemediation:[0m Disable automatic login: sudo defaults delete /Library/Preferences/com.apple.loginwindow autoLoginUser
+[0;32m[Pass][0m 2.7.2 Disable guest account login
+[0;31m[Fail][0m 2.7.3 Disable Show password hints
+[1;33mRemediation:[0m Disable password hints: sudo defaults write /Library/Preferences/com.apple.loginwindow RetriesUntilHint -int 0
+
+[1m3. Logging and Auditing[0m
+----------------------------------------
+[0;31m[Fail][0m 3.1.1 Ensure security auditing is enabled
+[1;33mRemediation:[0m Enable security auditing: sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.auditd.plist
+[0;32m[Pass][0m 3.1.2 Ensure install.log exists and is configured properly
+[0;32m[Pass][0m 3.2.1 Ensure system log files exist and are configured properly
+[0;31m[Fail][0m 3.2.2 Ensure security auditing retention
+[1;33mRemediation:[0m Configure audit retention: sudo vi /etc/security/audit_control and add 'expire-after:60d'
+[0;31m[Fail][0m 3.3.1 Ensure install.log retention
+[1;33mRemediation:[0m Set install.log retention: sudo vi /etc/asl/com.apple.install and add 'ttl=365'
+[0;31m[Fail][0m 3.4.1 Ensure audit files are retained for at least 60 days
+[1;33mRemediation:[0m Set audit retention: sudo vi /etc/security/audit_control and ensure expire-after:60d is set
+[0;31m[Fail][0m 3.4.2 Ensure old audit logs are closed
+[1;33mRemediation:[0m Configure audit flags: sudo vi /etc/security/audit_control and add appropriate flags
+[0;32m[Pass][0m 3.5.1 Ensure audit folder has appropriate permissions
+[0;31m[Fail][0m 3.5.2 Ensure audit files have appropriate permissions
+[1;33mRemediation:[0m Set audit file permissions: sudo find /var/audit -type f -exec chmod 600 {} \;
+[0;31m[Fail][0m 3.6.1 Ensure audit service is running
+[1;33mRemediation:[0m Start audit service: sudo audit -s
+[0;31m[Fail][0m 3.6.2 Ensure audit statistics are properly configured
+[1;33mRemediation:[0m Configure audit statistics: sudo vi /etc/security/audit_control and set minfree:25
+[0;31m[Fail][0m 3.6.3 Ensure audit settings are configured properly
+[1;33mRemediation:[0m Configure audit policy: sudo vi /etc/security/audit_control and set appropriate policy
+[0;31m[Fail][0m 3.6.4 Ensure login/logout events are logged
+[1;33mRemediation:[0m Enable login/logout auditing: sudo vi /etc/security/audit_control and add 'fm' to flags
+[0;31m[Fail][0m 3.6.5 Ensure audit logs are not deleted
+[1;33mRemediation:[0m Prevent audit log deletion: sudo vi /etc/security/audit_control and add keep-alive
+
+[1m4. Network Configurations[0m
+----------------------------------------
+[0;31m[Fail][0m 4.1.1 Disable Bonjour advertising service
+[1;33mRemediation:[0m Disable Bonjour advertising: sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES
+[0;31m[Fail][0m 4.2.1 Show Wi-Fi status in menu bar
+[1;33mRemediation:[0m Show Wi-Fi in menu bar: defaults write com.apple.controlcenter 'NSStatusItem Visible WiFi' -int 1
+[0;32m[Pass][0m 4.3.1 Disable Remote Apple Events
+[0;32m[Pass][0m 4.4.1 Disable Remote Login (SSH)
+[0;31m[Fail][0m 4.4.2 Ensure SSH KeyBased Authentication is enabled
+[1;33mRemediation:[0m Enable SSH key authentication: Add 'PasswordAuthentication no' to /etc/ssh/sshd_config
+[0;31m[Fail][0m 4.5.1 Disable AFP
+[1;33mRemediation:[0m Disable AFP: sudo launchctl disable system/com.apple.AppleFileServer
+[0;31m[Fail][0m 4.5.2 Disable SMB
+[1;33mRemediation:[0m Disable SMB: sudo launchctl disable system/com.apple.smbd
+[0;31m[Fail][0m 4.6.1 Disable ARD Agent and Remote Desktop
+[1;33mRemediation:[0m Disable ARD Agent: sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -stop
+[0;31m[Fail][0m 4.7.1 Enable Application Firewall
+[1;33mRemediation:[0m Enable Firewall: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+[0;31m[Fail][0m 4.7.2 Enable Firewall Logging
+[1;33mRemediation:[0m Enable Firewall Logging: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
+[0;31m[Fail][0m 4.7.3 Enable Firewall Stealth Mode
+[1;33mRemediation:[0m Enable Stealth Mode: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+[0;31m[Fail][0m 4.8.1 Block all incoming connections
+[1;33mRemediation:[0m Block all incoming: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on
+[0;31m[Fail][0m 4.8.2 Automatically allow signed built-in software
+[1;33mRemediation:[0m Allow signed software: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on
+
+[1m5. System Access, Authentication and Authorization[0m
+----------------------------------------
+[0;31m[Fail][0m 5.1.1 Secure Home Folders
+[1;33mRemediation:[0m Secure home folders: sudo chmod 700 /Users/*/
+[0;31m[Fail][0m 5.1.2 Check System Wide Applications
+[1;33mRemediation:[0m Set Applications permissions: sudo chmod 755 /Applications/*
+[0;32m[Pass][0m 5.1.3 Check System Folder Permissions
+[0;31m[Fail][0m 5.2.1 Configure account lockout threshold
+[1;33mRemediation:[0m Set account lockout threshold: pwpolicy -setaccountpolicies
+[0;31m[Fail][0m 5.2.2 Set a minimum password length
+[1;33mRemediation:[0m Set minimum password length: pwpolicy -setaccountpolicies
+[0;31m[Fail][0m 5.2.3 Complex passwords must contain an Alphabetic Character
+[1;33mRemediation:[0m Require alphabetic characters: pwpolicy -setaccountpolicies
+[0;31m[Fail][0m 5.3.1 Set sudo timeout period to 0
+[1;33mRemediation:[0m Set sudo timeout: sudo visudo and add 'Defaults timestamp_timeout=0'
+[0;31m[Fail][0m 5.4.1 Enable tty_tickets for sudo
+[1;33mRemediation:[0m Enable tty_tickets: sudo visudo and add 'Defaults tty_tickets'
+[0;31m[Fail][0m 5.5.1 Enable auto-lock for login keychain
+[1;33mRemediation:[0m Enable keychain auto-lock: security set-keychain-settings ~/Library/Keychains/login.keychain
+[0;31m[Fail][0m 5.6.1 Lock keychain on sleep
+[1;33mRemediation:[0m Enable keychain lock on sleep: security set-keychain-settings -l ~/Library/Keychains/login.keychain
+[0;32m[Pass][0m 5.7.1 Disable root account
+[0;32m[Pass][0m 5.8.1 Ensure automatic login is disabled
+[0;31m[Fail][0m 5.9.1 Require password after sleep or screen saver
+[1;33mRemediation:[0m Enable password requirement: defaults write com.apple.screensaver askForPassword -int 1
+[0;31m[Fail][0m 5.10.1 Require admin password for system preferences
+[1;33mRemediation:[0m Require admin password: security authorizationdb write system.preferences shared false
+[0;31m[Fail][0m 5.11.1 Disable fast user switching
+[1;33mRemediation:[0m Disable fast user switching: sudo defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool false
+[0;32m[Pass][0m 5.12.1 Set login window text
+[0;31m[Fail][0m 5.13.1 Check for empty passwords
+[1;33mRemediation:[0m Ensure all accounts have passwords set
+
+[1m6. User Accounts and Environment[0m
+----------------------------------------
+[0;31m[Fail][0m 6.1.1 Display login window as name and password
+[1;33mRemediation:[0m Show login window as name and password: sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME -bool true
+[0;31m[Fail][0m 6.1.2 Disable "Show password hints"
+[1;33mRemediation:[0m Disable password hints: sudo defaults write /Library/Preferences/com.apple.loginwindow RetriesUntilHint -int 0
+[0;32m[Pass][0m 6.1.3 Disable guest account
+[0;31m[Fail][0m 6.1.4 Disable "Allow guests to connect to shared folders"
+[1;33mRemediation:[0m Disable guest folder sharing: sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool false
+[0;31m[Fail][0m 6.2.1 Enable filename extensions
+[1;33mRemediation:[0m Show all file extensions: defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+[0;31m[Fail][0m 6.3.1 Disable Safari safe files auto-run
+[1;33mRemediation:[0m Disable auto-run of safe files: defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+[0;31m[Fail][0m 6.4.1 Disable Safari plugins
+[1;33mRemediation:[0m Disable Safari plugins: defaults write com.apple.Safari WebKitPluginsEnabled -bool false
+[0;31m[Fail][0m 6.5.1 Enable parental controls where needed
+[1;33mRemediation:[0m Consider enabling parental controls for unmanaged systems
+[0;32m[Pass][0m 6.6.1 Ensure System Integrity Protection is enabled
+[0;32m[Pass][0m 6.7.1 Ensure Sealed System Volume is enabled
+[0;31m[Fail][0m 6.8.1 Ensure home directories are secure
+[1;33mRemediation:[0m Secure home directories: sudo chmod 700 /Users/*
+[0;31m[Fail][0m 6.9.1 Check Library folder permissions
+[1;33mRemediation:[0m Set Library permissions: sudo chmod 755 /Library
+
+[1m7. File System Configuration[0m
+----------------------------------------
+[0;32m[Pass][0m 7.1.1 Enable FileVault
+[0;31m[Fail][0m 7.1.2 Ensure all user storage APFS volumes are encrypted
+[1;33mRemediation:[0m Encrypt all APFS volumes: Use Disk Utility to encrypt volumes
+[0;32m[Pass][0m 7.2.1 Enable Gatekeeper
+[0;31m[Fail][0m 7.2.2 Enable Quarantine for downloaded applications
+[1;33mRemediation:[0m Enable Quarantine: defaults write com.apple.LaunchServices LSQuarantine -bool true
+[0;31m[Fail][0m 7.3.1 Enable Library Validation
+[1;33mRemediation:[0m Enable Library Validation: sudo defaults write /Library/Preferences/com.apple.security.libraryvalidation.plist Enabled -bool true
+[0;31m[Fail][0m 7.4.1 Enable Secure Keyboard Entry in terminal.app
+[1;33mRemediation:[0m Enable Secure Keyboard Entry: defaults write -app Terminal SecureKeyboardEntry -bool true
+[0;31m[Fail][0m 7.5.1 Enable Secure Empty Trash
+[1;33mRemediation:[0m Enable Secure Empty Trash: defaults write com.apple.finder EmptyTrashSecurely -bool true
+[0;31m[Fail][0m 7.6.1 Disable the automatic run of safe files in Safari
+[1;33mRemediation:[0m Disable automatic run of safe files: defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+[0;31m[Fail][0m 7.7.1 Disable saving passwords in Safari
+[1;33mRemediation:[0m Disable password saving in Safari: defaults write com.apple.Safari AutoFillPasswords -bool false
+[0;31m[Fail][0m 7.8.1 Ensure EFI version is valid
+[1;33mRemediation:[0m Check and update EFI firmware if needed
+[0;31m[Fail][0m 7.9.1 Disable AirDrop
+[1;33mRemediation:[0m Disable AirDrop: defaults write com.apple.NetworkBrowser DisableAirDrop -bool true
+[0;31m[Fail][0m 7.10.1 Disable File Sharing (AFP)
+[1;33mRemediation:[0m Disable AFP: sudo launchctl disable system/com.apple.AppleFileServer
+[0;31m[Fail][0m 7.10.2 Disable File Sharing (SMB)
+[1;33mRemediation:[0m Disable SMB: sudo launchctl disable system/com.apple.smbd
+[0;32m[Pass][0m 7.11.1 Ensure security assessment policy is configured correctly
+[0;32m[Pass][0m 7.12.1 Enable Sealed System Volume
+
+[1m8. Application Installation and Execution[0m
+----------------------------------------
+[0;32m[Pass][0m 8.1.1 Enable Gatekeeper
+[0;31m[Fail][0m 8.1.2 Enable Quarantine for downloaded applications
+[1;33mRemediation:[0m Enable Quarantine: defaults write com.apple.LaunchServices LSQuarantine -bool true
+[0;31m[Fail][0m 8.1.3 Enable XProtect
+[1;33mRemediation:[0m Enable XProtect: sudo defaults write /Library/Preferences/com.apple.security.XProtect Enabled -bool true
+[0;31m[Fail][0m 8.2.1 Enable Application Firewall
+[1;33mRemediation:[0m Enable Application Firewall: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+[0;31m[Fail][0m 8.2.2 Enable Stealth Mode
+[1;33mRemediation:[0m Enable Stealth Mode: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+[0;31m[Fail][0m 8.3.1 Review Privacy Settings for each application
+[1;33mRemediation:[0m Review and adjust Privacy Settings in System Preferences
+[0;31m[Fail][0m 8.4.1 Enable automatic software updates
+[1;33mRemediation:[0m Enable automatic updates: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+[0;31m[Fail][0m 8.4.2 Enable app update installs
+[1;33mRemediation:[0m Enable app updates: sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true
+[0;31m[Fail][0m 8.5.1 Enable XProtect Updater
+[1;33mRemediation:[0m Enable XProtect updates: sudo defaults write /Library/Preferences/com.apple.security.XProtect AutoUpdate -bool true
+[0;31m[Fail][0m 8.5.2 Enable MRT Updater
+[1;33mRemediation:[0m Enable MRT updates: sudo defaults write /Library/Preferences/com.apple.security.MRT AutoUpdate -bool true
+[0;31m[Fail][0m 8.6.1 Restrict developer tools access
+[1;33mRemediation:[0m Restrict developer tools: sudo /usr/sbin/DevToolsSecurity -enable
+[0;32m[Pass][0m 8.7.1 Enable app download restrictions
+[0;31m[Fail][0m 8.7.2 Automatically install macOS updates
+[1;33mRemediation:[0m Enable macOS auto-updates: sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -bool true
+
+[1m9. Security & Privacy[0m
+----------------------------------------
+[0;32m[Pass][0m 9.1.1 Enable FileVault
+[0;31m[Fail][0m 9.1.2 Ensure all user storage APFS volumes are encrypted
+[1;33mRemediation:[0m Encrypt all APFS volumes: Use Disk Utility to encrypt volumes
+[0;31m[Fail][0m 9.2.1 Enable Firewall
+[1;33mRemediation:[0m Enable Firewall: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+[0;31m[Fail][0m 9.2.2 Enable Firewall Stealth Mode
+[1;33mRemediation:[0m Enable Stealth Mode: sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
+[0;31m[Fail][0m 9.2.3 Review Application Firewall Rules
+[1;33mRemediation:[0m Review and adjust firewall rules as needed
+[0;32m[Pass][0m 9.3.1 Enable Location Services
+[0;31m[Fail][0m 9.3.2 Review Location Services Access
+[1;33mRemediation:[0m Review Location Services access for applications
+[0;31m[Fail][0m 9.3.3 Review Accessibility API access
+[1;33mRemediation:[0m Review Accessibility access in System Preferences > Security & Privacy > Privacy
+[0;31m[Fail][0m 9.4.1 Review Camera access
+[1;33mRemediation:[0m Review Camera access in System Preferences > Security & Privacy > Privacy
+[0;31m[Fail][0m 9.4.2 Review Microphone access
+[1;33mRemediation:[0m Review Microphone access in System Preferences > Security & Privacy > Privacy
+[0;31m[Fail][0m 9.5.1 Disable sending diagnostic and usage data to Apple
+[1;33mRemediation:[0m Disable diagnostic data submission: sudo defaults write /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist AutoSubmit -bool false
+[0;31m[Fail][0m 9.6.1 Disable Bluetooth if not needed
+[1;33mRemediation:[0m Disable Bluetooth: sudo defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0
+[0;31m[Fail][0m 9.6.2 Disable Bluetooth Sharing
+[1;33mRemediation:[0m Disable Bluetooth Sharing: sudo defaults write /Library/Preferences/com.apple.Bluetooth PrefKeyServicesEnabled -bool false
+[0;31m[Fail][0m 9.7.1 iCloud keychain
+[1;33mRemediation:[0m Review iCloud keychain settings
+[0;31m[Fail][0m 9.7.2 iCloud Drive
+[1;33mRemediation:[0m Review iCloud Drive settings and disable if not needed
+[0;31m[Fail][0m 9.8.1 Disable Screen Sharing
+[1;33mRemediation:[0m Disable Screen Sharing: sudo launchctl disable system/com.apple.screensharing
+[0;31m[Fail][0m 9.8.2 Disable Remote Management
+[1;33mRemediation:[0m Disable Remote Management: sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -stop
+
+[1m10. iCloud Configuration[0m
+----------------------------------------
+[0;31m[Fail][0m 10.1.1 Review iCloud account configuration
+[1;33mRemediation:[0m Review iCloud account settings in System Preferences
+[0;31m[Fail][0m 10.2.1 Review iCloud Keychain status
+[1;33mRemediation:[0m Review iCloud Keychain settings
+[0;31m[Fail][0m 10.2.2 Enable two-factor authentication for Apple ID
+[1;33mRemediation:[0m Enable two-factor authentication for Apple ID
+[0;31m[Fail][0m 10.3.1 Review iCloud Drive settings
+[1;33mRemediation:[0m Review and configure iCloud Drive settings
+[0;31m[Fail][0m 10.3.2 Disable iCloud Desktop & Documents
+[1;33mRemediation:[0m Disable iCloud Desktop & Documents syncing if not needed
+[0;31m[Fail][0m 10.4.1 Review iCloud Photos settings
+[1;33mRemediation:[0m Review and configure iCloud Photos settings
+[0;31m[Fail][0m 10.5.1 Review iCloud Backup settings
+[1;33mRemediation:[0m Review and configure iCloud Backup settings
+[0;31m[Fail][0m 10.6.1 Enable Find My Mac
+[1;33mRemediation:[0m Enable Find My Mac in iCloud settings
+[0;31m[Fail][0m 10.7.1 Review iCloud Mail settings
+[1;33mRemediation:[0m Review and configure iCloud Mail settings if needed
+[0;31m[Fail][0m 10.8.1 Review iCloud sharing settings
+[1;33mRemediation:[0m Review and configure iCloud sharing settings
+[0;31m[Fail][0m 10.9.1 Enable iCloud Private Relay
+[1;33mRemediation:[0m Enable iCloud Private Relay for enhanced privacy
+[0;31m[Fail][0m 10.10.1 Review Security Recommendations
+[1;33mRemediation:[0m Review and implement iCloud security recommendations
+
+[1m11. Privacy Settings[0m
+----------------------------------------
+[0;32m[Pass][0m 11.1.1 Review Location Services
+[0;31m[Fail][0m 11.1.2 Review Location Services System Services
+[1;33mRemediation:[0m Review System Services Location access
+[0;31m[Fail][0m 11.2.1 Review Contacts Access
+[1;33mRemediation:[0m Review application access to Contacts
+[0;31m[Fail][0m 11.3.1 Review Calendar Access
+[1;33mRemediation:[0m Review application access to Calendars
+[0;31m[Fail][0m 11.4.1 Review Reminders Access
+[1;33mRemediation:[0m Review application access to Reminders
+[0;31m[Fail][0m 11.5.1 Review Photos Access
+[1;33mRemediation:[0m Review application access to Photos
+[0;31m[Fail][0m 11.6.1 Review Camera Access
+[1;33mRemediation:[0m Review application access to Camera
+[0;31m[Fail][0m 11.7.1 Review Microphone Access
+[1;33mRemediation:[0m Review application access to Microphone
+[0;31m[Fail][0m 11.8.1 Review Accessibility Access
+[1;33mRemediation:[0m Review application access to Accessibility
+[0;31m[Fail][0m 11.9.1 Review Full Disk Access
+[1;33mRemediation:[0m Review application access to Full Disk Access
+[0;31m[Fail][0m 11.10.1 Disable Analytics Data Submission
+[1;33mRemediation:[0m Disable Analytics Data Submission
+[0;31m[Fail][0m 11.10.2 Disable Siri Analytics
+[1;33mRemediation:[0m Disable Siri Analytics sharing
+[0;31m[Fail][0m 11.11.1 Enable Limit Ad Tracking
+[1;33mRemediation:[0m Enable Limit Ad Tracking
+
+[1m12. System Hardening[0m
+----------------------------------------
+[0;31m[Fail][0m 12.1.1 Disable Core Dumps
+[1;33mRemediation:[0m Disable core dumps: sudo sysctl -w kern.coredump=0
+[0;31m[Fail][0m 12.2.1 Enable Hibernate Mode
+[1;33mRemediation:[0m Enable hibernate mode: sudo pmset -a hibernatemode 25
+[0;31m[Fail][0m 12.3.1 Disable wake on network access
+[1;33mRemediation:[0m Disable wake on network: sudo pmset -a womp 0
+[0;31m[Fail][0m 12.3.2 Disable Power Nap
+[1;33mRemediation:[0m Disable Power Nap: sudo pmset -a powernap 0
+[0;31m[Fail][0m 12.4.1 Enable Time Machine
+[1;33mRemediation:[0m Enable Time Machine backups
+[0;31m[Fail][0m 12.4.2 Enable Time Machine encryption
+[1;33mRemediation:[0m Enable Time Machine encryption
+[0;31m[Fail][0m 12.5.1 Enable firmware password
+[1;33mRemediation:[0m Enable firmware password protection
+[0;32m[Pass][0m 12.6.1 Enable Secure Boot
+[0;32m[Pass][0m 12.7.1 Enable System Integrity Protection
+[0;32m[Pass][0m 12.8.1 Enable FileVault
+[0;32m[Pass][0m 12.9.1 Enable Gatekeeper
+[0;31m[Fail][0m 12.10.1 Set shell timeout
+[1;33mRemediation:[0m Set shell timeout: echo 'TMOUT=900' >> /etc/profile
+[0;31m[Fail][0m 12.11.1 Enable Secure Keyboard Entry in Terminal
+[1;33mRemediation:[0m Enable Secure Keyboard Entry in Terminal
+[0;31m[Fail][0m 12.12.1 Set screen saver timeout
+[1;33mRemediation:[0m Set screen saver timeout to 20 minutes or less
+[0;32m[Pass][0m 12.13.1 Disable Remote Apple Events
+[0;31m[Fail][0m 12.13.2 Disable Internet Sharing
+[1;33mRemediation:[0m Disable Internet Sharing
+
+[1m13. Software Updates[0m
+----------------------------------------
+[0;31m[Fail][0m 13.1.1 Enable automatic app updates
+[1;33mRemediation:[0m Enable automatic app updates
+[0;31m[Fail][0m 13.1.2 Enable system data files installation
+[1;33mRemediation:[0m Enable system data files installation
+[0;31m[Fail][0m 13.1.3 Enable security updates installation
+[1;33mRemediation:[0m Enable security updates installation
+[0;31m[Fail][0m 13.2.1 Enable automatic checking for updates
+[1;33mRemediation:[0m Enable automatic update checks
+[0;31m[Fail][0m 13.2.2 Enable automatic download of updates
+[1;33mRemediation:[0m Enable automatic update downloads
+[0;31m[Fail][0m 13.3.1 Enable XProtect updates
+[1;33mRemediation:[0m Enable XProtect updates
+[0;31m[Fail][0m 13.3.2 Enable MRT updates
+[1;33mRemediation:[0m Enable MRT updates
+[0;31m[Fail][0m 13.4.1 Enable certificate updates
+[1;33mRemediation:[0m Enable certificate updates
+[0;31m[Fail][0m 13.5.1 Verify recent updates
+[1;33mRemediation:[0m Check and install pending updates
+[0;32m[Pass][0m 13.6.1 Enable Gatekeeper updates
+[0;32m[Pass][0m 13.7.1 Update developer tools
+
+[1m14. Security Audit[0m
+----------------------------------------
+[0;31m[Fail][0m 14.1.1 Enable security auditing
+[1;33mRemediation:[0m Enable security auditing
+[0;31m[Fail][0m 14.1.2 Configure audit log retention
+[1;33mRemediation:[0m Configure audit log retention
+[0;31m[Fail][0m 14.2.1 Enable audit flags for login/logout
+[1;33mRemediation:[0m Enable login/logout auditing
+[0;31m[Fail][0m 14.2.2 Enable audit flags for administrative actions
+[1;33mRemediation:[0m Enable administrative actions auditing
+[0;31m[Fail][0m 14.3.1 Verify system integrity
+[1;33mRemediation:[0m Verify system integrity
+[0;31m[Fail][0m 14.4.1 Enable file integrity monitoring
+[1;33mRemediation:[0m Install and configure file integrity monitoring
+[0;31m[Fail][0m 14.5.1 Verify log files permissions
+[1;33mRemediation:[0m Secure log files permissions
+[0;31m[Fail][0m 14.5.2 Enable system.log
+[1;33mRemediation:[0m Enable system logging
+[0;31m[Fail][0m 14.6.1 Monitor security events
+[1;33mRemediation:[0m Enable security event monitoring
+[0;31m[Fail][0m 14.7.1 Protect audit configuration
+[1;33mRemediation:[0m Secure audit configuration files
+[0;31m[Fail][0m 14.8.1 Configure remote logging
+[1;33mRemediation:[0m Configure remote logging if required
+
+[1m15. Additional Security Controls[0m
+----------------------------------------
+[0;31m[Fail][0m 15.1.1 Verify endpoint protection
+[1;33mRemediation:[0m Install and configure endpoint security software
+[0;31m[Fail][0m 15.2.1 Enable data loss prevention
+[1;33mRemediation:[0m Configure data loss prevention policies
+[0;31m[Fail][0m 15.3.1 Verify security awareness
+[1;33mRemediation:[0m Ensure security awareness training is completed and documented
+
+[1mSecurity Check Report[0m
+----------------------------------------
+
+Security Check Report Summary
+============================
+Total Checks Run: 188
+CIS MacOS Security Benchmark v4.0.0 - Mon Feb 10 12:03:00 EST 2025
+Sections Covered: 15
+Level 1 (Required) Checks: 145
+Level 2 (Recommended) Checks: 43
+Passed Checks: 32
+Failed Checks: 156
+Compliance Rate: 17%
+
+Detailed report saved to: /Users/techmore/CyberSecurityPilot.org/dashboard/reports/cis_security_report_20250210_120254.txt
+To view the report, run: cat /Users/techmore/CyberSecurityPilot.org/dashboard/reports/cis_security_report_20250210_120254.txt
+
+Run this script with sudo privileges to perform all checks:
+sudo bash cis_macos_check.sh
+scripts/cis_macos_check.sh: line 1833: ./report_to_json.sh: No such file or directory
+chmod: update_dashboard_reports.sh: No such file or directory
+scripts/cis_macos_check.sh: line 1837: ./update_dashboard_reports.sh: No such file or directory
+To view the report, run: cat /Users/techmore/CyberSecurityPilot.org/dashboard/reports/cis_security_report_20250210_120254.txt

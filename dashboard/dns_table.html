@@ -41,7 +41,21 @@
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+          
+        <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+            <span class="absolute -inset-1.5"></span>
+            <span class="sr-only">View notifications</span>
+            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+            </svg>
+            
+        <div class="absolute -top-2 -right-2 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full" 
+             style="display: block">
+            16
+        </div>
+        
+        </button>
+        
             <span class="absolute -inset-1.5"></span>
             <span class="sr-only">View notifications</span>
             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
@@ -106,10 +120,10 @@
                   <li class="flex">
                     <div class="flex items-center">
                       <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                           <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd" />
                         </svg>
-                        <span class="sr-only">DNS Portal</span>
+                        <span class="sr-only">Home</span>
                       </a>
                     </div>
                   </li>
@@ -118,7 +132,9 @@
                       <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                       </svg>
-                      <a href="#" class="ml-4 text-sm font-medium text-blue-500 hover:text-gray-700">DNS Portal</a>
+                      <div class="flex items-center space-x-4">
+                        <a href="#" class="text-sm font-medium text-blue-500 hover:text-gray-700">DNS Portal</a>
+                      </div>
                     </div>
                   </li>
                   <li class="flex">
@@ -135,6 +151,14 @@
                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                       </svg>
                       <a href="cis_ram_questionnaire.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
+                    </div>
+                  </li><!-- DNS Check Status -->
+                  <li class="flex">
+                    <div class="flex items-center">
+                      <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">02 DNS</a>
                     </div>
                   </li>
                   <li class="flex">
@@ -213,50 +237,65 @@ Subnet	VLAN	Used	Free
               </div>
             </li>
             <li class="relative md:flex md:flex-1">
-              <!-- Current Step -->
-              <a href="#" class="flex items-center px-6 py-4 text-sm font-medium" aria-current="step">
-                <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
-                  <span class="text-indigo-600">02</span>
-                </span>
-                <span class="ml-4 text-sm font-medium text-indigo-600">DNS<br><br>               
-                  <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                    <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
-                      <circle cx="3" cy="3" r="3" />
-                    </svg>
-                    DVfriends.orgs
-                  </span>
-                  <br>
-                  <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                    <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
-                      <circle cx="3" cy="3" r="3" />
-                    </svg>
-                    admin.dvfriends.org
-                  </span>
+              <div class="group w-full">
+                <div class="px-6 py-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
+                        <span class="text-indigo-600">02</span>
+                      </span>
+                      <span class="ml-4 text-sm font-medium text-gray-900">DNS<br><br>               
+                        <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                          <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                            <circle cx="3" cy="3" r="3" />
+                          </svg>
+                          DVfriends.orgs
+                        </span>
+                        <br>
+                        <span class="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                          <svg class="size-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                            <circle cx="3" cy="3" r="3" />
+                          </svg>
+                          admin.dvfriends.org
+                        </span>
 
-                  <br>
-                  <p class="text-xs text-gray-700 font-light">Network Solutions, LLC</p>
-                  <p class="text-xs text-gray-700 font-light">Renewal: 2025-05-20T16:37:33Z</p>
-                  
-                </span>
-              </span>
-              </a>
-              <!-- Arrow separator for lg screens and up -->
-              <div class="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
-                <svg class="size-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
-                  <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
-                </svg>
+                        <br>
+                        <p class="text-xs text-gray-700 font-light">Network Solutions, LLC</p>
+                        <p class="text-xs text-gray-700 font-light">Renewal: 2025-05-20T16:37:33Z</p>
+                        
+                      </span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                      <span id="scanStatusIndicator" class="h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+                      <span id="lastScanTime" class="text-sm text-gray-600"></span>
+                      <span id="lastScanStats" class="text-sm text-gray-500"></span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </li>
             <li class="relative md:flex md:flex-1">
               <!-- Upcoming Step -->
-              <a href="#" class="group flex items-center">
-                <span class="flex items-center px-6 py-4 text-sm font-medium">
-                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 group-hover:border-gray-400">
-                    <span class="text-gray-500 group-hover:text-gray-900">03</span>
-                  </span>
-                  <span class="ml-4 text-sm font-medium text-gray-500 group-hover:text-gray-900">Preview</span>
-                </span>
-              </a>
+              <div class="group w-full">
+                <div class="px-6 py-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-gray-300">
+                        <span class="text-gray-500">03</span>
+                      </span>
+                      <div class="ml-4">
+                        <span class="text-sm font-medium text-gray-900">Preview</span>
+                        <div class="mt-1 flex flex-col space-y-1">
+                          <span class="text-xs text-gray-500" id="preview-last-run">Last run: 02/09 22:46</span>
+                          <span class="text-xs text-gray-500" id="preview-dns">DNS: 0 changes</span>
+                          <span class="text-xs text-gray-500" id="preview-whois">WHOIS: 0 changes</span>
+                          <span class="text-xs text-gray-500" id="preview-crtsh">CRT.sh: 0 changes</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </li>
           </ol>
         </nav>
@@ -744,4 +783,47 @@ Subnet	VLAN	Used	Free
       </div>
     </div>
   </div>
+</div>
+
+<div class="bg-white shadow rounded-lg overflow-hidden">
+  <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
+    <div class="flex items-center">
+      <h2 class="text-base font-semibold leading-7 text-gray-900">02 DNS Records</h2>
+      <div class="ml-4 flex items-center">
+        <span id="scanStatusIndicator" class="h-2.5 w-2.5 rounded-full bg-gray-400 mr-2"></span>
+        <span id="lastScanTime" class="text-sm text-gray-500"></span>
+        <span id="lastScanStats" class="ml-4 text-sm text-gray-500"></span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DNS Records Table -->
+  <div class="px-4 sm:px-6 lg:px-8">
+    <!-- ... -->
+  </div>
+</div>
+
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- DNS Status Section -->
+    <div class="mt-8 bg-white shadow rounded-lg">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <h2 class="text-lg font-semibold text-gray-900">02 DNS Monitor</h2>
+            <div class="flex items-center">
+              <span id="scanStatusIndicator" class="h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+              <span id="lastScanTime" class="ml-2 text-sm text-gray-500"></span>
+            </div>
+          </div>
+          <div>
+            <span id="lastScanStats" class="text-sm text-gray-500"></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- DNS Records Content -->
+      <div class="px-4 py-4">
+        <!-- Your existing DNS records table content -->
+      </div>
+    </div>
 </div>

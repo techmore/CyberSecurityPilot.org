@@ -1,353 +1,83 @@
 #!/usr/bin/env python3
 
-import subprocess
-import json
 import os
-import sqlite3
-import requests
+import sys
+import json
+import subprocess
+import traceback
 from datetime import datetime
 from pathlib import Path
-import plistlib
-import re
-import csv
-from typing import Dict, List, Tuple, Optional
-import openpyxl
-import logging
-import sys
-
-class CISRAMChecker:
-    def __init__(self, questions_file: str):
-        """Initialize CIS RAM checker with questions file path"""
-        self.questions_file = questions_file
-        self.questions = self.load_questions()
-        self.responses = {}
-        
-    def load_questions(self) -> Dict:
-        """Load questions from JSON file"""
-        try:
-            with open(self.questions_file, 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"Error loading CIS RAM questions: {e}")
-            return {"controls": {}}
-            
-    def assess_controls(self) -> Dict:
-        """Assess CIS RAM controls and return results"""
-        results = {
-            'controls': {},
-            'scores': {
-                'level1': 0.0,
-                'level2': 0.0,
-                'overall': 0.0
-            },
-            'recommendations': []
-        }
-        
-        level1_count = 0
-        level2_count = 0
-        
-        for control_id, control in self.questions['controls'].items():
-            control_score = 0
-            questions_count = len(control['questions'])
-            
-            for question in control['questions']:
-                # For now, we'll auto-assess based on our security checks
-                # In future, this could be a web form or interactive questionnaire
-                is_compliant = self._auto_assess_question(question['id'])
-                if is_compliant:
-                    control_score += 1
-                    
-                # Track scores by level
-                if question['level'] == '1':
-                    level1_count += 1
-                    if is_compliant:
-                        results['scores']['level1'] += 1
-                elif question['level'] == '2':
-                    level2_count += 1
-                    if is_compliant:
-                        results['scores']['level2'] += 1
-            
-            # Calculate control score
-            control_score = (control_score / questions_count) * 100 if questions_count > 0 else 0
-            results['controls'][control_id] = {
-                'title': control['title'],
-                'score': control_score,
-                'compliant': control_score >= 70  # Consider 70% as passing threshold
-            }
-            
-            # Add recommendations for low-scoring controls
-            if control_score < 70:
-                results['recommendations'].append({
-                    'control_id': control_id,
-                    'title': control['title'],
-                    'score': control_score,
-                    'recommendation': f"Improve compliance with {control['title']} controls. Current score: {control_score:.1f}%"
-                })
-        
-        # Calculate final scores
-        if level1_count > 0:
-            results['scores']['level1'] = (results['scores']['level1'] / level1_count) * 100
-        if level2_count > 0:
-            results['scores']['level2'] = (results['scores']['level2'] / level2_count) * 100
-            
-        total_controls = level1_count + level2_count
-        if total_controls > 0:
-            results['scores']['overall'] = ((results['scores']['level1'] * level1_count) + 
-                                         (results['scores']['level2'] * level2_count)) / total_controls
-        
-        return results
-    
-    def _auto_assess_question(self, question_id: str) -> bool:
-        """Auto-assess a question based on security checks"""
-        # This is where we map questions to actual security checks
-        # For now, return a default value
-        return True
-
-class CISRAMQuestionnaire:
-    def __init__(self, workbook_path: str):
-        """Initialize CIS RAM questionnaire with workbook path"""
-        self.workbook = openpyxl.load_workbook(workbook_path, data_only=True)
-        self.questions = self.load_questions()
-        self.responses = {}
-        
-    def load_questions(self) -> Dict[str, List[Dict]]:
-        """Load questions from CIS RAM workbook"""
-        questions = {}
-        
-        try:
-            sheet = self.workbook['3 Risk Register Controls v8']
-            current_control = None
-            current_questions = []
-            
-            for row in sheet.iter_rows(min_row=2):
-                values = [str(cell.value).strip() if cell.value else '' for cell in row[:6]]
-                
-                # Skip empty rows
-                if not any(values):
-                    continue
-                
-                control_id = values[1]
-                if control_id and '.' in control_id:  # This is a control ID (e.g., "1.1")
-                    if current_control:
-                        questions[current_control] = current_questions
-                    current_control = control_id
-                    current_questions = []
-                    
-                    # Add implementation questions for this control
-                    current_questions.extend([
-                        {
-                            'id': f"{control_id}_imp_1",
-                            'question': f"Is control {control_id} ({values[2]}) implemented?",
-                            'type': 'boolean'
-                        },
-                        {
-                            'id': f"{control_id}_imp_2",
-                            'question': "What evidence supports this implementation?",
-                            'type': 'text'
-                        },
-                        {
-                            'id': f"{control_id}_imp_3",
-                            'question': "When was this control last reviewed?",
-                            'type': 'date'
-                        },
-                        {
-                            'id': f"{control_id}_imp_4",
-                            'question': "What is the maturity level of this control?",
-                            'type': 'choice',
-                            'options': ['Not Implemented', 'Initial', 'Managed', 'Defined', 'Measured', 'Optimized']
-                        }
-                    ])
-            
-            if current_control:
-                questions[current_control] = current_questions
-                
-        except Exception as e:
-            print(f"Error loading CIS RAM questions: {e}")
-            import traceback
-            traceback.print_exc()
-        
-        return questions
-    
-    def ask_questions(self, control_id: str) -> Dict:
-        """Ask questions for a specific control and store responses"""
-        if control_id not in self.questions:
-            return {}
-            
-        responses = {}
-        print(f"\nAssessing CIS RAM Control {control_id}:")
-        
-        for question in self.questions[control_id]:
-            print(f"\n{question['question']}")
-            
-            if question['type'] == 'boolean':
-                response = input("Enter 'yes' or 'no': ").lower().strip()
-                responses[question['id']] = response == 'yes'
-            
-            elif question['type'] == 'text':
-                response = input("Enter your response: ").strip()
-                responses[question['id']] = response
-            
-            elif question['type'] == 'date':
-                response = input("Enter date (YYYY-MM-DD): ").strip()
-                responses[question['id']] = response
-            
-            elif question['type'] == 'choice':
-                print("Options:", ', '.join(question['options']))
-                response = input("Enter your choice: ").strip()
-                if response in question['options']:
-                    responses[question['id']] = response
-                else:
-                    print("Invalid choice. Defaulting to 'Not Implemented'")
-                    responses[question['id']] = 'Not Implemented'
-        
-        self.responses[control_id] = responses
-        return responses
-    
-    def get_control_maturity_score(self, control_id: str) -> float:
-        """Calculate maturity score for a control based on responses"""
-        if control_id not in self.responses:
-            return 0.0
-            
-        responses = self.responses[control_id]
-        maturity_levels = {
-            'Not Implemented': 0.0,
-            'Initial': 0.2,
-            'Managed': 0.4,
-            'Defined': 0.6,
-            'Measured': 0.8,
-            'Optimized': 1.0
-        }
-        
-        # Get maturity level response
-        maturity_question_id = f"{control_id}_imp_4"
-        maturity_level = responses.get(maturity_question_id, 'Not Implemented')
-        
-        # Calculate score
-        implementation_score = 1.0 if responses.get(f"{control_id}_imp_1", False) else 0.0
-        evidence_score = 0.5 if responses.get(f"{control_id}_imp_2", "").strip() else 0.0
-        review_score = 0.5 if responses.get(f"{control_id}_imp_3", "").strip() else 0.0
-        
-        base_score = (implementation_score + evidence_score + review_score) / 2
-        maturity_multiplier = maturity_levels.get(maturity_level, 0.0)
-        
-        return base_score * maturity_multiplier
-
-class VulnerabilityScanner:
-    def __init__(self):
-        """Initialize vulnerability scanner"""
-        self.nvd_api_url = "https://services.nvd.nist.gov/rest/json/cves/2.0"
-        self.cpe_match_url = "https://services.nvd.nist.gov/rest/json/cpes/2.0"
-        
-    def get_installed_software(self) -> List[Dict]:
-        """Get list of installed applications and their versions"""
-        apps = []
-        
-        # Get apps from /Applications
-        stdout, success = self._safe_run_command(['find', '/Applications', '-name', '*.app'])
-        if success:
-            for app_path in stdout.split('\n'):
-                if app_path:
-                    info_plist = os.path.join(app_path, 'Contents/Info.plist')
-                    if os.path.exists(info_plist):
-                        try:
-                            with open(info_plist, 'rb') as f:
-                                plist_data = plistlib.load(f)
-                                apps.append({
-                                    'name': plist_data.get('CFBundleName', os.path.basename(app_path)),
-                                    'version': plist_data.get('CFBundleShortVersionString', 'Unknown'),
-                                    'path': app_path,
-                                    'bundle_id': plist_data.get('CFBundleIdentifier', '')
-                                })
-                        except:
-                            pass
-        
-        # Get Homebrew packages
-        stdout, success = self._safe_run_command(['brew', 'list', '--versions'])
-        if success:
-            for line in stdout.split('\n'):
-                if line:
-                    parts = line.split()
-                    if len(parts) >= 2:
-                        apps.append({
-                            'name': parts[0],
-                            'version': parts[1],
-                            'path': f'/opt/homebrew/Cellar/{parts[0]}/',
-                            'source': 'homebrew'
-                        })
-        
-        return apps
-    
-    def check_vulnerabilities(self, apps: List[Dict]) -> List[Dict]:
-        """Check for known vulnerabilities in installed applications"""
-        results = []
-        
-        for app in apps:
-            vulnerabilities = []
-            
-            # Check NVD database
-            cpe_query = f"cpe:2.3:a:*:{app['name']}:{app['version']}:*:*:*:*:*:*:*"
-            params = {
-                'cpeName': cpe_query,
-                'resultsPerPage': 100
-            }
-            
-            try:
-                response = requests.get(self.nvd_api_url, params=params)
-                if response.status_code == 200:
-                    data = response.json()
-                    for vuln in data.get('vulnerabilities', []):
-                        cve = vuln.get('cve', {})
-                        if cve:
-                            vulnerabilities.append({
-                                'id': cve.get('id', ''),
-                                'description': cve.get('descriptions', [{}])[0].get('value', ''),
-                                'severity': cve.get('metrics', {}).get('cvssMetricV31', [{}])[0].get('cvssData', {}).get('baseScore', 0),
-                                'published': cve.get('published', '')
-                            })
-            except Exception as e:
-                print(f"Error checking vulnerabilities for {app['name']}: {e}")
-            
-            if vulnerabilities:
-                results.append({
-                    'app_name': app['name'],
-                    'version': app['version'],
-                    'vulnerabilities': vulnerabilities
-                })
-        
-        return results
-    
-    def _safe_run_command(self, command: List[str], requires_sudo: bool = False) -> Tuple[str, bool]:
-        """Safely run a command and return its output"""
-        try:
-            if requires_sudo:
-                command.insert(0, 'sudo')
-            result = subprocess.run(command, capture_output=True, text=True)
-            return result.stdout.strip(), result.returncode == 0
-        except Exception as e:
-            return str(e), False
+from typing import Dict, List, Tuple
 
 class MacDeviceScanner:
+    """Scanner for macOS security settings based on CIS benchmarks"""
+    
     def __init__(self):
-        """Initialize the scanner"""
+        """Initialize scanner"""
         self.today = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        self.project_dir = Path(__file__).parent.parent
-        self.reports_dir = self.project_dir / 'reports'
-        self.reports_dir.mkdir(parents=True, exist_ok=True)
+        self.reports_dir = Path('reports')
+        self.reports_dir.mkdir(exist_ok=True)
         
-        # Load CIS RAM controls
-        cis_ram_path = self.project_dir / 'scripts/cis_ram_questions.json'
-        self.cis_ram = CISRAMChecker(str(cis_ram_path))
-        self.cis_ram_questionnaire = CISRAMQuestionnaire(str(cis_ram_path))
-        
+        # Initialize report data
         self.report_data = {
-            'system_info': {},
-            'vulnerabilities': [],
-            'cis_level1': {},
-            'cis_level2': {},
-            'cis_level3': {},
-            'cis_ram': {}
+            'sections': {},
+            'system_info': {}
         }
         
+        # Initialize system info
+        self._init_system_info()
+        
+        # Initialize sections
+        self._init_sections()
+    
+    def _init_system_info(self):
+        """Initialize system information"""
+        self.report_data['system_info'] = {
+            'ProductName': 'macOS',
+            'ProductVersion': self._get_os_version(),
+            'BuildVersion': self._get_build_version()
+        }
+    
+    def _init_sections(self):
+        """Initialize report sections"""
+        self.report_data['sections'] = {
+            'system_security': None,
+            'password_policy': None,
+            'screen_saver': None,
+            'network_security': None,
+            'sharing_settings': None,
+            'software_updates': None,
+            'logging_auditing': None
+        }
+    
+    def _safe_run_command(self, cmd: List[str]) -> str:
+        """Run command safely and handle errors gracefully"""
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            if result.returncode != 0:
+                print(f"Warning: Command {' '.join(cmd)} failed: {result.stderr}")
+                return ""
+            return result.stdout.strip()
+        except Exception as e:
+            print(f"Error running command {' '.join(cmd)}: {str(e)}")
+            return ""
+
+    def _get_os_version(self) -> str:
+        """Get macOS version"""
+        try:
+            result = self._safe_run_command(['sw_vers', '-productVersion'])
+            return result.strip() or 'Unknown'
+        except:
+            return 'Unknown'
+    
+    def _get_build_version(self) -> str:
+        """Get macOS build version"""
+        try:
+            result = self._safe_run_command(['sw_vers', '-buildVersion'])
+            return result.strip() or 'Unknown'
+        except:
+            return 'Unknown'
+    
     def check_prerequisites(self):
         """Display scanner information"""
         print("\n=== Security Scanner Information ===")
@@ -356,24 +86,14 @@ class MacDeviceScanner:
         print("2. Keychain access for certificate and security checks\n")
         
         print("The following checks will be performed:")
-        print("- System configuration")
-        print("- Security settings")
-        print("- DNS configuration")
-        print("- Certificate validation")
-        print("- CIS compliance checks\n")
-        
-    def _safe_run_command(self, command: List[str], requires_sudo: bool = False) -> subprocess.CompletedProcess:
-        """Safely run commands with proper permission handling"""
-        if requires_sudo:
-            command = ['sudo'] + command
-            
-        try:
-            return subprocess.run(command, capture_output=True, text=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Command failed: {' '.join(command)}")
-            print(f"Error: {str(e)}")
-            return subprocess.CompletedProcess(command, 1, stdout="", stderr=str(e))
-
+        print("- System Security")
+        print("- Password Policy")
+        print("- Screen Saver Security")
+        print("- Network Security")
+        print("- Sharing Settings")
+        print("- Software Updates")
+        print("- Logging and Auditing\n")
+    
     def get_installed_apps(self) -> List[Dict]:
         """Get list of installed applications and their versions"""
         apps = []
@@ -667,6 +387,83 @@ class MacDeviceScanner:
             })
             print(f"✓ Found {len(active_shares)} active sharing services")
 
+        # Check firewall status
+        stdout, success = run_command(['defaults', 'read', '/Library/Preferences/com.apple.alf', 'globalstate'])
+        is_firewall_enabled = success and '1' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'Firewall Status',
+            'status': is_firewall_enabled,
+            'details': 'Firewall is enabled' if is_firewall_enabled else 'Firewall is disabled'
+        })
+        print(f"✓ Firewall: {'Enabled' if is_firewall_enabled else 'Disabled'}")
+
+        # Check stealth mode status
+        stdout, success = run_command(['defaults', 'read', '/Library/Preferences/com.apple.alf', 'stealthenabled'])
+        is_stealth_enabled = success and '1' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'Stealth Mode Status',
+            'status': is_stealth_enabled,
+            'details': 'Stealth mode is enabled' if is_stealth_enabled else 'Stealth mode is disabled'
+        })
+        print(f"✓ Stealth Mode: {'Enabled' if is_stealth_enabled else 'Disabled'}")
+
+        # Check WiFi status
+        stdout, success = run_command(['networksetup', '-getairportpower', 'en0'])
+        is_wifi_off = success and 'Off' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'WiFi Status',
+            'status': is_wifi_off,
+            'details': 'WiFi is disabled' if is_wifi_off else 'WiFi is enabled'
+        })
+        print(f"✓ WiFi: {'Disabled' if is_wifi_off else 'Enabled'}")
+
+        # Check Bluetooth status
+        stdout, success = run_command(['defaults', 'read', '/Library/Preferences/com.apple.Bluetooth', 'ControllerPowerState'])
+        is_bluetooth_off = success and '0' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'Bluetooth Status',
+            'status': is_bluetooth_off,
+            'details': 'Bluetooth is disabled' if is_bluetooth_off else 'Bluetooth is enabled'
+        })
+        print(f"✓ Bluetooth: {'Disabled' if is_bluetooth_off else 'Enabled'}")
+
+        # Check remote login status
+        stdout, success = run_command(['systemsetup', '-getremotelogin'])
+        is_remote_login_off = success and 'Off' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'Remote Login Status',
+            'status': is_remote_login_off,
+            'details': 'Remote login is disabled' if is_remote_login_off else 'Remote login is enabled'
+        })
+        print(f"✓ Remote Login: {'Disabled' if is_remote_login_off else 'Enabled'}")
+
+        # Check network time status
+        stdout, success = run_command(['systemsetup', '-getnetworktimeserver'])
+        is_network_time_on = success and 'On' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'Network Time Status',
+            'status': is_network_time_on,
+            'details': 'Network time is enabled' if is_network_time_on else 'Network time is disabled'
+        })
+        print(f"✓ Network Time: {'Enabled' if is_network_time_on else 'Disabled'}")
+
+        # Check DNS over HTTPS status
+        stdout, success = run_command(['defaults', 'read', '/Library/Preferences/com.apple.dnssd', 'DOHEnabled'])
+        is_dns_over_https_enabled = success and '1' in stdout
+        results.append({
+            'check_type': 'network',
+            'name': 'DNS over HTTPS Status',
+            'status': is_dns_over_https_enabled,
+            'details': 'DNS over HTTPS is enabled' if is_dns_over_https_enabled else 'DNS over HTTPS is disabled'
+        })
+        print(f"✓ DNS over HTTPS: {'Enabled' if is_dns_over_https_enabled else 'Disabled'}")
+
         return results
 
     def check_process_security(self) -> List[Dict]:
@@ -905,8 +702,8 @@ class MacDeviceScanner:
                     network_checks: List[Dict], process_checks: List[Dict],
                     vuln_results: List[Dict], system_info: Dict, cis_ram_results: List[Dict]):
         """Save all scan results to JSON files"""
-        results_dir = self.reports_dir
-        results_dir.mkdir(exist_ok=True)
+        results_dir = Path('reports')
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Save application inventory
         with open(results_dir / f"application_inventory_{self.today}.json", 'w') as f:
@@ -940,9 +737,11 @@ class MacDeviceScanner:
                        network_checks: List[Dict], process_checks: List[Dict],
                        vuln_results: List[Dict], system_info: Dict, cis_ram_results: List[Dict]):
         """Generate detailed reports in both text and JSON formats"""
-        report_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        report_path = self.reports_dir / f"security_report_{report_time}.txt"
-        json_path = self.reports_dir / f"security_report_{report_time}.json"
+        report_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_path = Path('reports') / f"security_report_{report_time}.txt"
+        json_path = Path('reports') / f"security_report_{report_time}.json"
+        
+        report_path.parent.mkdir(exist_ok=True)
         
         with open(report_path, 'w') as f:
             f.write("=== macOS Security Assessment Report ===\n")
@@ -984,7 +783,10 @@ class MacDeviceScanner:
             f.write(f"Score: {(level1_score/level1_max)*100:.1f}%\n")
             for check in level1_checks:
                 status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
+                f.write(f"{status} {check['name']} ({check['cis_ref']})\n")
+                f.write(f"   Risk: {check['risk']}\n")
+                f.write(f"   Impact: {check['impact']}\n")
+                f.write(f"   Details: {check['details']}\n")
             
             # Level 2 Results
             f.write("\nLevel 2 (Advanced) Checks:\n")
@@ -993,7 +795,10 @@ class MacDeviceScanner:
             f.write(f"Score: {(level2_score/level2_max)*100:.1f}%\n")
             for check in level2_checks:
                 status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
+                f.write(f"{status} {check['name']} ({check['cis_ref']})\n")
+                f.write(f"   Risk: {check['risk']}\n")
+                f.write(f"   Impact: {check['impact']}\n")
+                f.write(f"   Details: {check['details']}\n")
             
             # Level 3 Results
             f.write("\nLevel 3 (Enterprise) Checks:\n")
@@ -1002,7 +807,10 @@ class MacDeviceScanner:
             f.write(f"Score: {(level3_score/level3_max)*100:.1f}%\n")
             for check in level3_checks:
                 status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
+                f.write(f"{status} {check['name']} ({check['cis_ref']})\n")
+                f.write(f"   Risk: {check['risk']}\n")
+                f.write(f"   Impact: {check['impact']}\n")
+                f.write(f"   Details: {check['details']}\n")
             
             # Network Security
             f.write("\n=== Network Security ===\n")
@@ -1044,7 +852,7 @@ class MacDeviceScanner:
             # Executive Summary
             f.write("\n=== Executive Summary ===\n")
             total_score = level1_score + level2_score + level3_score
-            total_max = level1_max + level2_max + level3_max
+            total_max = 40 + 7 + 11
             overall_percent = (total_score / total_max) * 100
             f.write(f"Overall Security Score: {overall_percent:.1f}%\n")
             f.write(f"CIS Level 1 (Basic) Score: {(level1_score/level1_max)*100:.1f}%\n")
@@ -1058,16 +866,16 @@ class MacDeviceScanner:
             json_data = {
                 'timestamp': datetime.now().isoformat(),
                 'system_info': system_info,
-                'cis_compliance': {
-                    'level1': {'checks': level1_checks, 'score': (level1_score/level1_max)*100},
-                    'level2': {'checks': level2_checks, 'score': (level2_score/level2_max)*100},
-                    'level3': {'checks': level3_checks, 'score': (level3_score/level3_max)*100},
-                    'overall_score': overall_percent
+                'overall_score': (passed_checks / total_checks) * 100 if total_checks > 0 else 0,
+                'total_checks': total_checks,
+                'passed_checks': passed_checks,
+                'failed_checks': failed_checks,
+                'risks': {
+                    'high': len(high_risks),
+                    'medium': len(medium_risks),
+                    'low': len(low_risks)
                 },
-                'network_security': network_checks,
-                'process_security': process_checks,
-                'vulnerabilities': vuln_results,
-                'cis_ram_results': cis_ram_results
+                'sections': self.report_data['sections']
             }
             
             with open(json_path, 'w') as jf:
@@ -1194,7 +1002,7 @@ class MacDeviceScanner:
             updates = subprocess.run(['softwareupdate', '--schedule'], capture_output=True, text=True)
             checks.append({
                 'title': 'Automatic Updates',
-                'status': 'pass' if 'enabled' in updates.stdout.lower() else 'fail',
+                'status': 'pass' if 'on' in updates.stdout.lower() else 'fail',
                 'output': updates.stdout.strip()
             })
         except Exception as e:
@@ -1245,8 +1053,8 @@ class MacDeviceScanner:
         print("\n1. Advanced System Settings:")
         
         # 1.1 Bluetooth
-        stdout, success = self._safe_run_command(['defaults', 'read', '/Library/Preferences/com.apple.Bluetooth', 'ControllerPowerState'])
-        is_bluetooth_disabled = success and '0' in stdout
+        stdout, success = self._safe_run_command(['systemsetup', '-getremoteappleevents'])
+        is_bluetooth_disabled = success and 'off' in stdout.lower()
         checks.append({
             'name': '1.1 Bluetooth',
             'level': 2,
@@ -1399,7 +1207,7 @@ class MacDeviceScanner:
     def save_report(self, results: Dict, recommendations: List[Dict]):
         """Save scan results and recommendations"""
         # Create reports directory if it doesn't exist
-        report_dir = Path(self.reports_dir)
+        report_dir = Path('reports')
         report_dir.mkdir(parents=True, exist_ok=True)
         
         report_file = report_dir / f'security_report_{self.today}.md'
@@ -1514,7 +1322,8 @@ class MacDeviceScanner:
         try:
             result = subprocess.run(
                 ['defaults', 'read', '/Library/Preferences/com.apple.alf', 'globalstate'],
-                capture_output=True, text=True
+                capture_output=True,
+                text=True
             )
             return result.stdout.strip() == '1'
         except Exception:
@@ -1525,7 +1334,8 @@ class MacDeviceScanner:
         try:
             result = subprocess.run(
                 ['defaults', 'read', '/Library/Preferences/com.apple.SoftwareUpdate.plist', 'AutomaticCheckEnabled'],
-                capture_output=True, text=True
+                capture_output=True,
+                text=True
             )
             return result.stdout.strip() == '1'
         except Exception:
@@ -1552,7 +1362,6 @@ class MacDeviceScanner:
         summary = []
         total_checks = len(results['checks'])
         passed_checks = len([c for c in results['checks'] if c['status'] == 'pass'])
-        failed_checks = len([c for c in results['checks'] if c['status'] == 'fail'])
         
         risk_score = (passed_checks / total_checks) * 100
         
@@ -1560,9 +1369,9 @@ class MacDeviceScanner:
         summary.append(f"Security Risk Score: {risk_score:.1f}%")
         summary.append(f"Total Checks: {total_checks}")
         summary.append(f"Passed: {passed_checks}")
-        summary.append(f"Failed: {failed_checks}")
+        summary.append(f"Failed: {total_checks - passed_checks}")
         
-        if failed_checks > 0:
+        if total_checks - passed_checks > 0:
             summary.append("\nCritical Issues:")
             for check in results['checks']:
                 if check['status'] == 'fail':
@@ -1582,46 +1391,64 @@ class MacDeviceScanner:
 
     def run_scan(self):
         """Run the security scan"""
+        print("\nStarting macOS security scan...\n")
+        print("=== Security Scanner Information ===")
+        print("This scanner will check your system security settings and may require:")
+        print("1. Administrator (sudo) privileges for some checks")
+        print("2. Keychain access for certificate and security checks\n")
+        
+        print("The following checks will be performed:")
+        print("- System configuration")
+        print("- Security settings")
+        print("- DNS configuration")
+        print("- Certificate validation")
+        print("- CIS compliance checks\n")
+        
         try:
-            self.check_prerequisites()
+            print("\nRunning Basic Security Checks...")
             
-            # Part 1: System Information
-            print("\n=== System Information ===")
-            system_info = self.get_system_info()
-            self.report_data['system_info'] = system_info
+            print("\n1. Checking System Configuration...")
+            # System Security
+            system_results = self._check_system_security()
+            self.report_data['sections']['system_security'] = system_results
             
-            # Part 2: Vulnerability Scanning
-            print("\n=== Vulnerability Scanning ===")
-            vuln_scanner = VulnerabilityScanner()
-            installed_apps = vuln_scanner.get_installed_software()
-            vulnerabilities = vuln_scanner.check_vulnerabilities(installed_apps)
-            self.report_data['vulnerabilities'] = vulnerabilities
+            print("\n2. Checking Password Policy...")
+            # Password Policy
+            password_results = self._check_password_policy()
+            self.report_data['sections']['password_policy'] = password_results
             
-            # Part 3: CIS Level 1 Compliance
-            print("\n=== CIS Level 1 Compliance Checks ===")
-            cis_level1_results = self.check_cis_level1()
-            self.report_data['cis_level1'] = cis_level1_results
+            print("\n3. Checking Screen Saver Settings...")
+            # Screen Saver
+            screen_results = self._check_screen_saver()
+            self.report_data['sections']['screen_saver'] = screen_results
             
-            # Part 4: CIS Level 2 Compliance
-            print("\n=== CIS Level 2 Compliance Checks ===")
-            cis_level2_results = self.check_cis_level2()
-            self.report_data['cis_level2'] = cis_level2_results
+            print("\n4. Checking Network Security...")
+            # Network Security
+            network_results = self._check_network_security()
+            self.report_data['sections']['network_security'] = network_results
             
-            # Part 5: CIS Level 3 Compliance
-            print("\n=== CIS Level 3 Compliance Checks ===")
-            cis_level3_results = self.check_cis_level3()
-            self.report_data['cis_level3'] = cis_level3_results
+            print("\n5. Checking Sharing Settings...")
+            # Sharing Settings
+            sharing_results = self._check_sharing_settings()
+            self.report_data['sections']['sharing_settings'] = sharing_results
             
-            # Part 6: CIS RAM Assessment
-            print("\n=== CIS RAM Assessment ===")
-            cis_ram_results = self.assess_cis_ram_controls()
-            self.report_data['cis_ram'] = cis_ram_results
+            print("\n6. Checking Software Updates...")
+            # Software Updates
+            updates_results = self._check_software_updates()
+            self.report_data['sections']['software_updates'] = updates_results
             
-            # Generate Report
+            print("\n7. Checking Logging and Auditing...")
+            # Logging and Auditing
+            logging_results = self._check_logging_auditing()
+            self.report_data['sections']['logging_auditing'] = logging_results
+            
+            print("\n8. Generating Security Recommendations...")
             self.generate_report()
             
+            print("\n9. Security Assessment Complete!")
+            
         except Exception as e:
-            print(f"Error during scan: {e}")
+            print(f"\nError during scan: {str(e)}")
             import traceback
             traceback.print_exc()
             
@@ -1634,20 +1461,26 @@ class MacDeviceScanner:
             'passed_checks': 0
         }
         
-        # 1. Password Policy
+        # 1. System Security
+        self._check_system_security(results)
+        
+        # 2. Password Policy
         self._check_password_policy(results)
         
-        # 2. Screen Saver Settings
+        # 3. Screen Saver Settings
         self._check_screen_saver(results)
         
-        # 3. Automatic Login
-        self._check_auto_login(results)
+        # 4. Network Security
+        self._check_network_security(results)
         
-        # 4. Guest Account
-        self._check_guest_account(results)
+        # 5. Sharing Settings
+        self._check_sharing_settings(results)
         
-        # 5. Remote Login
-        self._check_remote_login(results)
+        # 6. Software Updates
+        self._check_software_updates(results)
+        
+        # 7. Logging and Auditing
+        self._check_logging_auditing(results)
         
         # Calculate score
         if results['total_checks'] > 0:
@@ -1755,172 +1588,990 @@ class MacDeviceScanner:
     def generate_report(self):
         """Generate comprehensive security report"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_path = self.project_dir / f'reports/security_report_{timestamp}.txt'
-        json_path = self.project_dir / f'reports/security_report_{timestamp}.json'
+        report_path = Path('reports') / f'reports/security_report_{timestamp}.txt'
+        json_path = Path('reports') / f'reports/security_report_{timestamp}.json'
+        
+        # Create reports directory if it doesn't exist
+        report_path.parent.mkdir(exist_ok=True)
+        
+        # Calculate overall statistics
+        sections = [s for s in self.report_data['sections'].values() if s is not None]
+        total_checks = sum(section['total_checks'] for section in sections)
+        passed_checks = sum(section['passed_checks'] for section in sections)
+        failed_checks = total_checks - passed_checks if total_checks > 0 else 0
+        
+        # Categorize risks
+        high_risks = []
+        medium_risks = []
+        low_risks = []
+        
+        for section in sections:
+            for check in section['checks']:
+                if check.get('status', '') == 'fail':
+                    if check.get('risk', '') == 'HIGH':
+                        high_risks.append(check)
+                    elif check.get('risk', '') == 'MEDIUM':
+                        medium_risks.append(check)
+                    else:
+                        low_risks.append(check)
         
         with open(report_path, 'w') as f:
-            f.write("=== macOS Security Assessment Report ===\n")
-            f.write(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write("macOS Security Assessment Report\n")
+            f.write("=============================\n\n")
             
-            # System Information
-            f.write("=== System Information ===\n")
-            if 'ProductName' in self.report_data['system_info']:
-                f.write(f"OS: {self.report_data['system_info'].get('ProductName', 'Unknown')} {self.report_data['system_info'].get('ProductVersion', 'Unknown')}\n")
-            if 'Model Name' in self.report_data['system_info']:
-                f.write(f"Model: {self.report_data['system_info'].get('Model Name', 'Unknown')}\n")
-            if 'Processor Name' in self.report_data['system_info']:
-                f.write(f"Processor: {self.report_data['system_info'].get('Processor Name', 'Unknown')}\n")
-            if 'Memory' in self.report_data['system_info']:
-                f.write(f"Memory: {self.report_data['system_info'].get('Memory', 'Unknown')}\n")
+            f.write("Executive Summary\n")
+            f.write("=================\n")
+            if total_checks > 0:
+                score = (passed_checks / total_checks) * 100
+                f.write(f"Overall Security Score: {score:.1f}%\n")
+            f.write(f"Total Checks: {total_checks}\n")
+            f.write(f"Passed: {passed_checks}\n")
+            f.write(f"Failed: {failed_checks}\n\n")
             
-            # Disk Space Information
-            if 'disk_space' in self.report_data['system_info']:
-                f.write("\n=== Disk Space Information ===\n")
-                for disk in self.report_data['system_info']['disk_space']:
-                    f.write(f"\nFilesystem: {disk['filesystem']}\n")
-                    f.write(f"Size: {disk['size']}\n")
-                    f.write(f"Used: {disk['used']} ({disk['capacity']})\n")
-                    f.write(f"Available: {disk['available']}\n")
-                    f.write(f"Mounted on: {disk['mounted_on']}\n")
+            f.write("Risk Summary\n")
+            f.write("============\n")
+            f.write(f"High Risk Issues: {len(high_risks)}\n")
+            f.write(f"Medium Risk Issues: {len(medium_risks)}\n")
+            f.write(f"Low Risk Issues: {len(low_risks)}\n\n")
             
-            # CIS Compliance Results
-            f.write("\n=== CIS Compliance Results ===\n")
+            f.write("Detailed Findings\n")
+            f.write("=================\n\n")
             
-            # Group checks by level
-            level1_checks = [c for c in self.report_data['cis_level1']['checks']]
-            level2_checks = [c for c in self.report_data['cis_level2']['checks']]
-            level3_checks = [c for c in self.report_data['cis_level3']['checks']]
+            for section_name, section_data in self.report_data['sections'].items():
+                if section_data is None or not section_data['checks']:
+                    continue
+                
+                # Convert section name from snake_case to Title Case
+                section_title = ' '.join(word.capitalize() for word in section_name.split('_'))
+                f.write(f"{section_title}\n")
+                f.write("-" * len(section_title) + "\n")
+                
+                for check in section_data['checks']:
+                    f.write(f"\n{check.get('title', 'Unnamed Check')}\n")
+                    f.write(f"Status: {check.get('status', 'UNKNOWN').upper()}\n")
+                    f.write(f"Details: {check.get('details', 'No details available')}\n")
+                    if 'risk' in check:
+                        f.write(f"Risk Level: {check['risk']}\n")
+                    if 'cis_ref' in check:
+                        f.write(f"CIS Reference: {check['cis_ref']}\n")
+                    if 'impact' in check:
+                        f.write(f"Security Impact: {check['impact']}\n")
+                    f.write("\n")
+                
+                f.write("\n")
             
-            # Level 1 Results
-            f.write("\nLevel 1 (Basic) Checks:\n")
-            level1_score = self.report_data['cis_level1']['score']
-            f.write(f"Score: {level1_score:.1f}%\n")
-            for check in level1_checks:
-                status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
+            f.write("\nRecommendations\n")
+            f.write("===============\n")
+            if high_risks:
+                f.write("\nHigh Priority:\n")
+                for risk in high_risks:
+                    f.write(f"- {risk.get('title', 'Unnamed Check')}: {risk.get('details', 'No details available')}\n")
             
-            # Level 2 Results
-            f.write("\nLevel 2 (Advanced) Checks:\n")
-            level2_score = self.report_data['cis_level2']['score']
-            f.write(f"Score: {level2_score:.1f}%\n")
-            for check in level2_checks:
-                status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
+            if medium_risks:
+                f.write("\nMedium Priority:\n")
+                for risk in medium_risks:
+                    f.write(f"- {risk.get('title', 'Unnamed Check')}: {risk.get('details', 'No details available')}\n")
             
-            # Level 3 Results
-            f.write("\nLevel 3 (Enterprise) Checks:\n")
-            level3_score = self.report_data['cis_level3']['score']
-            f.write(f"Score: {level3_score:.1f}%\n")
-            for check in level3_checks:
-                status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
-            
-            # Network Security
-            f.write("\n=== Network Security ===\n")
-            for check in self.report_data['network_checks']:
-                status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
-            
-            # Process Security
-            f.write("\n=== Process Security ===\n")
-            for check in self.report_data['process_checks']:
-                status = "✓" if check['status'] else "✗"
-                f.write(f"{status} {check['name']}: {check['details']}\n")
-            
-            # Vulnerabilities
-            f.write("\n=== Vulnerability Assessment ===\n")
-            if self.report_data['vulnerabilities']:
-                for vuln in self.report_data['vulnerabilities']:
-                    f.write(f"\nApplication: {vuln.get('name', 'Unknown')}\n")
-                    f.write(f"Version: {vuln.get('version', 'Unknown')}\n")
-                    f.write(f"Risk Score: {vuln.get('risk_score', 'N/A')}\n")
-                    if 'vulnerabilities' in vuln:
-                        f.write("Known Vulnerabilities:\n")
-                        for v in vuln['vulnerabilities']:
-                            f.write(f"- {v}\n")
-            else:
-                f.write("No vulnerabilities found\n")
-            
-            # CIS RAM Results
-            if self.report_data['cis_ram']:
-                f.write("\n=== CIS RAM Assessment ===\n")
-                for result in self.report_data['cis_ram']['controls'].values():
-                    f.write(f"\nControl {result['responses']['1.1_imp_1']}: {result['score']:.2f}\n")
-            
-            # Executive Summary
-            f.write("\n=== Executive Summary ===\n")
-            total_score = level1_score + level2_score + level3_score
-            total_max = 40 + 7 + 11
-            overall_percent = (total_score / total_max) * 100
-            f.write(f"Overall Security Score: {overall_percent:.1f}%\n")
-            f.write(f"CIS Level 1 (Basic) Score: {level1_score:.1f}%\n")
-            f.write(f"CIS Level 2 (Advanced) Score: {level2_score:.1f}%\n")
-            f.write(f"CIS Level 3 (Enterprise) Score: {level3_score:.1f}%\n")
-            
-            vuln_count = sum(len(v.get('vulnerabilities', [])) for v in self.report_data['vulnerabilities'])
-            f.write(f"Total Vulnerabilities Found: {vuln_count}\n")
-            
-            # Save as JSON for machine processing
-            json_data = {
-                'timestamp': datetime.now().isoformat(),
-                'system_info': self.report_data['system_info'],
-                'cis_compliance': {
-                    'level1': {'checks': level1_checks, 'score': level1_score},
-                    'level2': {'checks': level2_checks, 'score': level2_score},
-                    'level3': {'checks': level3_checks, 'score': level3_score},
-                    'overall_score': overall_percent
-                },
-                'network_security': self.report_data['network_checks'],
-                'process_security': self.report_data['process_checks'],
-                'vulnerabilities': self.report_data['vulnerabilities'],
-                'cis_ram_results': self.report_data['cis_ram']
-            }
-            
-            with open(json_path, 'w') as jf:
-                json.dump(json_data, jf, indent=2)
-            print(f"JSON data saved: {json_path}")
-
-def main():
-    scanner = MacDeviceScanner()
-    print("Starting macOS security scan...")
-    
-    # Check prerequisites and get user consent
-    scanner.check_prerequisites()
-    
-    try:
-        # Run basic checks first (no keychain/sudo required)
-        print("\nRunning Basic Security Checks...")
-        results = {
-            'checks': [],
-            'timestamp': datetime.now().isoformat()
+            if low_risks:
+                f.write("\nLow Priority:\n")
+                for risk in low_risks:
+                    f.write(f"- {risk.get('title', 'Unnamed Check')}: {risk.get('details', 'No details available')}\n")
+        
+        # Save raw data as JSON
+        json_data = {
+            'timestamp': datetime.now().isoformat(),
+            'overall_score': (passed_checks / total_checks) * 100 if total_checks > 0 else 0,
+            'total_checks': total_checks,
+            'passed_checks': passed_checks,
+            'failed_checks': failed_checks,
+            'risks': {
+                'high': len(high_risks),
+                'medium': len(medium_risks),
+                'low': len(low_risks)
+            },
+            'sections': self.report_data['sections']
         }
         
-        # System Configuration
-        print("\n1. Checking System Configuration...")
-        results['checks'].extend(scanner._check_cis_level1())
+        with open(json_path, 'w') as f:
+            json.dump(json_data, f, indent=2)
+            
+        print(f"\nDetailed report saved to: {report_path}")
+        print(f"JSON data saved to: {json_path}")
+
+    def _check_software_updates(self) -> Dict:
+        """Check software update settings"""
+        results = {
+            'total_checks': 2,
+            'passed_checks': 0,
+            'checks': []
+        }
         
-        # Network Security
-        print("\n2. Checking Network Security...")
-        dns_info = scanner.check_dns_history()
-        results['dns_info'] = dns_info
+        # Check Auto Update Status using softwareupdate command
+        auto_update = self._safe_run_command(['softwareupdate', '--schedule'])
+        auto_update_enabled = 'on' in auto_update.lower()
+        results['checks'].append({
+            'title': 'Automatic Updates Check',
+            'status': 'pass' if auto_update_enabled else 'fail',
+            'details': f"Automatic update check is {'enabled' if auto_update_enabled else 'disabled'}",
+            'expected': 'enabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 1.1',
+            'impact': 'System may miss critical security updates'
+        })
+        if auto_update_enabled:
+            results['passed_checks'] += 1
         
-        # Generate recommendations
-        print("\n3. Generating Security Recommendations...")
-        recommendations = scanner.generate_recommendations(results)
+        # Check System Update Status
+        update_status = self._safe_run_command(['softwareupdate', '-l'])
+        no_updates_needed = 'No new software available' in update_status
+        results['checks'].append({
+            'title': 'System Updates Status',
+            'status': 'pass' if no_updates_needed else 'fail',
+            'details': f"System {'is up to date' if no_updates_needed else 'has pending updates'}",
+            'expected': 'up to date',
+            'risk': 'MEDIUM',
+            'cis_ref': 'CIS 1.2',
+            'impact': 'System may be vulnerable to known security issues'
+        })
+        if no_updates_needed:
+            results['passed_checks'] += 1
         
-        # Save comprehensive report
-        print("\n4. Saving Detailed Report...")
-        scanner.save_report(results, recommendations)
+        return results
+
+    def _check_logging_auditing(self) -> Dict:
+        """Check logging and auditing settings"""
+        results = {
+            'total_checks': 2,
+            'passed_checks': 0,
+            'checks': []
+        }
         
-        # Display executive summary
-        print("\n5. Security Assessment Complete!")
-        print(scanner.generate_executive_summary(results))
+        # Check System Logging
+        log_status = self._safe_run_command(['log', 'show', '--last', '1m'])
+        has_logs = len(log_status) > 0
+        results['checks'].append({
+            'title': 'System Logging',
+            'status': 'pass' if has_logs else 'fail',
+            'details': f"System logging is {'active' if has_logs else 'inactive'}",
+            'expected': 'active',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 8.1',
+            'impact': 'System may not record security-relevant events'
+        })
+        if has_logs:
+            results['passed_checks'] += 1
         
-        print(f"\nDetailed report saved to: {scanner.reports_dir}/security_report_{scanner.today}.md")
+        # Check Log Retention
+        log_retention = self._safe_run_command(['log', 'show', '--last', '7d'])
+        has_retention = len(log_retention) > 0
+        results['checks'].append({
+            'title': 'Log Retention',
+            'status': 'pass' if has_retention else 'fail',
+            'details': f"Log retention is {'properly configured' if has_retention else 'not properly configured'}",
+            'expected': 'configured',
+            'risk': 'MEDIUM',
+            'cis_ref': 'CIS 8.2',
+            'impact': 'Historical security events may not be available for analysis'
+        })
+        if has_retention:
+            results['passed_checks'] += 1
+        
+        return results
+    
+    def _get_os_version(self) -> str:
+        """Get macOS version"""
+        try:
+            result = self._safe_run_command(['sw_vers', '-productVersion'])
+            return result.strip()
+        except:
+            return 'Unknown'
+    
+    def _get_build_version(self) -> str:
+        """Get macOS build version"""
+        try:
+            result = self._safe_run_command(['sw_vers', '-buildVersion'])
+            return result.strip()
+        except:
+            return 'Unknown'
+    
+    def _check_logging_auditing(self) -> Dict:
+        """Check logging and auditing settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 8.1 Audit Service
+            {
+                'id': '8.1.1',
+                'title': 'Audit Service Status',
+                'command': ['sudo', 'launchctl', 'list', 'com.apple.auditd'],
+                'expected': '"PID"',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 8.1.1',
+                'impact': 'System activities not being logged'
+            },
+            # 8.2 Audit Files
+            {
+                'id': '8.2.1',
+                'title': 'Audit Files Permissions',
+                'command': ['sudo', 'ls', '-l', '/var/audit'],
+                'expected': 'dr-x------',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 8.2.1',
+                'impact': 'Audit logs may be tampered with'
+            },
+            # 8.3 Audit Configuration
+            {
+                'id': '8.3.1',
+                'title': 'Audit Control Settings',
+                'command': ['sudo', 'cat', '/etc/security/audit_control'],
+                'expected': 'flags:lo,aa,ad,fd,fm,-all',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 8.3.1',
+                'impact': 'Important events may not be logged'
+            },
+            # 8.4 Audit Retention
+            {
+                'id': '8.4.1',
+                'title': 'Audit Log Retention',
+                'command': ['sudo', 'cat', '/etc/security/audit_control'],
+                'expected': 'expire-after:60d',
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 8.4.1',
+                'impact': 'Audit logs may be lost'
+            },
+            # 8.5 Security Logging
+            {
+                'id': '8.5.1',
+                'title': 'Security Logging Status',
+                'command': ['log', 'show', '--predicate', '"subsystem == \"com.apple.security\"" --last 1m'],
+                'expected': lambda x: len(x.strip()) > 0,
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 8.5.1',
+                'impact': 'Security events not being logged'
+            },
+            # 8.6 Log Rotation
+            {
+                'id': '8.6.1',
+                'title': 'System Log Rotation',
+                'command': ['sudo', 'cat', '/etc/newsyslog.conf'],
+                'expected': '/var/log',
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 8.6.1',
+                'impact': 'Logs may fill disk space'
+            },
+            # 8.7 Log Permissions
+            {
+                'id': '8.7.1',
+                'title': 'System Log Permissions',
+                'command': ['sudo', 'ls', '-l', '/var/log/system.log'],
+                'expected': '-rw-r-----',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 8.7.1',
+                'impact': 'Logs may be accessed by unauthorized users'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                if callable(check.get('expected')):
+                    passed = check['expected'](result)
+                else:
+                    passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+
+    def _check_password_policy(self) -> Dict:
+        """Check password policy settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 5.1 Password Requirements
+            {
+                'id': '5.1.1',
+                'title': 'Password Length Requirement',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'minChars=12',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 5.1.1',
+                'impact': 'Weak passwords may be used'
+            },
+            {
+                'id': '5.1.2',
+                'title': 'Password Complexity',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'requiresAlpha=1',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 5.1.2',
+                'impact': 'Simple passwords may be used'
+            },
+            {
+                'id': '5.1.3',
+                'title': 'Password Special Characters',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'requiresSymbol=1',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 5.1.3',
+                'impact': 'Passwords may lack special characters'
+            },
+            # 5.2 Password Age
+            {
+                'id': '5.2.1',
+                'title': 'Maximum Password Age',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'maxMinutesUntilChangePassword=129600',  # 90 days
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 5.2.1',
+                'impact': 'Passwords may be used indefinitely'
+            },
+            {
+                'id': '5.2.2',
+                'title': 'Minimum Password Age',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'minMinutesUntilChangePassword=1440',  # 24 hours
+                'risk': 'LOW',
+                'cis_ref': 'CIS 5.2.2',
+                'impact': 'Passwords may be changed too frequently'
+            },
+            # 5.3 Password History
+            {
+                'id': '5.3.1',
+                'title': 'Password History',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'usingHistory=15',
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 5.3.1',
+                'impact': 'Old passwords may be reused'
+            },
+            # 5.4 Account Lockout
+            {
+                'id': '5.4.1',
+                'title': 'Account Lockout Threshold',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'maxFailedLoginAttempts=5',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 5.4.1',
+                'impact': 'Accounts vulnerable to brute force attacks'
+            },
+            {
+                'id': '5.4.2',
+                'title': 'Account Lockout Duration',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'minutesUntilFailedLoginReset=15',
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 5.4.2',
+                'impact': 'Locked accounts may be unlocked too quickly'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+
+    def _check_screen_saver(self) -> Dict:
+        """Check screen saver security settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 6.1 Screen Saver Activation
+            {
+                'id': '6.1.1',
+                'title': 'Screen Saver Activation',
+                'command': ['defaults', '-currentHost', 'read', 'com.apple.screensaver', 'idleTime'],
+                'expected': lambda x: int(x) <= 1200,  # 20 minutes or less
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 6.1.1',
+                'impact': 'System may remain unlocked when unattended'
+            },
+            # 6.2 Screen Saver Password Protection
+            {
+                'id': '6.2.1',
+                'title': 'Screen Saver Password Protection',
+                'command': ['defaults', 'read', 'com.apple.screensaver', 'askForPassword'],
+                'expected': '1',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 6.2.1',
+                'impact': 'Unauthorized access when system is unattended'
+            },
+            # 6.3 Password Delay
+            {
+                'id': '6.3.1',
+                'title': 'Password Delay After Screen Saver',
+                'command': ['defaults', 'read', 'com.apple.screensaver', 'askForPasswordDelay'],
+                'expected': '0',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 6.3.1',
+                'impact': 'Delayed password prompt allows unauthorized access'
+            },
+            # 6.4 Hot Corners
+            {
+                'id': '6.4.1',
+                'title': 'Hot Corners Configuration',
+                'command': ['defaults', 'read', 'com.apple.dock', 'wvous-bl-corner'],
+                'expected': '6',  # Screen Saver
+                'risk': 'LOW',
+                'cis_ref': 'CIS 6.4.1',
+                'impact': 'No quick way to activate screen saver'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                if callable(check.get('expected')):
+                    try:
+                        value = int(result.strip())
+                        passed = check['expected'](value)
+                    except (ValueError, TypeError):
+                        passed = False
+                else:
+                    passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+
+    def _check_system_security(self) -> Dict:
+        """Check system security settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 2.1 System Integrity Protection
+            {
+                'id': '2.1.1',
+                'title': 'System Integrity Protection Status',
+                'command': ['csrutil', 'status'],
+                'expected': 'enabled',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 2.1.1',
+                'impact': 'System files and processes may be modified by malware'
+            },
+            # 2.2 FileVault
+            {
+                'id': '2.2.1',
+                'title': 'FileVault Status',
+                'command': ['fdesetup', 'status'],
+                'expected': 'On',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 2.2.1',
+                'impact': 'Data may be accessible if device is lost or stolen'
+            },
+            # 2.3 Gatekeeper
+            {
+                'id': '2.3.1',
+                'title': 'Gatekeeper Status',
+                'command': ['spctl', '--status'],
+                'expected': 'assessments enabled',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 2.3.1',
+                'impact': 'Unsigned applications may be executed'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                if callable(check.get('expected')):
+                    try:
+                        value = int(result.strip())
+                        passed = check['expected'](value)
+                    except (ValueError, TypeError):
+                        passed = False
+                else:
+                    passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+    
+    def _check_password_policy(self) -> Dict:
+        """Check password policy settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 5.1 Password Requirements
+            {
+                'id': '5.1.1',
+                'title': 'Password Length Requirement',
+                'command': ['pwpolicy', '-getaccountpolicies'],
+                'expected': 'minChars=12',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 5.1.1',
+                'impact': 'Weak passwords may be used'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+    
+    def _check_screen_saver(self) -> Dict:
+        """Check screen saver security settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 6.1 Screen Saver Activation
+            {
+                'id': '6.1.1',
+                'title': 'Screen Saver Activation',
+                'command': ['defaults', '-currentHost', 'read', 'com.apple.screensaver', 'idleTime'],
+                'expected': lambda x: int(x) <= 1200,  # 20 minutes or less
+                'risk': 'MEDIUM',
+                'cis_ref': 'CIS 6.1.1',
+                'impact': 'System may remain unlocked when unattended'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                if callable(check.get('expected')):
+                    try:
+                        value = int(result.strip())
+                        passed = check['expected'](value)
+                    except (ValueError, TypeError):
+                        passed = False
+                else:
+                    passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+
+    def _check_network_security(self) -> Dict:
+        """Check network security settings"""
+        results = {
+            'checks': [],
+            'total_checks': 0,
+            'passed_checks': 0
+        }
+        
+        checks = [
+            # 3.1 Firewall
+            {
+                'id': '3.1.1',
+                'title': 'Firewall Status',
+                'command': ['sudo', '/usr/libexec/ApplicationFirewall/socketfilterfw', '--getglobalstate'],
+                'expected': 'enabled',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 3.1.1',
+                'impact': 'System may be vulnerable to unauthorized network access and potential malware communication.'
+            },
+            # 3.2 Remote Login
+            {
+                'id': '3.2.1',
+                'title': 'Remote Login Status',
+                'command': ['sudo', 'systemsetup', '-getremotelogin'],
+                'expected': 'Remote Login: Off',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 3.2.1',
+                'impact': 'Unauthorized remote access may be possible'
+            },
+            # 3.3 Remote Management
+            {
+                'id': '3.3.1',
+                'title': 'Remote Management Status',
+                'command': ['sudo', 'systemsetup', '-getremotemanagement'],
+                'expected': 'Remote Management: Off',
+                'risk': 'HIGH',
+                'cis_ref': 'CIS 3.3.1',
+                'impact': 'Unauthorized remote management may be possible'
+            }
+        ]
+        
+        for check in checks:
+            try:
+                result = self._safe_run_command(check['command'])
+                if callable(check.get('expected')):
+                    try:
+                        value = int(result.strip())
+                        passed = check['expected'](value)
+                    except (ValueError, TypeError):
+                        passed = False
+                else:
+                    passed = check['expected'] in result
+                
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'pass' if passed else 'fail',
+                    'details': result.strip() if result.strip() else 'No output',
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+                if passed:
+                    results['passed_checks'] += 1
+            except Exception as e:
+                results['checks'].append({
+                    'id': check['id'],
+                    'title': check['title'],
+                    'status': 'error',
+                    'details': str(e),
+                    'risk': check['risk'],
+                    'cis_ref': check['cis_ref'],
+                    'impact': check['impact']
+                })
+                results['total_checks'] += 1
+        
+        return results
+    
+    def _check_sharing_settings(self) -> Dict:
+        """Check sharing settings"""
+        results = {
+            'total_checks': 3,
+            'passed_checks': 0,
+            'checks': []
+        }
+        
+        # Check File Sharing
+        file_sharing = self._safe_run_command(['systemsetup', '-getremoteappleevents'])
+        file_sharing_disabled = 'off' in file_sharing.lower()
+        results['checks'].append({
+            'title': 'File Sharing',
+            'status': 'pass' if file_sharing_disabled else 'fail',
+            'details': f"File sharing is {'disabled' if file_sharing_disabled else 'enabled'}",
+            'expected': 'disabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 2.4.1',
+            'impact': 'System may be vulnerable to unauthorized file access'
+        })
+        if file_sharing_disabled:
+            results['passed_checks'] += 1
+        
+        # Check Remote Management
+        remote_mgmt = self._safe_run_command(['systemsetup', '-getremotelogin'])
+        remote_mgmt_disabled = 'off' in remote_mgmt.lower()
+        results['checks'].append({
+            'title': 'Remote Management',
+            'status': 'pass' if remote_mgmt_disabled else 'fail',
+            'details': f"Remote management is {'disabled' if remote_mgmt_disabled else 'enabled'}",
+            'expected': 'disabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 2.4.2',
+            'impact': 'Unauthorized remote management may be possible'
+        })
+        if remote_mgmt_disabled:
+            results['passed_checks'] += 1
+        
+        # Check Screen Sharing
+        screen_sharing = self._safe_run_command(['systemsetup', '-getremotelogin'])
+        screen_sharing_disabled = 'off' in screen_sharing.lower()
+        results['checks'].append({
+            'title': 'Screen Sharing',
+            'status': 'pass' if screen_sharing_disabled else 'fail',
+            'details': f"Screen sharing is {'disabled' if screen_sharing_disabled else 'enabled'}",
+            'expected': 'disabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 2.4.3',
+            'impact': 'System may be vulnerable to unauthorized screen access'
+        })
+        if screen_sharing_disabled:
+            results['passed_checks'] += 1
+        
+        return results
+    
+    def _check_software_updates(self) -> Dict:
+        """Check software update settings"""
+        results = {
+            'total_checks': 2,
+            'passed_checks': 0,
+            'checks': []
+        }
+        
+        # Check Auto Update Status
+        auto_update = self._safe_run_command(['softwareupdate', '--schedule'])
+        auto_update_enabled = 'on' in auto_update.lower()
+        results['checks'].append({
+            'title': 'Automatic Updates Check',
+            'status': 'pass' if auto_update_enabled else 'fail',
+            'details': f"Automatic update check is {'enabled' if auto_update_enabled else 'disabled'}",
+            'expected': 'enabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 1.1',
+            'impact': 'System may miss critical security updates'
+        })
+        if auto_update_enabled:
+            results['passed_checks'] += 1
+        
+        # Check Auto Download Status
+        auto_download = self._safe_run_command(['defaults', 'read', '/Library/Preferences/com.apple.commerce', 'AutoUpdate'])
+        auto_download_enabled = '1' in auto_download
+        results['checks'].append({
+            'title': 'Automatic Updates Download',
+            'status': 'pass' if auto_download_enabled else 'fail',
+            'details': f"Automatic update download is {'enabled' if auto_download_enabled else 'disabled'}",
+            'expected': 'enabled',
+            'risk': 'MEDIUM',
+            'cis_ref': 'CIS 1.2',
+            'impact': 'System may delay installation of critical security updates'
+        })
+        if auto_download_enabled:
+            results['passed_checks'] += 1
+        
+        return results
+    
+    def _check_logging_auditing(self) -> Dict:
+        """Check logging and auditing settings"""
+        results = {
+            'total_checks': 2,
+            'passed_checks': 0,
+            'checks': []
+        }
+        
+        # Check Security Auditing Status
+        audit_status = self._safe_run_command(['sudo', 'praudit', '-l', '/var/audit/current'])
+        audit_enabled = len(audit_status) > 0
+        results['checks'].append({
+            'title': 'Security Auditing',
+            'status': 'pass' if audit_enabled else 'fail',
+            'details': f"Security auditing is {'enabled' if audit_enabled else 'disabled'}",
+            'expected': 'enabled',
+            'risk': 'HIGH',
+            'cis_ref': 'CIS 8.1',
+            'impact': 'System may not record security-relevant events'
+        })
+        if audit_enabled:
+            results['passed_checks'] += 1
+        
+        # Check System Log Size
+        log_config = self._safe_run_command(['log', 'config'])
+        has_logs = 'mode = "simple"' in log_config
+        results['checks'].append({
+            'title': 'System Logging',
+            'status': 'pass' if has_logs else 'fail',
+            'details': f"System logging is {'active' if has_logs else 'inactive'}",
+            'expected': 'active',
+            'risk': 'MEDIUM',
+            'cis_ref': 'CIS 8.2',
+            'impact': 'System may not maintain adequate logs for security analysis'
+        })
+        if has_logs:
+            results['passed_checks'] += 1
+        
+        return results
+
+def main():
+    """Main execution flow"""
+    try:
+        scanner = MacDeviceScanner()
+        scanner.check_prerequisites()
+        
+        print("\nRunning Security Checks...\n")
+        
+        # 1. System Security
+        print("1. Checking System Security...")
+        system_results = scanner._check_system_security()
+        scanner.report_data['sections']['system_security'] = system_results
+        
+        # 2. Password Policy
+        print("2. Checking Password Policy...")
+        password_results = scanner._check_password_policy()
+        scanner.report_data['sections']['password_policy'] = password_results
+        
+        # 3. Screen Saver
+        print("3. Checking Screen Saver Settings...")
+        screen_results = scanner._check_screen_saver()
+        scanner.report_data['sections']['screen_saver'] = screen_results
+        
+        # 4. Network Security
+        print("4. Checking Network Security...")
+        network_results = scanner._check_network_security()
+        scanner.report_data['sections']['network_security'] = network_results
+        
+        # 5. Sharing Settings
+        print("5. Checking Sharing Settings...")
+        sharing_results = scanner._check_sharing_settings()
+        scanner.report_data['sections']['sharing_settings'] = sharing_results
+        
+        # 6. Software Updates
+        print("6. Checking Software Updates...")
+        updates_results = scanner._check_software_updates()
+        scanner.report_data['sections']['software_updates'] = updates_results
+        
+        # 7. Logging and Auditing
+        print("7. Checking Logging and Auditing...")
+        logging_results = scanner._check_logging_auditing()
+        scanner.report_data['sections']['logging_auditing'] = logging_results
+        
+        print("\n8. Generating Security Recommendations...")
+        scanner.generate_report()
+        
+        print("\n9. Security Assessment Complete!")
         
     except Exception as e:
         print(f"\nError during scan: {str(e)}")
-        sys.exit(1)
-
+        import traceback
+        traceback.print_exc()
+        
 if __name__ == '__main__':
     main()

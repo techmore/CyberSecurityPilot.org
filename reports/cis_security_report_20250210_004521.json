@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-02-10T06:02:51Z",
+  "report_file": "/Users/techmore/CyberSecurityPilot.org/scripts/../reports/cis_security_report_20250210_004521.txt",
+  "summary": {
+    "total_checks": 188,
+    "passed_checks": 32,
+    "failed_checks": 156,
+    "compliance_rate": 17
+  },
+  "system_info": {
+    "system_information": {
+      "model": "Mac mini",
+      "macosversion": "15.3"
+    }
+  },
+  "sections": [
+  ]
+}

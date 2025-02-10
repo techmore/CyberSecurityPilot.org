@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS Security Benchmark Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex h-16 items-center justify-between">
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="flex flex-shrink-0 items-center">
+                        <span class="text-white font-bold text-xl">CyberSecurityPilot</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <a href="dns_table.html" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">DNS Monitor</a>
+                            <a href="cis-report-dashboard.html" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">CIS Security</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Historical Reports Section -->
+        <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-900">Security Reports History</h2>
+                <div class="flex space-x-4">
+                    <input type="text" 
+                           id="reportSearch" 
+                           placeholder="Search reports..." 
+                           class="px-3 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="reportFilter" 
+                            class="px-3 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Reports</option>
+                        <option value="lastDay">Last 24 Hours</option>
+                        <option value="lastWeek">Last Week</option>
+                        <option value="lastMonth">Last Month</option>
+                    </select>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
+                                Date ↕
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
+                                Compliance Rate ↕
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
+                                Checks (Passed/Total) ↕
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                System Info
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Reports will be dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Current Report Details -->
+        <div class="bg-white shadow-lg rounded-lg p-4">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-gray-900">Current Report Details</h2>
+                <p class="text-sm text-gray-500" id="currentReportDate"></p>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-sm font-medium text-gray-500">Compliance Rate</div>
+                    <div class="text-2xl font-bold text-gray-900" id="complianceRate">-</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-sm font-medium text-gray-500">Total Checks</div>
+                    <div class="text-2xl font-bold text-gray-900" id="totalChecks">-</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-sm font-medium text-gray-500">Passed Checks</div>
+                    <div class="text-2xl font-bold text-green-600" id="passedChecks">-</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-sm font-medium text-gray-500">Failed Checks</div>
+                    <div class="text-2xl font-bold text-red-600" id="failedChecks">-</div>
+                </div>
+            </div>
+
+            <!-- All Checks -->
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-900">All Security Checks</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="filterChecks('all')" class="px-3 py-1 text-sm rounded-lg bg-gray-100 hover:bg-gray-200">All</button>
+                        <button onclick="filterChecks('passed')" class="px-3 py-1 text-sm rounded-lg bg-green-100 hover:bg-green-200">Passed</button>
+                        <button onclick="filterChecks('failed')" class="px-3 py-1 text-sm rounded-lg bg-red-100 hover:bg-red-200">Failed</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="allChecksContainer">
+                    <!-- Checks will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentReport = null;
+        let checkFilter = 'all';
+        let reports = [];
+        let sortConfig = {
+            column: 'date',
+            ascending: false
+        };
+
+        function displayCurrentReport(report) {
+            currentReport = report;
+            
+            // Update summary cards
+            document.getElementById('currentReportDate').textContent = new Date(report.timestamp).toLocaleString();
+            document.getElementById('complianceRate').textContent = `${report.summary.compliance_rate}%`;
+            document.getElementById('totalChecks').textContent = report.summary.total_checks;
+            document.getElementById('passedChecks').textContent = report.summary.passed_checks;
+            document.getElementById('failedChecks').textContent = report.summary.failed_checks;
+
+            // Display all checks
+            displayAllChecks();
+        }
+
+        function displayAllChecks() {
+            if (!currentReport) return;
+
+            const container = document.getElementById('allChecksContainer');
+            container.innerHTML = '';
+
+            currentReport.sections.forEach(section => {
+                section.checks.forEach(check => {
+                    if (checkFilter !== 'all' && check.status.toLowerCase() !== checkFilter) return;
+
+                    const checkCard = document.createElement('div');
+                    checkCard.className = 'bg-white border rounded-lg p-3 text-sm';
+                    checkCard.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium text-gray-900 truncate" title="${section.name}">${section.name}</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                check.status === 'Passed' ? 'bg-green-100 text-green-800' :
+                                check.status === 'Failed' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }">${check.status}</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">${check.name}</p>
+                        ${check.remediation ? `
+                            <div class="mt-2 pt-2 border-t border-gray-100">
+                                <details class="text-xs">
+                                    <summary class="text-blue-600 hover:text-blue-800 cursor-pointer">Show Remediation</summary>
+                                    <p class="mt-1 text-gray-600">${check.remediation}</p>
+                                </details>
+                            </div>
+                        ` : ''}
+                    `;
+                    container.appendChild(checkCard);
+                });
+            });
+        }
+
+        function filterChecks(filter) {
+            checkFilter = filter;
+            displayAllChecks();
+        }
+
+        // Function to load reports from the directory
+        async function loadReports() {
+            try {
+                const response = await fetch('../reports/');
+                const dirListing = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(dirListing, 'text/html');
+                
+                // Get all JSON report files
+                const reportFiles = Array.from(doc.querySelectorAll('a'))
+                    .filter(a => a.href.endsWith('.json'))
+                    .map(a => a.href);
+
+                // Load each report
+                const loadedReports = await Promise.all(
+                    reportFiles.map(async file => {
+                        const response = await fetch(file);
+                        return response.json();
+                    })
+                );
+
+                // Process reports
+                reports = loadedReports.map(report => ({
+                    date: new Date(report.timestamp),
+                    compliance: report.summary.compliance_rate,
+                    passed: report.summary.passed_checks,
+                    total: report.summary.total_checks,
+                    systemInfo: report.system_info,
+                    textFile: report.report_file,
+                    jsonFile: report.report_file.replace('.txt', '.json')
+                }));
+
+                // Sort reports by date
+                reports.sort((a, b) => b.date - a.date);
+
+                // Set most recent report as current
+                if (reports.length > 0) {
+                    displayCurrentReport(loadedReports[0]);
+                }
+
+                displayReports();
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            }
+        }
+
+        // Function to display reports
+        function displayReports() {
+            const tbody = document.getElementById('reportsTableBody');
+            tbody.innerHTML = '';
+
+            if (reports.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-3 py-2 text-center text-sm text-gray-500">
+                            No reports found. View them directly in the <a href="../reports/" class="text-blue-600 hover:text-blue-900">reports directory</a>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            reports.forEach(report => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                // Main row content
+                row.innerHTML = `
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                        ${report.date.toLocaleString()}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-medium text-gray-900">${report.compliance}%</span>
+                            <div class="w-16 bg-gray-200 rounded-full h-1.5">
+                                <div class="bg-${report.compliance >= 70 ? 'green' : report.compliance >= 40 ? 'yellow' : 'red'}-500 rounded-full h-1.5" 
+                                     style="width: ${report.compliance}%">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                        ${report.passed}/${report.total}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                        <div class="flex flex-col">
+                            <span>${report.systemInfo.system_information.model}</span>
+                            <span class="text-xs text-gray-400">macOS ${report.systemInfo.system_information.macosversion}</span>
+                        </div>
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleDetails(this)" class="text-blue-600 hover:text-blue-900">
+                                Show Details
+                            </button>
+                            <a href="${report.textFile}" class="text-gray-500 hover:text-gray-700" target="_blank">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </a>
+                            <a href="${report.jsonFile}" class="text-gray-500 hover:text-gray-700" target="_blank">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                `;
+
+                // Create detail row
+                const detailRow = document.createElement('tr');
+                detailRow.className = 'hidden';
+                detailRow.innerHTML = `
+                    <td colspan="5" class="px-3 py-2 bg-gray-50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- System Information -->
+                            <div class="space-y-2">
+                                <h4 class="font-semibold text-sm text-gray-700">System Information</h4>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    ${Object.entries(report.systemInfo.system_information).map(([key, value]) => `
+                                        <div class="text-gray-600">${key}:</div>
+                                        <div class="text-gray-900">${value}</div>
+                                    `).join('')}
+                                </div>
+                                
+                                <h4 class="font-semibold text-sm text-gray-700 mt-4">Storage Information</h4>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    ${Object.entries(report.systemInfo.storage_information).map(([key, value]) => `
+                                        <div class="text-gray-600">${key}:</div>
+                                        <div class="text-gray-900">${value}</div>
+                                    `).join('')}
+                                </div>
+
+                                <h4 class="font-semibold text-sm text-gray-700 mt-4">Network Information</h4>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    ${Object.entries(report.systemInfo.network_information).map(([key, value]) => `
+                                        <div class="text-gray-600">${key}:</div>
+                                        <div class="text-gray-900">${value}</div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Security Checks -->
+                            <div class="space-y-2">
+                                <h4 class="font-semibold text-sm text-gray-700">Security Checks</h4>
+                                <div class="space-y-1">
+                                    ${report.sections.map(section => `
+                                        <div class="border-t border-gray-200 pt-2">
+                                            <h5 class="text-xs font-medium text-gray-700">${section.name}</h5>
+                                            <div class="mt-1 space-y-1">
+                                                ${section.checks.map(check => `
+                                                    <div class="flex items-start space-x-2 text-xs">
+                                                        <span class="flex-shrink-0 w-16 font-medium ${
+                                                            check.status === 'Passed' ? 'text-green-600' :
+                                                            check.status === 'Failed' ? 'text-red-600' :
+                                                            'text-yellow-600'
+                                                        }">${check.status}</span>
+                                                        <span class="flex-grow text-gray-900">${check.name}</span>
+                                                        ${check.remediation ? `
+                                                            <button onclick="toggleRemediation(this)" class="text-blue-600 hover:text-blue-900 text-xs">
+                                                                Show Fix
+                                                            </button>
+                                                            <div class="hidden mt-1 text-xs text-gray-600 bg-gray-100 p-2 rounded">
+                                                                ${check.remediation}
+                                                            </div>
+                                                        ` : ''}
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+                tbody.appendChild(detailRow);
+            });
+        }
+
+        // Toggle details visibility
+        function toggleDetails(button) {
+            const detailRow = button.closest('tr').nextElementSibling;
+            detailRow.classList.toggle('hidden');
+            button.textContent = detailRow.classList.contains('hidden') ? 'Show Details' : 'Hide Details';
+        }
+
+        // Toggle remediation visibility
+        function toggleRemediation(button) {
+            const remediation = button.nextElementSibling;
+            remediation.classList.toggle('hidden');
+            button.textContent = remediation.classList.contains('hidden') ? 'Show Fix' : 'Hide Fix';
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReports();
+        });
+    </script>
+</body>
+</html>

@@ -21,62 +21,59 @@
         <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <!-- Reports List -->
             <div class="bg-white shadow rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <h2 class="text-lg font-medium text-gray-900 mb-4">Available Reports</h2>
-                    <div class="space-y-4" x-data="{ reports: [], debug: '' }" x-init="
-                        debug = 'Fetching reports...';
-                        fetch('./reports/reports_list.json')
+                <div class="px-4 py-4 sm:p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Available Reports</h2>
+                    <div class="space-y-4" x-data="{ reports: [] }" x-init="
+                        fetch('reports/reports_list.json')
                             .then(response => response.json())
                             .then(data => {
-                                debug = 'Got data!';
-                                reports = data.reports.sort((a, b) => new Date(b.date) - new Date(a.date));
-                            })
-                            .catch(error => debug = 'Error: ' + error)
-                    ">
-                        <div x-text="debug" class="text-red-500 mb-4"></div>
+                                reports = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                            })">
                         <template x-for="report in reports" :key="report.html">
                             <div class="border rounded-lg overflow-hidden">
                                 <div class="bg-white px-4 py-4">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <h3 class="text-lg font-medium text-gray-900" x-text="'Report from ' + new Date(report.date).toLocaleString()"></h3>
-                                            <div class="mt-1 flex items-center space-x-4">
-                                                <div class="flex items-center text-sm text-gray-500">
-                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                    </svg>
-                                                    <span x-text="report.passed + ' passed'"></span>
+                                    <div class="flex flex-col p-1">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <h3 class="text-base font-medium text-gray-900" x-text="'Report from ' + new Date(report.date).toLocaleString()"></h3>
+                                                <div class="mt-0.5 text-sm text-gray-600">
+                                                    <span x-text="report.hostname + ' • ' + report.model + ' • macOS ' + report.macos_version + ' • ' + report.processor + ' • ' + report.memory"></span>
                                                 </div>
-                                                <div class="flex items-center text-sm text-gray-500">
-                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                    </svg>
-                                                    <span x-text="report.failed + ' failed'"></span>
+                                            </div>
+                                            <div class="flex items-center space-x-4">
+                                                <div class="text-lg font-medium">
+                                                    <template x-if="report.passed_delta > 0">
+                                                        <span class="text-green-600">+<span x-text="report.passed_delta"></span> passed</span>
+                                                    </template>
+                                                    <template x-if="report.failed_delta > 0">
+                                                        <span class="text-red-600 ml-3">+<span x-text="report.failed_delta"></span> failed</span>
+                                                    </template>
                                                 </div>
-                                                <div class="flex items-center text-sm text-gray-500">
-                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                                                    </svg>
-                                                    <span x-text="report.compliance + '% compliance'"></span>
+                                                <div class="flex items-center space-x-2">
+                                                    <a :href="'reports/' + report.txt" download class="inline-flex items-center p-1 text-gray-500 hover:text-gray-700" title="Download Raw Report">
+                                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                        </svg>
+                                                    </a>
+                                                    <a :href="'reports/' + report.html" class="inline-flex items-center p-1 text-indigo-600 hover:text-indigo-800" title="View Report">
+                                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                        </svg>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex space-x-2">
-                                            <a :href="'./reports/' + report.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                View Report
-                                            </a>
-                                            <a :href="'./reports/' + report.txt" download class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                                </svg>
-                                                Download
-                                            </a>
-                                            <a :href="'./reports/' + report.json" download class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                                </svg>
-                                                JSON
-                                            </a>
+                                        <div class="mt-1 flex items-center space-x-6">
+                                            <div class="text-base text-green-600">
+                                                <span x-text="report.passed + ' passed'"></span>
+                                            </div>
+                                            <div class="text-base text-red-600">
+                                                <span x-text="report.failed + ' failed'"></span>
+                                            </div>
+                                            <div class="text-base text-gray-600">
+                                                <span x-text="Math.round((report.passed / (report.passed + report.failed)) * 100) + '% compliance'"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -123,11 +123,26 @@
     <script>
         let currentReport = null;
         let checkFilter = 'all';
-        let reports = [];
-        let sortConfig = {
-            column: 'date',
-            ascending: false
-        };
+        
+        // Sample report data - this would normally come from your backend
+        const reportsList = [
+            {
+                timestamp: "2025-02-10T00:21:40-05:00",
+                report_file: "../reports/cis_security_report_20250210_002140.txt",
+                summary: {
+                    total_checks: 188,
+                    passed_checks: 27,
+                    failed_checks: 161,
+                    compliance_rate: 14
+                },
+                system_info: {
+                    system_information: {
+                        model: "Mac mini",
+                        macosversion: "15.3"
+                    }
+                }
+            }
+        ];
 
         function displayCurrentReport(report) {
             currentReport = report;
@@ -143,153 +158,63 @@
             displayAllChecks();
         }
 
-        function displayAllChecks() {
-            if (!currentReport) return;
-
-            const container = document.getElementById('allChecksContainer');
-            container.innerHTML = '';
-
-            currentReport.sections.forEach(section => {
-                section.checks.forEach(check => {
-                    if (checkFilter !== 'all' && check.status.toLowerCase() !== checkFilter) return;
-
-                    const checkCard = document.createElement('div');
-                    checkCard.className = 'bg-white border rounded-lg p-3 text-sm';
-                    checkCard.innerHTML = `
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-medium text-gray-900 truncate" title="${section.name}">${section.name}</span>
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                                check.status === 'Passed' ? 'bg-green-100 text-green-800' :
-                                check.status === 'Failed' ? 'bg-red-100 text-red-800' :
-                                'bg-yellow-100 text-yellow-800'
-                            }">${check.status}</span>
-                        </div>
-                        <p class="text-gray-600 mb-2">${check.name}</p>
-                        ${check.remediation ? `
-                            <div class="mt-2 pt-2 border-t border-gray-100">
-                                <details class="text-xs">
-                                    <summary class="text-blue-600 hover:text-blue-800 cursor-pointer">Show Remediation</summary>
-                                    <p class="mt-1 text-gray-600">${check.remediation}</p>
-                                </details>
-                            </div>
-                        ` : ''}
-                    `;
-                    container.appendChild(checkCard);
-                });
-            });
-        }
-
-        function filterChecks(filter) {
-            checkFilter = filter;
-            displayAllChecks();
-        }
-
-        // Function to load reports from the directory
-        async function loadReports() {
-            try {
-                const response = await fetch('../reports/');
-                const dirListing = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(dirListing, 'text/html');
-                
-                // Get all JSON report files
-                const reportFiles = Array.from(doc.querySelectorAll('a'))
-                    .filter(a => a.href.endsWith('.json'))
-                    .map(a => a.href);
-
-                // Load each report
-                const loadedReports = await Promise.all(
-                    reportFiles.map(async file => {
-                        const response = await fetch(file);
-                        return response.json();
-                    })
-                );
-
-                // Process reports
-                reports = loadedReports.map(report => ({
-                    date: new Date(report.timestamp),
-                    compliance: report.summary.compliance_rate,
-                    passed: report.summary.passed_checks,
-                    total: report.summary.total_checks,
-                    systemInfo: report.system_info,
-                    textFile: report.report_file,
-                    jsonFile: report.report_file.replace('.txt', '.json')
-                }));
-
-                // Sort reports by date
-                reports.sort((a, b) => b.date - a.date);
-
-                // Set most recent report as current
-                if (reports.length > 0) {
-                    displayCurrentReport(loadedReports[0]);
-                }
-
-                displayReports();
-            } catch (error) {
-                console.error('Error loading reports:', error);
-            }
-        }
-
-        // Function to display reports
         function displayReports() {
             const tbody = document.getElementById('reportsTableBody');
             tbody.innerHTML = '';
 
-            if (reports.length === 0) {
+            if (reportsList.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="5" class="px-3 py-2 text-center text-sm text-gray-500">
-                            No reports found. View them directly in the <a href="../reports/" class="text-blue-600 hover:text-blue-900">reports directory</a>
+                            No reports found. Run the CIS check script to generate reports.
                         </td>
                     </tr>
                 `;
                 return;
             }
 
-            reports.forEach(report => {
+            reportsList.forEach(report => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50';
-                
-                // Main row content
                 row.innerHTML = `
                     <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                        ${report.date.toLocaleString()}
+                        ${new Date(report.timestamp).toLocaleString()}
                     </td>
                     <td class="px-3 py-2 whitespace-nowrap">
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm font-medium text-gray-900">${report.compliance}%</span>
+                            <span class="text-sm font-medium text-gray-900">${report.summary.compliance_rate}%</span>
                             <div class="w-16 bg-gray-200 rounded-full h-1.5">
-                                <div class="bg-${report.compliance >= 70 ? 'green' : report.compliance >= 40 ? 'yellow' : 'red'}-500 rounded-full h-1.5" 
-                                     style="width: ${report.compliance}%">
+                                <div class="bg-${report.summary.compliance_rate >= 70 ? 'green' : report.summary.compliance_rate >= 40 ? 'yellow' : 'red'}-500 rounded-full h-1.5" 
+                                     style="width: ${report.summary.compliance_rate}%">
                                 </div>
                             </div>
                         </div>
                     </td>
                     <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                        ${report.passed}/${report.total}
+                        ${report.summary.passed_checks}/${report.summary.total_checks}
                     </td>
                     <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                         <div class="flex flex-col">
-                            <span>${report.systemInfo.system_information.model}</span>
-                            <span class="text-xs text-gray-400">macOS ${report.systemInfo.system_information.macosversion}</span>
+                            <span>${report.system_info.system_information.model}</span>
+                            <span class="text-xs text-gray-400">macOS ${report.system_info.system_information.macosversion}</span>
                         </div>
                     </td>
                     <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
                         <div class="flex items-center space-x-2">
-                            <button onclick="toggleDetails(this)" class="text-blue-600 hover:text-blue-900">
+                            <button onclick="displayCurrentReport(${JSON.stringify(report)})" class="text-blue-600 hover:text-blue-900">
                                 Show Details
                             </button>
-                            <a href="${report.textFile}" class="text-gray-500 hover:text-gray-700" title="View Text Report" target="_blank">
+                            <a href="${report.report_file}" class="text-gray-500 hover:text-gray-700" title="View Text Report" target="_blank">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                             </a>
-                            <a href="${report.jsonFile}" class="text-gray-500 hover:text-gray-700" title="View JSON Report" target="_blank">
+                            <a href="${report.report_file.replace('.txt', '.json')}" class="text-gray-500 hover:text-gray-700" title="View JSON Report" target="_blank">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                                 </svg>
                             </a>
-                            <a href="${report.textFile}" download class="text-gray-500 hover:text-gray-700" title="Download Text Report">
+                            <a href="${report.report_file}" download class="text-gray-500 hover:text-gray-700" title="Download Text Report">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                 </svg>
@@ -297,98 +222,22 @@
                         </div>
                     </td>
                 `;
-
-                // Create detail row
-                const detailRow = document.createElement('tr');
-                detailRow.className = 'hidden';
-                detailRow.innerHTML = `
-                    <td colspan="5" class="px-3 py-2 bg-gray-50">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- System Information -->
-                            <div class="space-y-2">
-                                <h4 class="font-semibold text-sm text-gray-700">System Information</h4>
-                                <div class="grid grid-cols-2 gap-2 text-xs">
-                                    ${Object.entries(report.systemInfo.system_information).map(([key, value]) => `
-                                        <div class="text-gray-600">${key}:</div>
-                                        <div class="text-gray-900">${value}</div>
-                                    `).join('')}
-                                </div>
-                                
-                                <h4 class="font-semibold text-sm text-gray-700 mt-4">Storage Information</h4>
-                                <div class="grid grid-cols-2 gap-2 text-xs">
-                                    ${Object.entries(report.systemInfo.storage_information).map(([key, value]) => `
-                                        <div class="text-gray-600">${key}:</div>
-                                        <div class="text-gray-900">${value}</div>
-                                    `).join('')}
-                                </div>
-
-                                <h4 class="font-semibold text-sm text-gray-700 mt-4">Network Information</h4>
-                                <div class="grid grid-cols-2 gap-2 text-xs">
-                                    ${Object.entries(report.systemInfo.network_information).map(([key, value]) => `
-                                        <div class="text-gray-600">${key}:</div>
-                                        <div class="text-gray-900">${value}</div>
-                                    `).join('')}
-                                </div>
-                            </div>
-
-                            <!-- Security Checks -->
-                            <div class="space-y-2">
-                                <h4 class="font-semibold text-sm text-gray-700">Security Checks</h4>
-                                <div class="space-y-1">
-                                    ${report.sections.map(section => `
-                                        <div class="border-t border-gray-200 pt-2">
-                                            <h5 class="text-xs font-medium text-gray-700">${section.name}</h5>
-                                            <div class="mt-1 space-y-1">
-                                                ${section.checks.map(check => `
-                                                    <div class="flex items-start space-x-2 text-xs">
-                                                        <span class="flex-shrink-0 w-16 font-medium ${
-                                                            check.status === 'Passed' ? 'text-green-600' :
-                                                            check.status === 'Failed' ? 'text-red-600' :
-                                                            'text-yellow-600'
-                                                        }">${check.status}</span>
-                                                        <span class="flex-grow text-gray-900">${check.name}</span>
-                                                        ${check.remediation ? `
-                                                            <button onclick="toggleRemediation(this)" class="text-blue-600 hover:text-blue-900 text-xs">
-                                                                Show Fix
-                                                            </button>
-                                                            <div class="hidden mt-1 text-xs text-gray-600 bg-gray-100 p-2 rounded">
-                                                                ${check.remediation}
-                                                            </div>
-                                                        ` : ''}
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                `;
-
                 tbody.appendChild(row);
-                tbody.appendChild(detailRow);
             });
-        }
-
-        // Toggle details visibility
-        function toggleDetails(button) {
-            const detailRow = button.closest('tr').nextElementSibling;
-            detailRow.classList.toggle('hidden');
-            button.textContent = detailRow.classList.contains('hidden') ? 'Show Details' : 'Hide Details';
-        }
-
-        // Toggle remediation visibility
-        function toggleRemediation(button) {
-            const remediation = button.nextElementSibling;
-            remediation.classList.toggle('hidden');
-            button.textContent = remediation.classList.contains('hidden') ? 'Show Fix' : 'Hide Fix';
         }
 
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', () => {
-            loadReports();
+            displayReports();
+            if (reportsList.length > 0) {
+                displayCurrentReport(reportsList[0]);
+            }
         });
+
+        function filterChecks(filter) {
+            checkFilter = filter;
+            displayAllChecks();
+        }
     </script>
 </body>
 </html>

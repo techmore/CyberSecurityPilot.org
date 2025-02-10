@@ -15,6 +15,21 @@ fi
 BASE_NAME=$(basename "$LATEST_REPORT" .txt)
 DASHBOARD_FILE="$REPORTS_DIR/${BASE_NAME}.html"
 
+# Process the report file to remove ANSI color codes
+clean_report=$(cat "$LATEST_REPORT" | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
+
+# Calculate total checks and compliance rate
+total_checks=$(echo "$clean_report" | grep -c "^\[.*\]")
+passed_checks=$(echo "$clean_report" | grep -c "^\[Pass\]")
+failed_checks=$(echo "$clean_report" | grep -c "^\[Fail\]")
+
+# Calculate compliance rate, handle division by zero
+if [ "$total_checks" -gt 0 ]; then
+    compliance_rate=$((passed_checks * 100 / total_checks))
+else
+    compliance_rate=0
+fi
+
 # Get system information
 hostname=$(hostname)
 model=$(system_profiler SPHardwareDataType | grep "Model Name" | cut -d: -f2- | xargs)
@@ -59,26 +74,12 @@ cat > "$DASHBOARD_FILE" << EOL
                                     JSON
                                 </a>
                             </div>
-                            <a href="../cis-report-dashboard.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            <a href="../cis-report-dashboard.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-600 hover:text-gray-800">
                                 <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                                 </svg>
                                 Back to Dashboard
                             </a>
-                        </div>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600 space-x-4">
-                        <div class="flex items-center space-x-1">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
-                            <span>$hostname</span>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            <span>$macos_version</span>
                         </div>
                     </div>
                 </div>
@@ -93,39 +94,24 @@ cat > "$DASHBOARD_FILE" << EOL
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <div class="text-sm font-medium text-gray-500">Total Checks</div>
-                            <div class="mt-1 text-3xl font-semibold text-gray-900">$total_checks</div>
+                            <div class="mt-1 text-3xl font-semibold text-gray-900">${total_checks}</div>
                         </div>
                         <div class="bg-green-50 p-4 rounded-lg">
                             <div class="text-sm font-medium text-green-600">Passed Checks</div>
-                            <div class="mt-1 text-3xl font-semibold text-green-700">$passed_checks</div>
+                            <div class="mt-1 text-3xl font-semibold text-green-700">${passed_checks}</div>
                         </div>
                         <div class="bg-red-50 p-4 rounded-lg">
                             <div class="text-sm font-medium text-red-600">Failed Checks</div>
-                            <div class="mt-1 text-3xl font-semibold text-red-700">$failed_checks</div>
+                            <div class="mt-1 text-3xl font-semibold text-red-700">${failed_checks}</div>
                         </div>
                         <div class="bg-blue-50 p-4 rounded-lg">
                             <div class="text-sm font-medium text-blue-600">Compliance Rate</div>
-                            <div class="mt-1 text-3xl font-semibold text-blue-700">$compliance_rate%</div>
+                            <div class="mt-1 text-3xl font-semibold text-blue-700">${compliance_rate}%</div>
                         </div>
                     </div>
                 </div>
             </div>
 EOL
-
-# Process the report file to remove ANSI color codes
-clean_report=$(cat "$LATEST_REPORT" | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
-
-# Calculate total checks and compliance rate
-total_checks=$(echo "$clean_report" | grep -c "^\[.*\]")
-passed_checks=$(echo "$clean_report" | grep -c "^\[Pass\]")
-failed_checks=$(echo "$clean_report" | grep -c "^\[Fail\]")
-
-# Calculate compliance rate, handle division by zero
-if [ "$total_checks" -gt 0 ]; then
-    compliance_rate=$((passed_checks * 100 / total_checks))
-else
-    compliance_rate=0
-fi
 
 # Process each section and its tests
 current_section=""

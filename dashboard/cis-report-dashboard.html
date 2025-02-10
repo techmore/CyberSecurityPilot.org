@@ -3,241 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CIS Security Benchmark Dashboard</title>
+    <title>CIS Security Reports Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-gray-800">
-        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div class="relative flex h-16 items-center justify-between">
-                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                    <div class="flex flex-shrink-0 items-center">
-                        <span class="text-white font-bold text-xl">CyberSecurityPilot</span>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:block">
-                        <div class="flex space-x-4">
-                            <a href="dns_table.html" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">DNS Monitor</a>
-                            <a href="cis-report-dashboard.html" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">CIS Security</a>
+    <div class="min-h-screen">
+        <nav class="bg-white shadow">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <div class="flex">
+                        <div class="flex flex-shrink-0 items-center">
+                            <h1 class="text-xl font-semibold">CIS Security Reports</h1>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <!-- Historical Reports Section -->
-        <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-900">Security Reports History</h2>
-                <div class="flex space-x-4">
-                    <input type="text" 
-                           id="reportSearch" 
-                           placeholder="Search reports..." 
-                           class="px-3 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <select id="reportFilter" 
-                            class="px-3 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all">All Reports</option>
-                        <option value="lastDay">Last 24 Hours</option>
-                        <option value="lastWeek">Last Week</option>
-                        <option value="lastMonth">Last Month</option>
-                    </select>
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
-                                Date ↕
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
-                                Compliance Rate ↕
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700">
-                                Checks (Passed/Total) ↕
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                System Info
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportsTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Reports will be dynamically loaded here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Current Report Details -->
-        <div class="bg-white shadow-lg rounded-lg p-4">
-            <div class="mb-4">
-                <h2 class="text-xl font-bold text-gray-900">Current Report Details</h2>
-                <p class="text-sm text-gray-500" id="currentReportDate"></p>
-            </div>
-            
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <div class="text-sm font-medium text-gray-500">Compliance Rate</div>
-                    <div class="text-2xl font-bold text-gray-900" id="complianceRate">-</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <div class="text-sm font-medium text-gray-500">Total Checks</div>
-                    <div class="text-2xl font-bold text-gray-900" id="totalChecks">-</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <div class="text-sm font-medium text-gray-500">Passed Checks</div>
-                    <div class="text-2xl font-bold text-green-600" id="passedChecks">-</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <div class="text-sm font-medium text-gray-500">Failed Checks</div>
-                    <div class="text-2xl font-bold text-red-600" id="failedChecks">-</div>
-                </div>
-            </div>
-
-            <!-- All Checks -->
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-semibold text-gray-900">All Security Checks</h3>
-                    <div class="flex space-x-2">
-                        <button onclick="filterChecks('all')" class="px-3 py-1 text-sm rounded-lg bg-gray-100 hover:bg-gray-200">All</button>
-                        <button onclick="filterChecks('passed')" class="px-3 py-1 text-sm rounded-lg bg-green-100 hover:bg-green-200">Passed</button>
-                        <button onclick="filterChecks('failed')" class="px-3 py-1 text-sm rounded-lg bg-red-100 hover:bg-red-200">Failed</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="allChecksContainer">
-                    <!-- Checks will be dynamically loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let currentReport = null;
-        let checkFilter = 'all';
-        
-        // Sample report data - this would normally come from your backend
-        const reportsList = [
-            {
-                timestamp: "2025-02-10T00:21:40-05:00",
-                report_file: "../reports/cis_security_report_20250210_002140.txt",
-                summary: {
-                    total_checks: 188,
-                    passed_checks: 27,
-                    failed_checks: 161,
-                    compliance_rate: 14
-                },
-                system_info: {
-                    system_information: {
-                        model: "Mac mini",
-                        macosversion: "15.3"
-                    }
-                }
-            }
-        ];
-
-        function displayCurrentReport(report) {
-            currentReport = report;
-            
-            // Update summary cards
-            document.getElementById('currentReportDate').textContent = new Date(report.timestamp).toLocaleString();
-            document.getElementById('complianceRate').textContent = `${report.summary.compliance_rate}%`;
-            document.getElementById('totalChecks').textContent = report.summary.total_checks;
-            document.getElementById('passedChecks').textContent = report.summary.passed_checks;
-            document.getElementById('failedChecks').textContent = report.summary.failed_checks;
-
-            // Display all checks
-            displayAllChecks();
-        }
-
-        function displayReports() {
-            const tbody = document.getElementById('reportsTableBody');
-            tbody.innerHTML = '';
-
-            if (reportsList.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="px-3 py-2 text-center text-sm text-gray-500">
-                            No reports found. Run the CIS check script to generate reports.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            reportsList.forEach(report => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                        ${new Date(report.timestamp).toLocaleString()}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm font-medium text-gray-900">${report.summary.compliance_rate}%</span>
-                            <div class="w-16 bg-gray-200 rounded-full h-1.5">
-                                <div class="bg-${report.summary.compliance_rate >= 70 ? 'green' : report.summary.compliance_rate >= 40 ? 'yellow' : 'red'}-500 rounded-full h-1.5" 
-                                     style="width: ${report.summary.compliance_rate}%">
+        <main>
+            <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+                <!-- Current Report Summary -->
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold mb-4">Current Report Summary</h2>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Report Date</dt>
+                                            <dd class="text-lg font-medium text-gray-900" id="currentReportDate">-</dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                        ${report.summary.passed_checks}/${report.summary.total_checks}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
-                        <div class="flex flex-col">
-                            <span>${report.system_info.system_information.model}</span>
-                            <span class="text-xs text-gray-400">macOS ${report.system_info.system_information.macosversion}</span>
-                        </div>
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
-                        <div class="flex items-center space-x-2">
-                            <button onclick="displayCurrentReport(${JSON.stringify(report)})" class="text-blue-600 hover:text-blue-900">
-                                Show Details
-                            </button>
-                            <a href="${report.report_file}" class="text-gray-500 hover:text-gray-700" title="View Text Report" target="_blank">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </a>
-                            <a href="${report.report_file.replace('.txt', '.json')}" class="text-gray-500 hover:text-gray-700" title="View JSON Report" target="_blank">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                </svg>
-                            </a>
-                            <a href="${report.report_file}" download class="text-gray-500 hover:text-gray-700" title="Download Text Report">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </a>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
 
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', () => {
-            displayReports();
-            if (reportsList.length > 0) {
-                displayCurrentReport(reportsList[0]);
-            }
-        });
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Compliance Rate</dt>
+                                            <dd class="text-lg font-medium text-gray-900" id="complianceRate">-</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        function filterChecks(filter) {
-            checkFilter = filter;
-            displayAllChecks();
-        }
-    </script>
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Total Checks</dt>
+                                            <dd class="text-lg font-medium text-gray-900" id="totalChecks">-</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Passed/Failed</dt>
+                                            <dd class="text-lg font-medium text-gray-900">
+                                                <span id="passedChecks" class="text-green-600">-</span>
+                                                <span class="text-gray-400">/</span>
+                                                <span id="failedChecks" class="text-red-600">-</span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historical Reports -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Historical Reports</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compliance</th>
+                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Checks</th>
+                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">System</th>
+                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="reportsTableBody">
+                                <!-- Reports will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
+            <div class="flex items-center space-x-4">
+                <button x-on:click="activeTab = 'summary'" :class="{'text-blue-600': activeTab === 'summary'}" class="px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100">Summary</button>
+                <button x-on:click="activeTab = 'checks'" :class="{'text-blue-600': activeTab === 'checks'}" class="px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100">Security Checks</button>
+                <button x-on:click="activeTab = 'reports'" :class="{'text-blue-600': activeTab === 'reports'}" class="px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100">Reports</button>
+                <button x-on:click="activeTab = 'history'" :class="{'text-blue-600': activeTab === 'history'}" class="px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100">History</button>
+            </div>
+
+            <!-- Reports Tab -->
+            <div x-show="activeTab === 'reports'" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <!-- Report Navigation -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-4">
+                                <h2 class="text-lg font-medium text-gray-900">Security Reports</h2>
+                                <div class="relative">
+                                    <select x-model="selectedReport" @change="loadReportContent()" class="block w-64 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <template x-for="report in reportsList" :key="report.timestamp">
+                                            <option :value="report.report_file" x-text="new Date(report.timestamp).toLocaleString()"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">Compliance Rate:</span>
+                                <span x-text="currentReport?.summary?.compliance_rate + '%'" class="text-lg font-semibold"></span>
+                            </div>
+                        </div>
+
+                        <!-- Report Content -->
+                        <div class="mt-6 space-y-6">
+                            <!-- System Information -->
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">System Information</h3>
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                                        <div class="text-sm font-medium text-gray-500">Model</div>
+                                        <div class="mt-1 text-lg font-semibold text-gray-900" x-text="currentReport?.system_info?.system_information?.model"></div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                                        <div class="text-sm font-medium text-gray-500">macOS Version</div>
+                                        <div class="mt-1 text-lg font-semibold text-gray-900" x-text="currentReport?.system_info?.system_information?.macosversion"></div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                                        <div class="text-sm font-medium text-gray-500">Report Date</div>
+                                        <div class="mt-1 text-lg font-semibold text-gray-900" x-text="new Date(currentReport?.timestamp).toLocaleString()"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Security Checks -->
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Security Checks</h3>
+                                    <div class="flex items-center space-x-2">
+                                        <button @click="checkFilter = 'all'" :class="{'bg-blue-100 text-blue-700': checkFilter === 'all'}" class="px-3 py-1 text-sm font-medium rounded-md hover:bg-gray-100">All</button>
+                                        <button @click="checkFilter = 'pass'" :class="{'bg-green-100 text-green-700': checkFilter === 'pass'}" class="px-3 py-1 text-sm font-medium rounded-md hover:bg-gray-100">Passed</button>
+                                        <button @click="checkFilter = 'fail'" :class="{'bg-red-100 text-red-700': checkFilter === 'fail'}" class="px-3 py-1 text-sm font-medium rounded-md hover:bg-gray-100">Failed</button>
+                                        <button @click="checkFilter = 'skip'" :class="{'bg-gray-100 text-gray-700': checkFilter === 'skip'}" class="px-3 py-1 text-sm font-medium rounded-md hover:bg-gray-100">Skipped</button>
+                                    </div>
+                                </div>
+
+                                <!-- Search and Export -->
+                                <div class="mb-4 flex items-center justify-between">
+                                    <div class="relative flex-1 max-w-lg">
+                                        <input type="text" x-model="searchQuery" placeholder="Search checks..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button @click="expandAll" class="px-3 py-1 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">Expand All</button>
+                                        <button @click="collapseAll" class="px-3 py-1 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">Collapse All</button>
+                                        <button @click="exportToCSV" class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Export CSV</button>
+                                    </div>
+                                </div>
+
+                                <!-- Sections List -->
+                                <div class="space-y-4">
+                                    <template x-for="section in filteredSections" :key="section.title">
+                                        <div class="border rounded-lg overflow-hidden">
+                                            <div class="bg-gray-50 px-4 py-3 flex items-center justify-between cursor-pointer" @click="section.isOpen = !section.isOpen">
+                                                <div class="flex items-center space-x-4">
+                                                    <h4 class="text-sm font-medium text-gray-900" x-text="section.title"></h4>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800" x-text="section.checks.filter(c => c.status === 'Pass').length + ' Passed'"></span>
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800" x-text="section.checks.filter(c => c.status === 'Fail').length + ' Failed'"></span>
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800" x-text="section.checks.filter(c => c.status === 'Skip').length + ' Skipped'"></span>
+                                                    </div>
+                                                </div>
+                                                <svg class="h-5 w-5 text-gray-400 transform transition-transform" :class="{'rotate-180': section.isOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                            <div x-show="section.isOpen" class="divide-y divide-gray-200">
+                                                <template x-for="check in filteredChecks(section.checks)" :key="check.id">
+                                                    <div class="px-4 py-3 hover:bg-gray-50">
+                                                        <div class="flex items-center justify-between">
+                                                            <div class="flex items-center space-x-3 flex-1">
+                                                                <div :class="{
+                                                                    'text-green-500': check.status === 'Pass',
+                                                                    'text-red-500': check.status === 'Fail',
+                                                                    'text-gray-400': check.status === 'Skip'
+                                                                }" class="flex-shrink-0">
+                                                                    <svg x-show="check.status === 'Pass'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                                    </svg>
+                                                                    <svg x-show="check.status === 'Fail'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                    </svg>
+                                                                    <svg x-show="check.status === 'Skip'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg>
+                                                                </div>
+                                                                <div class="min-w-0 flex-1">
+                                                                    <div class="flex items-center justify-between">
+                                                                        <p class="text-sm font-medium text-gray-900 truncate" x-text="check.id + ' ' + check.title"></p>
+                                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ml-2"
+                                                                              :class="{
+                                                                                  'bg-green-100 text-green-800': check.status === 'Pass',
+                                                                                  'bg-red-100 text-red-800': check.status === 'Fail',
+                                                                                  'bg-gray-100 text-gray-800': check.status === 'Skip'
+                                                                              }"
+                                                                              x-text="check.status">
+                                                                        </span>
+                                                                    </div>
+                                                                    <template x-if="check.status === 'Fail' && check.remediation">
+                                                                        <div class="mt-2 text-sm text-gray-500">
+                                                                            <div class="font-medium text-gray-700">Remediation:</div>
+                                                                            <p class="mt-1" x-text="check.remediation"></p>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('dashboard', () => ({
+                        activeTab: 'reports',
+                        checkFilter: 'all',
+                        searchQuery: '',
+                        selectedReport: null,
+                        currentReport: null,
+
+                        init() {
+                            if (reportsList.length > 0) {
+                                this.selectedReport = reportsList[0].report_file;
+                                this.loadReportContent();
+                            }
+                        },
+
+                        get filteredSections() {
+                            if (!this.currentReport?.sections) return [];
+                            return this.currentReport.sections.map(section => ({
+                                ...section,
+                                checks: section.checks.filter(check => 
+                                    (this.checkFilter === 'all' || check.status.toLowerCase() === this.checkFilter) &&
+                                    (!this.searchQuery || 
+                                     check.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                     check.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+                                )
+                            })).filter(section => section.checks.length > 0);
+                        },
+
+                        filteredChecks(checks) {
+                            return checks.filter(check => 
+                                (this.checkFilter === 'all' || check.status.toLowerCase() === this.checkFilter) &&
+                                (!this.searchQuery || 
+                                 check.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                 check.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+                            );
+                        },
+
+                        expandAll() {
+                            this.currentReport.sections.forEach(section => section.isOpen = true);
+                        },
+
+                        collapseAll() {
+                            this.currentReport.sections.forEach(section => section.isOpen = false);
+                        },
+
+                        exportToCSV() {
+                            const rows = [['Section', 'Check ID', 'Title', 'Status', 'Remediation']];
+                            
+                            this.currentReport.sections.forEach(section => {
+                                section.checks.forEach(check => {
+                                    rows.push([
+                                        section.title,
+                                        check.id,
+                                        check.title,
+                                        check.status,
+                                        check.remediation || ''
+                                    ]);
+                                });
+                            });
+                            
+                            const csvContent = rows.map(row => row.map(cell => 
+                                `"${(cell || '').toString().replace(/"/g, '""')}"`
+                            ).join(',')).join('\n');
+                            
+                            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `security_report_${new Date().toISOString().slice(0,10)}.csv`;
+                            link.click();
+                        },
+
+                        loadReportContent() {
+                            const report = reportsList.find(r => r.report_file === this.selectedReport);
+                            if (report) {
+                                this.currentReport = report;
+                                if (report.sections) {
+                                    report.sections.forEach(section => {
+                                        section.isOpen = false;
+                                    });
+                                }
+                            }
+                        }
+                    }));
+                });
+            </script>
+
+            <script>
+                let currentReport = null;
+                let checkFilter = 'all';
+                let activeTab = 'summary';
+                let selectedReport = null;
+
+                // Reports list will be inserted here
+                const reportsList = [
+                    {
+                        "timestamp": "2025-02-10T00:45:21-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_004521.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 32,
+                            "failed_checks": 156,
+                            "compliance_rate": 17
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:36:27-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_003627.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 27,
+                            "failed_checks": 161,
+                            "compliance_rate": 14
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:34:49-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_003449.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 32,
+                            "failed_checks": 156,
+                            "compliance_rate": 17
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:33:13-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_003313.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 32,
+                            "failed_checks": 156,
+                            "compliance_rate": 17
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:29:03-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_002903.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 32,
+                            "failed_checks": 156,
+                            "compliance_rate": 17
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:27:48-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_002748.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 32,
+                            "failed_checks": 156,
+                            "compliance_rate": 17
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    },
+                    {
+                        "timestamp": "2025-02-10T00:21:40-05:00",
+                        "report_file": "../reports/cis_security_report_20250210_002140.txt",
+                        "summary": {
+                            "total_checks": 188,
+                            "passed_checks": 27,
+                            "failed_checks": 161,
+                            "compliance_rate": 14
+                        },
+                        "system_info": {
+                            "system_information": {
+                                "model": "Mac mini",
+                                "macosversion": "15.3"
+                            }
+                        }
+                    }
+                ];
+
+                function displayCurrentReport(report) {
+                    currentReport = report;
+                    
+                    // Update summary cards
+                    document.getElementById('currentReportDate').textContent = new Date(report.timestamp).toLocaleString();
+                    document.getElementById('complianceRate').textContent = `${report.summary.compliance_rate}%`;
+                    document.getElementById('totalChecks').textContent = report.summary.total_checks;
+                    document.getElementById('passedChecks').textContent = report.summary.passed_checks;
+                    document.getElementById('failedChecks').textContent = report.summary.failed_checks;
+                }
+
+                function displayReports() {
+                    const tbody = document.getElementById('reportsTableBody');
+                    tbody.innerHTML = '';
+
+                    if (reportsList.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="px-3 py-2 text-center text-sm text-gray-500">
+                                    No reports found. Run the CIS check script to generate reports.
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    reportsList.forEach(report => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+                        row.innerHTML = `
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                                ${new Date(report.timestamp).toLocaleString()}
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-900">${report.summary.compliance_rate}%</span>
+                                    <div class="w-16 bg-gray-200 rounded-full h-1.5">
+                                        <div class="bg-${report.summary.compliance_rate >= 70 ? 'green' : report.summary.compliance_rate >= 40 ? 'yellow' : 'red'}-500 rounded-full h-1.5" 
+                                             style="width: ${report.summary.compliance_rate}%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                                ${report.summary.passed_checks}/${report.summary.total_checks}
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                <div class="flex flex-col">
+                                    <span>${report.system_info.system_information.model}</span>
+                                    <span class="text-xs text-gray-400">macOS ${report.system_info.system_information.macosversion}</span>
+                                </div>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center space-x-2">
+                                    <button onclick='displayCurrentReport(${JSON.stringify(report)})' class="text-blue-600 hover:text-blue-900">
+                                        Show Details
+                                    </button>
+                                    <a href="${report.report_file}" class="text-gray-500 hover:text-gray-700" title="View Text Report" target="_blank">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </a>
+                                    <a href="${report.report_file.replace('.txt', '.json')}" class="text-gray-500 hover:text-gray-700" title="View JSON Report" target="_blank">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                        </svg>
+                                    </a>
+                                    <a href="${report.report_file}" download class="text-gray-500 hover:text-gray-700" title="Download Text Report">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+
+                function filterChecks(filter) {
+                    checkFilter = filter;
+                    displayAllChecks();
+                }
+
+                function loadReportContent() {
+                    const report = reportsList.find(r => r.report_file === selectedReport);
+                    if (report) {
+                        currentReport = report;
+                        // Initialize section states
+                        if (report.sections) {
+                            report.sections.forEach(section => {
+                                section.isOpen = false;
+                            });
+                        }
+                    }
+                }
+
+                // Initialize the dashboard
+                document.addEventListener('DOMContentLoaded', () => {
+                    displayReports();
+                    if (reportsList.length > 0) {
+                        displayCurrentReport(reportsList[0]);
+                        selectedReport = reportsList[0].report_file;
+                    }
+                });
+            </script>
+        </div>
+    </div>
 </body>
 </html>

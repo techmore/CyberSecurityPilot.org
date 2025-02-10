@@ -1829,5 +1829,16 @@ print_detailed_report() {
     } > "$report_file"
 }
 
-# Clean up temporary files
-rm -f system_info.txt
+# Convert to JSON
+./report_to_json.sh
+
+# Update dashboard with latest reports
+chmod +x update_dashboard_reports.sh
+./update_dashboard_reports.sh
+
+echo "To view the report, run: cat $report_file"
+
+if [ "$EUID" -ne 0 ]; then
+    echo -e "\nRun this script with sudo privileges to perform all checks:"
+    echo "sudo bash $0"
+fi

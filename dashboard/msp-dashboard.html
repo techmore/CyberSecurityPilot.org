@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Schools Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        quaker: {
+                            light: '#7C9D96',
+                            DEFAULT: '#435B66',
+                            dark: '#2D4356'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-quaker-dark">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="text-white text-xl font-semibold">Friends Schools Network</span>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="#" class="bg-quaker text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                                <a href="#" class="text-gray-300 hover:bg-quaker hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reports</a>
+                                <a href="#" class="text-gray-300 hover:bg-quaker hover:text-white px-3 py-2 rounded-md text-sm font-medium">Alerts</a>
+                                <a href="#" class="text-gray-300 hover:bg-quaker hover:text-white px-3 py-2 rounded-md text-sm font-medium">Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-white" id="lastUpdated">Last Updated: Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-3xl font-bold text-gray-900">Network Overview</h1>
+                    <div class="flex space-x-4">
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
+                            <span class="font-semibold" id="healthyCount">0</span> Schools Online
+                        </div>
+                        <div class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg">
+                            <span class="font-semibold" id="warningCount">0</span> Warnings
+                        </div>
+                        <div class="bg-red-100 text-red-800 px-4 py-2 rounded-lg">
+                            <span class="font-semibold" id="criticalCount">0</span> Critical
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label for="typeFilter" class="block text-sm font-medium text-gray-700">Type</label>
+                            <select id="typeFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-quaker focus:ring-quaker">
+                                <option value="all">All Types</option>
+                                <option value="PreK-12">PreK-12</option>
+                                <option value="PreK-8">PreK-8</option>
+                                <option value="PreK-6">PreK-6</option>
+                                <option value="PreK-5">PreK-5</option>
+                                <option value="9-12">High School</option>
+                                <option value="organization">Organizations</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="regionFilter" class="block text-sm font-medium text-gray-700">Region</label>
+                            <select id="regionFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-quaker focus:ring-quaker">
+                                <option value="all">All Regions</option>
+                                <option value="Philadelphia">Philadelphia</option>
+                                <option value="Main Line">Main Line</option>
+                                <option value="Montgomery County">Montgomery County</option>
+                                <option value="Chester County">Chester County</option>
+                                <option value="Delaware County">Delaware County</option>
+                                <option value="Bucks County">Bucks County</option>
+                                <option value="New Jersey">New Jersey</option>
+                                <option value="Delaware">Delaware</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="statusFilter" class="block text-sm font-medium text-gray-700">Status</label>
+                            <select id="statusFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-quaker focus:ring-quaker">
+                                <option value="all">All Status</option>
+                                <option value="healthy">Healthy</option>
+                                <option value="warning">Warning</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="searchInput" class="block text-sm font-medium text-gray-700">Search</label>
+                            <input type="text" id="searchInput" placeholder="Search schools..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-quaker focus:ring-quaker">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schools List -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Institution</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Network Stats</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compliance</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schoolsList" class="bg-white divide-y divide-gray-200">
+                                <!-- Schools will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Embedded school data - Local Philadelphia Area Only (50-mile radius)
+        const schoolsData = {
+            "schools": [
+                // Philadelphia City
+                {
+                    "id": "fs",
+                    "name": "Friends Select School",
+                    "type": "PreK-12",
+                    "location": "Philadelphia, PA",
+                    "address": "17th & Benjamin Franklin Parkway",
+                    "region": "Center City",
+                    "founded": 1689,
+                    "website": "friends-select.org",
+                    "status": "healthy",
+                    "compliance": 92,
+                    "network": {
+                        "devices": { "total": 485, "active": 412 },
+                        "publicIps": ["72.45.123.45", "72.45.123.46", "72.45.123.47"],
+                        "activeClients": 1150,
+                        "dataUsage": "12.5"
+                    }
+                },
+                {
+                    "id": "gfs",
+                    "name": "Germantown Friends School",
+                    "type": "PreK-12",
+                    "location": "Philadelphia, PA",
+                    "address": "31 West Coulter Street",
+                    "region": "Germantown",
+                    "founded": 1845,
+                    "website": "germantownfriends.org",
+                    "status": "warning",
+                    "compliance": 78,
+                    "network": {
+                        "devices": { "total": 320, "active": 250 },
+                        "publicIps": ["72.45.123.48", "72.45.123.49"],
+                        "activeClients": 900,
+                        "dataUsage": "8.2"
+                    }
+                },
+                {
+                    "id": "wpc",
+                    "name": "William Penn Charter School",
+                    "type": "PreK-12",
+                    "location": "Philadelphia, PA",
+                    "address": "3000 West School House Lane",
+                    "region": "East Falls",
+                    "founded": 1689,
+                    "website": "penncharter.com",
+                    "status": "healthy",
+                    "compliance": 95,
+                    "network": {
+                        "devices": { "total": 550, "active": 475 },
+                        "publicIps": ["72.45.123.50", "72.45.123.51", "72.45.123.52"],
+                        "activeClients": 1300,
+                        "dataUsage": "15.1"
+                    }
+                },
+                {
+                    "id": "gsf",
+                    "name": "Greene Street Friends School",
+                    "type": "PreK-8",
+                    "location": "Philadelphia, PA",
+                    "address": "5511 Greene Street",
+                    "region": "Germantown",
+                    "founded": 1855,
+                    "website": "greenestreetfriends.org",
+                    "status": "healthy",
+                    "compliance": 88,
+                    "network": {
+                        "devices": { "total": 220, "active": 180 },
+                        "publicIps": ["72.45.123.53", "72.45.123.54"],
+                        "activeClients": 600,
+                        "dataUsage": "5.5"
+                    }
+                },
+                {
+                    "id": "ufs",
+                    "name": "United Friends School",
+                    "type": "PreK-8",
+                    "location": "Quakertown, PA",
+                    "address": "1018 West Broad Street",
+                    "region": "Quakertown",
+                    "founded": 1983,
+                    "website": "unitedfriendsschool.org",
+                    "status": "healthy",
+                    "compliance": 89,
+                    "network": {
+                        "devices": { "total": 200, "active": 160 },
+                        "publicIps": ["72.45.123.55", "72.45.123.56"],
+                        "activeClients": 500,
+                        "dataUsage": "4.2"
+                    }
+                },
+                // Delaware County
+                {
+                    "id": "mpfs",
+                    "name": "Media-Providence Friends School",
+                    "type": "PreK-8",
+                    "location": "Media, PA",
+                    "address": "125 W 3rd Street",
+                    "region": "Delaware County",
+                    "founded": 1876,
+                    "website": "mpfs.org",
+                    "status": "healthy",
+                    "compliance": 91,
+                    "network": {
+                        "devices": { "total": 280, "active": 230 },
+                        "publicIps": ["72.45.123.57", "72.45.123.58"],
+                        "activeClients": 700,
+                        "dataUsage": "6.3"
+                    }
+                },
+                {
+                    "id": "srv",
+                    "name": "The School in Rose Valley",
+                    "type": "PreK-6",
+                    "location": "Rose Valley, PA",
+                    "address": "20 School Lane",
+                    "region": "Delaware County",
+                    "founded": 1929,
+                    "website": "theschoolinrosevalley.org",
+                    "status": "healthy",
+                    "compliance": 87,
+                    "network": {
+                        "devices": { "total": 180, "active": 140 },
+                        "publicIps": ["72.45.123.59", "72.45.123.60"],
+                        "activeClients": 400,
+                        "dataUsage": "3.5"
+                    }
+                },
+                {
+                    "id": "lfs",
+                    "name": "Lansdowne Friends School",
+                    "type": "PreK-6",
+                    "location": "Lansdowne, PA",
+                    "address": "110 N Lansdowne Avenue",
+                    "region": "Delaware County",
+                    "founded": 1902,
+                    "website": "lansdownefriendsschool.org",
+                    "status": "warning",
+                    "compliance": 79,
+                    "network": {
+                        "devices": { "total": 150, "active": 110 },
+                        "publicIps": ["72.45.123.61", "72.45.123.62"],
+                        "activeClients": 300,
+                        "dataUsage": "2.5"
+                    }
+                },
+                // Montgomery County
+                {
+                    "id": "afs",
+                    "name": "Abington Friends School",
+                    "type": "PreK-12",
+                    "location": "Jenkintown, PA",
+                    "address": "575 Washington Lane",
+                    "region": "Montgomery County",
+                    "founded": 1697,
+                    "website": "abingtonfriends.net",
+                    "status": "warning",
+                    "compliance": 82,
+                    "network": {
+                        "devices": { "total": 380, "active": 300 },
+                        "publicIps": ["72.45.123.63", "72.45.123.64", "72.45.123.65"],
+                        "activeClients": 900,
+                        "dataUsage": "8.5"
+                    }
+                },
+                {
+                    "id": "pmfs",
+                    "name": "Plymouth Meeting Friends School",
+                    "type": "PreK-6",
+                    "location": "Plymouth Meeting, PA",
+                    "address": "2150 Butler Pike",
+                    "region": "Montgomery County",
+                    "founded": 1780,
+                    "website": "pmfs1780.org",
+                    "status": "healthy",
+                    "compliance": 94,
+                    "network": {
+                        "devices": { "total": 240, "active": 200 },
+                        "publicIps": ["72.45.123.66", "72.45.123.67"],
+                        "activeClients": 600,
+                        "dataUsage": "5.8"
+                    }
+                },
+                // Main Line Area
+                {
+                    "id": "fcs",
+                    "name": "Friends' Central School",
+                    "type": "PreK-12",
+                    "location": "Wynnewood, PA",
+                    "address": "1101 City Avenue",
+                    "region": "Main Line",
+                    "founded": 1845,
+                    "website": "friendscentral.org",
+                    "status": "healthy",
+                    "compliance": 89,
+                    "network": {
+                        "devices": { "total": 420, "active": 350 },
+                        "publicIps": ["72.45.123.68", "72.45.123.69", "72.45.123.70"],
+                        "activeClients": 1000,
+                        "dataUsage": "10.2"
+                    }
+                },
+                {
+                    "id": "fsh",
+                    "name": "Friends School Haverford",
+                    "type": "PreK-5",
+                    "location": "Haverford, PA",
+                    "address": "851 Buck Lane",
+                    "region": "Main Line",
+                    "founded": 1885,
+                    "website": "friendshaverford.org",
+                    "status": "healthy",
+                    "compliance": 93,
+                    "network": {
+                        "devices": { "total": 260, "active": 220 },
+                        "publicIps": ["72.45.123.71", "72.45.123.72"],
+                        "activeClients": 700,
+                        "dataUsage": "6.8"
+                    }
+                },
+                {
+                    "id": "ws",
+                    "name": "Westtown School",
+                    "type": "PreK-12 Boarding/Day",
+                    "location": "West Chester, PA",
+                    "address": "975 Westtown Road",
+                    "region": "Chester County",
+                    "founded": 1799,
+                    "website": "westtown.edu",
+                    "status": "healthy",
+                    "compliance": 90,
+                    "network": {
+                        "devices": { "total": 500, "active": 420 },
+                        "publicIps": ["72.45.123.73", "72.45.123.74", "72.45.123.75"],
+                        "activeClients": 1200,
+                        "dataUsage": "12.8"
+                    }
+                },
+                // New Jersey Schools
+                {
+                    "id": "moors",
+                    "name": "Moorestown Friends School",
+                    "type": "PreK-12",
+                    "location": "Moorestown, NJ",
+                    "address": "110 East Main Street",
+                    "region": "New Jersey",
+                    "founded": 1785,
+                    "website": "mfriends.org",
+                    "status": "healthy",
+                    "compliance": 87,
+                    "network": {
+                        "devices": { "total": 300, "active": 240 },
+                        "publicIps": ["72.45.123.76", "72.45.123.77"],
+                        "activeClients": 800,
+                        "dataUsage": "7.2"
+                    }
+                },
+                {
+                    "id": "hfs",
+                    "name": "Haddonfield Friends School",
+                    "type": "PreK-8",
+                    "location": "Haddonfield, NJ",
+                    "address": "47 N Haddon Avenue",
+                    "region": "New Jersey",
+                    "founded": 1786,
+                    "website": "hfs.org",
+                    "status": "warning",
+                    "compliance": 76,
+                    "network": {
+                        "devices": { "total": 200, "active": 160 },
+                        "publicIps": ["72.45.123.78", "72.45.123.79"],
+                        "activeClients": 400,
+                        "dataUsage": "3.2"
+                    }
+                },
+                {
+                    "id": "fsmh",
+                    "name": "Friends School Mullica Hill",
+                    "type": "PreK-8",
+                    "location": "Mullica Hill, NJ",
+                    "address": "15 High Street",
+                    "region": "New Jersey",
+                    "founded": 1969,
+                    "website": "friendsschool.org",
+                    "status": "healthy",
+                    "compliance": 88,
+                    "network": {
+                        "devices": { "total": 220, "active": 180 },
+                        "publicIps": ["72.45.123.80", "72.45.123.81"],
+                        "activeClients": 500,
+                        "dataUsage": "4.5"
+                    }
+                },
+                {
+                    "id": "pfs",
+                    "name": "Princeton Friends School",
+                    "type": "PreK-8",
+                    "location": "Princeton, NJ",
+                    "address": "470 Quaker Road",
+                    "region": "New Jersey",
+                    "founded": 1987,
+                    "website": "princetonfriendsschool.org",
+                    "status": "healthy",
+                    "compliance": 91,
+                    "network": {
+                        "devices": { "total": 280, "active": 230 },
+                        "publicIps": ["72.45.123.82", "72.45.123.83"],
+                        "activeClients": 600,
+                        "dataUsage": "5.9"
+                    }
+                },
+                // Bucks County
+                {
+                    "id": "gs",
+                    "name": "George School",
+                    "type": "9-12 Boarding/Day",
+                    "location": "Newtown, PA",
+                    "address": "1690 Newtown Langhorne Road",
+                    "region": "Bucks County",
+                    "founded": 1893,
+                    "website": "georgeschool.org",
+                    "status": "healthy",
+                    "compliance": 91,
+                    "network": {
+                        "devices": { "total": 400, "active": 330 },
+                        "publicIps": ["72.45.123.84", "72.45.123.85", "72.45.123.86"],
+                        "activeClients": 1000,
+                        "dataUsage": "10.5"
+                    }
+                },
+                {
+                    "id": "bfs",
+                    "name": "Buckingham Friends School",
+                    "type": "PreK-8",
+                    "location": "Lahaska, PA",
+                    "address": "5684 York Road",
+                    "region": "Bucks County",
+                    "founded": 1794,
+                    "website": "bfs.org",
+                    "status": "healthy",
+                    "compliance": 86,
+                    "network": {
+                        "devices": { "total": 240, "active": 200 },
+                        "publicIps": ["72.45.123.87", "72.45.123.88"],
+                        "activeClients": 600,
+                        "dataUsage": "5.6"
+                    }
+                },
+                {
+                    "id": "nfs",
+                    "name": "Newtown Friends School",
+                    "type": "PreK-8",
+                    "location": "Newtown, PA",
+                    "address": "1450 Newtown-Langhorne Road",
+                    "region": "Bucks County",
+                    "founded": 1948,
+                    "website": "newtownfriends.org",
+                    "status": "healthy",
+                    "compliance": 89,
+                    "network": {
+                        "devices": { "total": 260, "active": 220 },
+                        "publicIps": ["72.45.123.89", "72.45.123.90"],
+                        "activeClients": 700,
+                        "dataUsage": "6.4"
+                    }
+                },
+                // Delaware Schools
+                {
+                    "id": "wfs",
+                    "name": "Wilmington Friends School",
+                    "type": "PreK-12",
+                    "location": "Wilmington, DE",
+                    "address": "101 School Road",
+                    "region": "Delaware",
+                    "founded": 1748,
+                    "website": "wilmingtonfriends.org",
+                    "status": "healthy",
+                    "compliance": 92,
+                    "network": {
+                        "devices": { "total": 380, "active": 310 },
+                        "publicIps": ["72.45.123.91", "72.45.123.92", "72.45.123.93"],
+                        "activeClients": 900,
+                        "dataUsage": "9.2"
+                    }
+                }
+            ],
+            "organizations": [
+                {
+                    "id": "fce",
+                    "name": "Friends Council on Education",
+                    "type": "Organization",
+                    "location": "Philadelphia, PA",
+                    "address": "1507 Cherry Street",
+                    "region": "Center City",
+                    "founded": 1931,
+                    "website": "friendscouncil.org",
+                    "status": "healthy",
+                    "compliance": 100,
+                    "network": {
+                        "devices": { "total": 45, "active": 38 },
+                        "publicIps": ["98.76.54.32"],
+                        "activeClients": 42,
+                        "dataUsage": "1.2"
+                    }
+                },
+                {
+                    "id": "pym",
+                    "name": "Philadelphia Yearly Meeting",
+                    "type": "Organization",
+                    "location": "Philadelphia, PA",
+                    "address": "1515 Cherry Street",
+                    "region": "Center City",
+                    "founded": 1681,
+                    "website": "pym.org",
+                    "status": "healthy",
+                    "compliance": 100,
+                    "network": {
+                        "devices": { "total": 50, "active": 42 },
+                        "publicIps": ["98.76.54.33"],
+                        "activeClients": 45,
+                        "dataUsage": "1.5"
+                    }
+                },
+                {
+                    "id": "fgc",
+                    "name": "Friends General Conference",
+                    "type": "Organization",
+                    "location": "Philadelphia, PA",
+                    "address": "1216 Arch Street",
+                    "region": "Center City",
+                    "founded": 1900,
+                    "website": "fgcquaker.org",
+                    "status": "healthy",
+                    "compliance": 100,
+                    "network": {
+                        "devices": { "total": 55, "active": 48 },
+                        "publicIps": ["98.76.54.34"],
+                        "activeClients": 50,
+                        "dataUsage": "1.8"
+                    }
+                },
+                {
+                    "id": "afsc",
+                    "name": "American Friends Service Committee",
+                    "type": "Organization",
+                    "location": "Philadelphia, PA",
+                    "address": "1501 Cherry Street",
+                    "region": "Center City",
+                    "founded": 1917,
+                    "website": "afsc.org",
+                    "status": "healthy",
+                    "compliance": 100,
+                    "network": {
+                        "devices": { "total": 60, "active": 52 },
+                        "publicIps": ["98.76.54.35"],
+                        "activeClients": 55,
+                        "dataUsage": "2.1"
+                    }
+                },
+                {
+                    "id": "fwcc",
+                    "name": "Friends World Committee for Consultation",
+                    "type": "Organization",
+                    "location": "Philadelphia, PA",
+                    "address": "1506 Race Street",
+                    "region": "Center City",
+                    "founded": 1937,
+                    "website": "fwccamericas.org",
+                    "status": "healthy",
+                    "compliance": 100,
+                    "network": {
+                        "devices": { "total": 45, "active": 38 },
+                        "publicIps": ["98.76.54.32"],
+                        "activeClients": 42,
+                        "dataUsage": "1.2"
+                    }
+                }
+            ]
+        };
+
+        function calculateNetworkTotals() {
+            return [...schoolsData.schools, ...schoolsData.organizations].reduce((acc, item) => {
+                acc.devices.total += item.network.devices.total;
+                acc.devices.active += item.network.devices.active;
+                acc.clients += item.network.activeClients;
+                acc.dataUsage += parseFloat(item.network.dataUsage);
+                acc.publicIps += item.network.publicIps.length;
+                return acc;
+            }, {
+                devices: { total: 0, active: 0 },
+                clients: 0,
+                dataUsage: 0,
+                publicIps: 0
+            });
+        }
+
+        function updateNetworkStats() {
+            const totals = calculateNetworkTotals();
+            const elements = {
+                totalDevices: totals.devices.total.toLocaleString(),
+                activeDevices: `(${totals.devices.active.toLocaleString()} active)`,
+                totalClients: totals.clients.toLocaleString(),
+                totalDataUsage: totals.dataUsage.toFixed(1),
+                totalPublicIps: totals.publicIps.toLocaleString()
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+        }
+
+        function loadSchools() {
+            const schools = schoolsData.schools;
+            filterAndDisplayInstitutions(schools);
+            updateStatusCounts(schools);
+        }
+
+        function filterAndDisplayInstitutions(schools) {
+            const typeFilter = document.getElementById('typeFilter').value;
+            const regionFilter = document.getElementById('regionFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            const filteredSchools = schools.filter(school => {
+                const matchesType = typeFilter === 'all' || school.type.includes(typeFilter);
+                const matchesRegion = regionFilter === 'all' || school.region === regionFilter;
+                const matchesSearch = school.name.toLowerCase().includes(searchInput) ||
+                                   school.location.toLowerCase().includes(searchInput);
+                return matchesType && matchesRegion && matchesSearch;
+            });
+
+            const tbody = document.getElementById('schoolsList');
+            tbody.innerHTML = '';
+
+            filteredSchools.forEach(school => {
+                const row = document.createElement('tr');
+                const statusColor = {
+                    'healthy': 'bg-green-100 text-green-800',
+                    'warning': 'bg-yellow-100 text-yellow-800',
+                    'critical': 'bg-red-100 text-red-800'
+                }[school.status];
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${school.name}</div>
+                        <div class="text-sm text-gray-500">${school.website}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${school.location}</div>
+                        <div class="text-sm text-gray-500">${school.region}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="text-xs text-gray-500">Devices:</div>
+                            <div class="text-xs font-medium text-gray-900">${school.network.devices.total} (${school.network.devices.active} active)</div>
+                            <div class="text-xs text-gray-500">Public IPs:</div>
+                            <div class="text-xs font-medium text-gray-900">${school.network.publicIps.length}</div>
+                            <div class="text-xs text-gray-500">Active Clients:</div>
+                            <div class="text-xs font-medium text-gray-900">${school.network.activeClients}</div>
+                            <div class="text-xs text-gray-500">Data Usage:</div>
+                            <div class="text-xs font-medium text-gray-900">${school.network.dataUsage}TB/mo</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
+                            ${school.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-quaker h-2.5 rounded-full" style="width: ${school.compliance}%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">${school.compliance}% Compliant</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-quaker hover:text-quaker-dark mr-3">View Details</button>
+                        <button class="text-quaker hover:text-quaker-dark">Network Map</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateStatusCounts(schools) {
+            const counts = schools.reduce((acc, school) => {
+                acc[school.status]++;
+                return acc;
+            }, { healthy: 0, warning: 0, critical: 0 });
+
+            document.getElementById('healthyCount').textContent = counts.healthy;
+            document.getElementById('warningCount').textContent = counts.warning;
+            document.getElementById('criticalCount').textContent = counts.critical;
+        }
+
+        function updateTime() {
+            const now = new Date('2025-02-10T12:52:56-05:00');
+            document.getElementById('lastUpdated').textContent = 
+                `Last Updated: ${now.toLocaleString()}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSchools();
+            updateNetworkStats();
+            updateTime();
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # CyberSecurityPilot.org
-
+# sudo bash cis_macos_check.sh; ./report_to_json.sh; update_reports_list.sh; git add dashboard/reports/*; git commit -a -m "."; git push
 ## Quick Start
 
 ### 1. DNS Security Checks

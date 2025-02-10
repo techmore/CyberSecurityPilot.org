@@ -250,4 +250,22 @@
       "processor": "Apple M4",
       "memory": "16 GB"
     }
+,
+    {
+      "date": "2025-02-10T02:16:55",
+      "total": 188,
+      "passed": 27,
+      "failed": 161,
+      "compliance": 14,
+      "txt": "cis_security_report_20250210_021655.txt",
+      "json": "cis_security_report_20250210_021655.json",
+      "html": "cis_security_report_20250210_021655.html",
+      "passed_delta": -5,
+      "failed_delta": 5,
+      "hostname": "techmore’s Mac mini",
+      "model": "Mac mini",
+      "macos_version": "15.3",
+      "processor": "Apple M4",
+      "memory": "16 GB"
+    }
 ]

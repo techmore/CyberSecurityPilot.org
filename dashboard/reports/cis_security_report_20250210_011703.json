@@ -1,18 +1,13 @@
 {
-  "timestamp": "2025-02-10T06:24:44Z",
-  "report_file": "/Users/techmore/CyberSecurityPilot.org/scripts/../dashboard/reports/cis_security_report_20250210_011703.txt",
-  "summary": {
-    "total_checks": 188,
-    "passed_checks": 32,
-    "failed_checks": 156,
-    "compliance_rate": 17
-  },
-  "system_info": {
-    "system_information": {
-      "model": "Mac mini",
-      "macosversion": "15.3"
-    }
-  },
-  "sections": [
-  ]
+    "total": 188,
+    "passed":       32,
+    "failed":      156,
+    "compliance": 17,
+    "hostname": "techmore’s Mac mini",
+    "model": "Mac mini",
+    "macos_version": "15.3",
+    "processor": "Apple M4",
+    "memory": "16 GB",
+    "filevault_status": "FileVault is On",
+    "sip_status": "enabled."
 }

@@ -1,0 +1,13 @@
+{
+    "total": 188,
+    "passed": 27,
+    "failed": 161,
+    "compliance": 14,
+    "hostname": "techmores-Mac-mini.local",
+    "model": "Mac mini",
+    "macos_version": "15.3",
+    "processor": "Apple M4",
+    "memory": "16 GB",
+    "filevault_status": "FileVault",
+    "sip_status": "enabled."
+}

@@ -1,5 +1,23 @@
 [
     {
+      "date": "2025-02-10T12:21:52",
+      "total": 188,
+      "passed": 32,
+      "failed": 156,
+      "compliance": 17,
+      "txt": "cis_security_report_20250210_122152.txt",
+      "json": "cis_security_report_20250210_122152.json",
+      "html": "cis_security_report_20250210_122152.html",
+      "passed_delta": 32,
+      "failed_delta": 156,
+      "hostname": "techmores-Mac-mini.local",
+      "model": "Mac mini",
+      "macos_version": "15.3",
+      "processor": "Apple M4",
+      "memory": "16 GB"
+    }
+,
+    {
       "date": "2025-02-10T12:02:54",
       "total": 188,
       "passed": 32,
@@ -8,8 +26,8 @@
       "txt": "cis_security_report_20250210_120254.txt",
       "json": "cis_security_report_20250210_120254.json",
       "html": "cis_security_report_20250210_120254.html",
-      "passed_delta": 32,
-      "failed_delta": 156,
+      "passed_delta": 0,
+      "failed_delta": 0,
       "hostname": "techmores-Mac-mini.local",
       "model": "Mac mini",
       "macos_version": "15.3",

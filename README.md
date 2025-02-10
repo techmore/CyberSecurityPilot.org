@@ -49,4 +49,3 @@ CyberSecurityPilot.org/
 ## Dependencies
 - Python 3.8+
 - Tailwind CSS (CDN)
-- Alpine.js (CDN)

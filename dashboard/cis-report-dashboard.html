@@ -7,55 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-gray-800">
-        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div class="relative flex h-16 items-center justify-between">
-                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                    <!-- Mobile menu button-->
-                    <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="absolute -inset-0.5"></span>
-                        <span class="sr-only">Open main menu</span>
-                        <!--
-                        Icon when menu is closed.
-                        Menu open: "hidden", Menu closed: "block"
-                        -->
-                        <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
-                        <!--
-                        Icon when menu is open.
-                        Menu open: "block", Menu closed: "hidden"
-                        -->
-                        <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                    <div class="flex flex-shrink-0 items-center">
-                        <span class="text-white font-bold text-xl">CyberSecurityPilot</span>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:block">
-                        <div class="flex space-x-4">
-                            <a href="dns_table.html" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">DNS Monitor</a>
-                            <a href="cis-report-dashboard.html" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">CIS Security</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile menu -->
-        <div class="sm:hidden" id="mobile-menu">
-            <div class="space-y-1 px-2 pt-2 pb-3">
-                <a href="dns_table.html" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">DNS Monitor</a>
-                <a href="cis-report-dashboard.html" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">CIS Security</a>
-            </div>
-        </div>
-    </nav>
+    <div id="main-nav-container">
+        <!-- Main navigation will be loaded here -->
+    </div>
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <!-- Domain Section -->
         <nav class="mt-8 bg-white shadow rounded-lg">
             <div class="px-3 py-2 bg-gray-50">
                 <div class="flex justify-between items-center">
@@ -64,7 +20,7 @@
                         <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow-sm">
                             <li class="flex">
                                 <div class="flex items-center">
-                                    <a href="/" class="text-gray-400 hover:text-gray-500">
+                                    <a href="/" class="nav-item text-gray-400 hover:text-gray-500" data-page="home">
                                         <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 18 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7z" clip-rule="evenodd" />
                                         </svg>
@@ -77,7 +33,7 @@
                                     <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
                                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                                     </svg>
-                                    <a href="dns_table.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">DNS Portal</a>
+                                    <a href="dns_table.html" class="nav-item ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" data-page="dns">DNS Portal</a>
                                 </div>
                             </li>
                             <li class="flex">
@@ -85,7 +41,7 @@
                                     <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
                                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                                     </svg>
-                                    <a href="website-nmap-nikto.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Website Monitoring</a>
+                                    <a href="website-nmap-nikto.html" class="nav-item ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" data-page="website">Website Monitoring</a>
                                 </div>
                             </li>
                             <li class="flex">
@@ -94,9 +50,25 @@
                                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                                     </svg>
                                     <div class="ml-4 flex flex-col">
-                                        <a href="cis_ram_questionnaire.html" class="text-sm font-medium text-gray-500 hover:text-gray-700">CIS Baselines</a>
-                                        <a href="cis-report-dashboard.html" class="text-sm font-medium text-blue-500 font-semibold">CIS Reports</a>
+                                        <a href="cis_ram_questionnaire.html" class="nav-item text-sm font-medium text-gray-500 hover:text-gray-700" data-page="cis-baselines">CIS Baselines</a>
+                                        <a href="cis-report-dashboard.html" class="nav-item text-sm font-medium text-blue-500 font-semibold" data-page="cis-reports">CIS Reports</a>
                                     </div>
+                                </div>
+                            </li>
+                            <li class="flex">
+                                <div class="flex items-center">
+                                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                                    </svg>
+                                    <a href="policy_sources.html" class="nav-item ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" data-page="policy">Policy Templates</a>
+                                </div>
+                            </li>
+                            <li class="flex">
+                                <div class="flex items-center">
+                                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+                                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                                    </svg>
+                                    <a href="dashboard-projects.html" class="nav-item ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" data-page="projects">Projects</a>
                                 </div>
                             </li>
                         </ol>
@@ -105,6 +77,7 @@
             </div>
         </nav>
 
+        <!-- Domain Section -->
         <main class="mt-6 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <!-- Reports List -->
             <div class="bg-white shadow rounded-lg">
@@ -851,5 +824,6 @@
             </div>
         </main>
     </div>
+    <script src="/dashboard/js/navigation.js"></script>
 </body>
 </html>

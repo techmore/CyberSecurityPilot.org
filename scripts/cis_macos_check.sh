@@ -1,5 +1,85 @@
 #!/bin/bash
 
+# Function to collect system information
+collect_system_info() {
+    echo "System Information"
+    echo "=================="
+    
+    # Basic System Info
+    echo "Hostname: $(scutil --get ComputerName)"
+    echo "Local Hostname: $(scutil --get LocalHostName)"
+    echo "Model: $(system_profiler SPHardwareDataType | grep "Model Name" | cut -d: -f2- | xargs)"
+    echo "Model Identifier: $(system_profiler SPHardwareDataType | grep "Model Identifier" | cut -d: -f2- | xargs)"
+    echo "Serial Number: $(system_profiler SPHardwareDataType | grep "Serial Number" | cut -d: -f2- | xargs)"
+    echo "macOS Version: $(sw_vers -productVersion)"
+    echo "Build Version: $(sw_vers -buildVersion)"
+    
+    # CPU & Memory
+    echo -e "\nProcessor & Memory"
+    echo "------------------"
+    echo "Processor: $(sysctl -n machdep.cpu.brand_string)"
+    echo "CPU Cores: $(sysctl -n hw.ncpu)"
+    echo "Memory: $(system_profiler SPHardwareDataType | grep "Memory:" | cut -d: -f2- | xargs)"
+    
+    # Storage Information
+    echo -e "\nStorage Information"
+    echo "-------------------"
+    echo "Disk Usage:"
+    df -h / | tail -n 1 | awk '{print "Total: " $2 ", Used: " $3 ", Free: " $4 ", Use%: " $5}'
+    
+    # Network Interfaces
+    echo -e "\nNetwork Information"
+    echo "-------------------"
+    echo "Local IP Addresses:"
+    ipconfig getifaddr en0 2>/dev/null && echo "Wi-Fi (en0): $(ipconfig getifaddr en0)"
+    ipconfig getifaddr en1 2>/dev/null && echo "Ethernet (en1): $(ipconfig getifaddr en1)"
+    
+    # Public IP (if internet is available)
+    echo "Public IP: $(curl -s https://api.ipify.org 2>/dev/null || echo "Unable to determine")"
+    
+    # Active Network Services
+    echo -e "\nActive Network Services:"
+    networksetup -listallnetworkservices | grep -v "*" | while read -r service; do
+        if networksetup -getinfo "$service" | grep -q "IP address:" 2>/dev/null; then
+            echo "$service: Active"
+        fi
+    done
+    
+    # Security & Encryption Status
+    echo -e "\nSecurity Information"
+    echo "-------------------"
+    echo "FileVault Status: $(fdesetup status | cut -d. -f1)"
+    echo "SIP Status: $(csrutil status | cut -d: -f2- | xargs)"
+    
+    # Power Information
+    echo -e "\nPower Information"
+    echo "-----------------"
+    if system_profiler SPPowerDataType | grep -q "Battery"; then
+        system_profiler SPPowerDataType | grep -A 5 "Battery Information" | grep -E "Cycle Count|Condition|Charging"
+    else
+        echo "No battery detected (Desktop Mac)"
+    fi
+    
+    # Hardware Ports
+    echo -e "\nHardware Ports"
+    echo "--------------"
+    system_profiler SPUSBDataType | grep -A 2 "USB 3" | grep -v "Speed:"
+    
+    # Installed Applications
+    echo -e "\nInstalled Applications Summary"
+    echo "---------------------------"
+    echo "Total Apps in /Applications: $(ls -l /Applications | grep -c "^d")"
+    echo "Recently Modified Apps (last 30 days):"
+    find /Applications -type d -maxdepth 1 -mtime -30 | grep -v "^/Applications$" | while read -r app; do
+        echo "- $(basename "$app")"
+    done
+    
+    echo -e "\n===================="
+}
+
+# Add system information to the report
+collect_system_info > system_info.txt
+
 # CIS macOS Security Check Script
 # Based on CIS Apple macOS 12.0 Monterey Benchmark v4.0.0
 
@@ -80,7 +160,22 @@ mkdir -p "$REPORTS_DIR"
 timestamp=$(date +"%Y%m%d_%H%M%S")
 report_file="$REPORTS_DIR/cis_security_report_${timestamp}.txt"
 
-# Redirect all output to both console and file
+# Combine system information with the report
+{
+    echo "CIS macOS Security Benchmark Report"
+    echo "=================================="
+    echo "Generated on: $(date)"
+    echo ""
+    
+    # Add system information
+    cat system_info.txt
+    echo ""
+    echo "Security Check Results"
+    echo "====================="
+    echo ""
+} > "$report_file"
+
+# Append the rest of the report and clean up
 exec 1> >(tee -a "$report_file") 2>&1
 
 # Print header
@@ -1733,3 +1828,6 @@ print_detailed_report() {
         echo "For most accurate results, run this script with sudo privileges."
     } > "$report_file"
 }
+
+# Clean up temporary files
+rm -f system_info.txt
